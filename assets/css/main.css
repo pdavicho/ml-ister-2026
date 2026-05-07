@@ -70,6 +70,19 @@ body {
   margin-top: 0.25rem;
 }
 
+.sidebar-home {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #475569;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #1e293b;
+  transition: color 0.15s;
+}
+.sidebar-home:hover { color: #60a5fa; }
+
 .sidebar-nav { padding: 0.75rem 0; flex: 1; }
 
 .nav-section-label {
