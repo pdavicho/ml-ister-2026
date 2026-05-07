@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 3 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .task-row { display: flex; gap: .75rem; padding: .65rem .9rem; border-radius: 8px; margin-bottom: .5rem; align-items: flex-start; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .tree-mini { font-family: monospace; font-size: .6em; background: #1e293b; border-radius: 6px; padding: .5rem .75rem; color: #93c5fd; text-align: left; }
+    .vote-box { text-align: center; border-radius: 8px; padding: .5rem; font-size: .7em; border: 1px solid #334155; }
+    .vote-box .v { font-size: 1.8em; font-weight: 800; }
+    .acc-badge { display: inline-block; font-size: .75em; font-weight: 700; padding: .2em .6em; border-radius: 4px; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 3</div>
+  <h1 style="font-size:1.55em; line-height:1.2">Técnicas de Ensamblado:<br><span style="color:#60a5fa">Random Forest</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Bagging</span>
+    <span class="tag">Bootstrap</span>
+    <span class="tag">Random Forest</span>
+    <span class="tag">n_estimators</span>
+    <span class="tag">OOB Score</span>
+    <span class="tag">Gradient Boosting</span>
+  </div>
+  <div class="inst">Ing. Pablo Llumiquinga · ISTER — Sistemas y Gestión de Data · 2026</div>
+</section>
+
+<!-- S2: EL PROBLEMA DEL ÁRBOL SOLITARIO -->
+<section>
+  <h2>El Problema del Árbol Solitario</h2>
+  <div class="cols cols-3" style="font-size:.9em">
+    <div class="card" style="border-color:#ef4444">
+      <h4 style="color:#f87171">🎲 Alta varianza</h4>
+      <p>Cambia un par de datos de entrenamiento y el árbol puede cambiar drásticamente. Es inestable.</p>
+    </div>
+    <div class="card" style="border-color:#f59e0b">
+      <h4 style="color:#fbbf24">📉 Propenso a overfitting</h4>
+      <p>Sin controlar max_depth, memoriza el ruido del entrenamiento y falla con datos nuevos.</p>
+    </div>
+    <div class="card" style="border-color:#8b5cf6">
+      <h4 style="color:#a78bfa">👁️ Visión limitada</h4>
+      <p>Un solo árbol tiene una "visión" limitada del problema y puede sesgarse por casualidad.</p>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.75rem">¿Y si en vez de UN árbol usamos <strong>100 árboles</strong> que votan juntos?</div>
+  <p style="font-size:.55em; color:#64748b; text-align:center; margin-top:.5rem">Semana 3: Random Forest = 100 árboles que votan juntos → más robusto, más preciso, menos overfitting.</p>
+</section>
+
+<!-- S3: LA SOLUCIÓN - ENSEMBLE -->
+<section>
+  <h2>La Solución: Aprendizaje de Ensamblado</h2>
+  <blockquote style="font-size:.68em">"Ninguno de nosotros es tan inteligente como todos nosotros juntos." — Kenneth Blanchard</blockquote>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card" style="border-color:#3b82f6">
+      <h4>🌳🌳🌳 Bagging (Bootstrap Aggregating)</h4>
+      <p>Entrena múltiples modelos en paralelo, cada uno con una muestra diferente de los datos. Luego combina sus predicciones.</p>
+      <p style="color:#60a5fa; margin-top:.4rem; font-size:.8em">Random Forest usa Bagging.</p>
+    </div>
+    <div class="card" style="border-color:#8b5cf6">
+      <h4>🔗 Boosting</h4>
+      <p>Entrena modelos en secuencia. Cada nuevo modelo corrige los errores del anterior. Más poderoso pero más lento.</p>
+      <p style="color:#a78bfa; margin-top:.4rem; font-size:.8em">Gradient Boosting, XGBoost usan Boosting.</p>
+    </div>
+  </div>
+  <p style="font-size:.52em; color:#64748b; text-align:center; margin-top:.6rem">Ambos son técnicas de <strong>ensamblado</strong> — combinan modelos débiles para crear uno fuerte.</p>
+</section>
+
+<!-- S4: ANALOGÍA - SABIDURÍA DE MULTITUDES -->
+<section>
+  <h2>Analogía: La Sabiduría de las Multitudes</h2>
+  <p style="font-size:.62em; color:#94a3b8; margin-bottom:.7rem">¿Cuántos caramelos hay en el frasco? Un experto estima 850. Pero si 100 personas votan, el promedio suele ser más preciso que cualquier experto individual.</p>
+  <div class="cols cols-3" style="font-size:.85em">
+    <div class="card" style="text-align:center">
+      <h4>Árbol 1</h4>
+      <p>Entrenado con datos A</p>
+      <div style="margin-top:.4rem; font-size:.9em">Predice: <strong style="color:#4ade80">Maligno</strong></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h4>Árbol 2</h4>
+      <p>Entrenado con datos B</p>
+      <div style="margin-top:.4rem; font-size:.9em">Predice: <strong style="color:#4ade80">Maligno</strong></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h4>Árbol 3</h4>
+      <p>Entrenado con datos C</p>
+      <div style="margin-top:.4rem; font-size:.9em">Predice: <strong style="color:#f87171">Benigno</strong></div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:.75rem; font-size:.85em">
+    <div class="result">Votación: 2 Maligno vs 1 Benigno → Predicción final: <strong>Maligno</strong></div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.4rem">Los errores individuales de cada árbol se cancelan entre sí cuando votamos.</p>
+</section>
+
+<!-- S5: ¿QUÉ ES RANDOM FOREST? -->
+<section>
+  <h2>¿Qué es Random Forest?</h2>
+  <blockquote style="font-size:.65em">Random Forest es un algoritmo de ensamblado que construye múltiples árboles de decisión, cada uno entrenado con una muestra aleatoria de los datos y variables, y combina sus predicciones por votación.</blockquote>
+  <div style="font-size:.85em">
+    <p style="font-size:.65em; color:#60a5fa; font-weight:600; margin-bottom:.4rem">Dos fuentes de aleatoriedad (que dan diversidad a los árboles):</p>
+    <div class="step"><strong>1. Bootstrap de datos</strong> — Cada árbol entrena en una muestra diferente (con reemplazo) del dataset original.</div>
+    <div class="step"><strong>2. Aleatoriedad de variables</strong> — En cada nodo, solo se consideran √n variables (no todas) para encontrar la mejor división.</div>
+  </div>
+  <div class="result" style="margin-top:.5rem">La diversidad entre árboles es lo que hace al Random Forest robusto. Si todos los árboles son iguales, votar no ayuda.</div>
+</section>
+
+<!-- S6: BOOTSTRAP AGGREGATING -->
+<section>
+  <h2>Bootstrap Aggregating (Bagging)</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.5rem">Bootstrap = muestreo CON reemplazo. De un dataset de N ejemplos, extraemos N ejemplos al azar (un ejemplo puede aparecer varias veces).</p>
+  <div class="cols cols-3" style="font-size:.82em">
+    <div class="card" style="text-align:center">
+      <h4 style="font-size:.9em">Dataset original</h4>
+      <div class="tree-mini">Ejemplo 1<br>Ejemplo 2<br>Ejemplo 3<br>Ejemplo 4<br>Ejemplo 5</div>
+    </div>
+    <div class="card" style="border-color:#3b82f6; text-align:center">
+      <h4 style="font-size:.9em">Muestra bootstrap 1</h4>
+      <div class="tree-mini" style="color:#60a5fa">Ejemplo 1<br>Ejemplo 1 ←repetido<br>Ejemplo 3<br>Ejemplo 4<br>Ejemplo 5</div>
+    </div>
+    <div class="card" style="border-color:#8b5cf6; text-align:center">
+      <h4 style="font-size:.9em">Muestra bootstrap 2</h4>
+      <div class="tree-mini" style="color:#a78bfa">Ejemplo 2<br>Ejemplo 2 ←repetido<br>Ejemplo 3<br>Ejemplo 3 ←repetido<br>Ejemplo 5</div>
+    </div>
+  </div>
+  <p style="font-size:.52em; color:#64748b; text-align:center; margin-top:.5rem">Cada árbol ve una versión diferente del dataset → árboles distintos → errores diferentes → al votar, los errores se cancelan.</p>
+  <div class="warn" style="margin-top:.3rem">~37% de los ejemplos NO aparecen en cada muestra bootstrap. Esos son los datos <strong>Out-Of-Bag (OOB)</strong> — se usan para validación gratis.</div>
+</section>
+
+<!-- S7: CONSTRUCCIÓN PASO A PASO -->
+<section>
+  <h2>Cómo se Construye un Random Forest</h2>
+  <div style="font-size:.9em">
+    <div class="num-row"><span class="num-circle">1</span><span>Elige el número de árboles: <code>n_estimators=100</code>.</span></div>
+    <div class="num-row"><span class="num-circle">2</span><span>Para cada árbol: extrae una muestra bootstrap del tamaño del training set (con reemplazo).</span></div>
+    <div class="num-row"><span class="num-circle">3</span><span>Construye un árbol de decisión en esa muestra. En cada nodo, solo considera <code>max_features=√n</code> variables candidatas para la división.</span></div>
+    <div class="num-row"><span class="num-circle">4</span><span>El árbol crece sin poda (o con max_depth controlado).</span></div>
+    <div class="num-row"><span class="num-circle">5</span><span>Repite pasos 2–4 para cada uno de los 100 árboles.</span></div>
+    <div class="num-row"><span class="num-circle">6</span><span>Para predecir: cada árbol vota por una clase. La clase con más votos gana.</span></div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.5rem">Los 100 árboles son independientes entre sí → se pueden construir en paralelo → muy rápido.</p>
+</section>
+
+<!-- S8: ALEATORIEDAD DE VARIABLES -->
+<section>
+  <h2>Aleatoriedad de Variables (max_features)</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">En un árbol normal, cada nodo evalúa TODAS las variables para encontrar la mejor división. En Random Forest, solo evalúa una submuestra aleatoria.</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card">
+      <h4>Árbol de decisión normal</h4>
+      <p>Dataset con 10 variables. En cada nodo: evalúa las 10 variables. El mejor siempre gana.</p>
+      <p style="margin-top:.4rem; color:#f87171; font-size:.8em">→ Todos los árboles tenderán a usar las mismas variables → árboles correlacionados.</p>
+    </div>
+    <div class="card" style="border-color:#3b82f6">
+      <h4 style="color:#60a5fa">Random Forest</h4>
+      <p>Dataset con 10 variables. En cada nodo: evalúa solo √10 ≈ 3 variables elegidas al azar.</p>
+      <p style="margin-top:.4rem; color:#4ade80; font-size:.8em">→ Árboles usan variables distintas → menos correlacionados → mejor al votar.</p>
+    </div>
+  </div>
+  <table style="font-size:.62em; margin-top:.6rem">
+    <thead><tr><th>max_features</th><th>Significado</th><th>Cuándo usar</th></tr></thead>
+    <tbody>
+      <tr><td><code>'sqrt'</code></td><td>√n variables por nodo (defecto en clasificación)</td><td>Mayoría de casos</td></tr>
+      <tr><td><code>'log2'</code></td><td>log₂(n) variables por nodo</td><td>Datasets con muchas variables</td></tr>
+      <tr><td><code>None</code></td><td>Todas las variables (como árbol normal)</td><td>No recomendado en RF</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- S9: PARÁMETROS -->
+<section>
+  <h2>Parámetros Clave del Random Forest</h2>
+  <div class="cols cols-2" style="gap:.4rem; font-size:.9em">
+    <div class="step"><strong>n_estimators</strong> (default: 100) — Número de árboles. Más árboles = más estable, pero más lento. Raramente vale la pena superar 500.<br><span style="color:#64748b">n_estimators=100 → generalmente suficiente</span></div>
+    <div class="step"><strong>max_depth</strong> (default: None) — Profundidad máxima de cada árbol. En RF se permite crecer profundo porque la votación controla el overfitting.<br><span style="color:#64748b">Puedes dejar None o max_depth=10–20</span></div>
+    <div class="step"><strong>max_features</strong> (default: 'sqrt') — Variables a evaluar en cada nodo. Controla la diversidad entre árboles.<br><span style="color:#64748b">max_features='sqrt' → clasificación</span></div>
+    <div class="step"><strong>min_samples_split</strong> (default: 2) — Igual que en árbol individual. Mínimo de ejemplos para dividir un nodo.<br><span style="color:#64748b">min_samples_split=5 → menos overfitting</span></div>
+    <div class="step"><strong>oob_score</strong> (default: False) — Activar validación con datos Out-Of-Bag. Gratuita, sin necesitar test set.<br><span style="color:#64748b">oob_score=True → valida gratis</span></div>
+    <div class="step"><strong>n_jobs</strong> (default: 1) — Paralelismo. -1 usa todos los procesadores disponibles.<br><span style="color:#64748b">n_jobs=-1 → máxima velocidad</span></div>
+  </div>
+  <p style="font-size:.48em; color:#fbbf24; text-align:center; margin-top:.4rem">El más importante es <code>n_estimators</code>. Más es mejor, hasta un punto de rendimientos decrecientes (~100–300).</p>
+</section>
+
+<!-- S10: OOB SCORE -->
+<section>
+  <h2>OOB Score — Validación Gratuita</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">En cada árbol, ~37% de los ejemplos no se usan para entrenamiento (datos Out-Of-Bag). Podemos usar esos ejemplos para validar ese árbol específico.</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card">
+      <h4>¿Cómo funciona?</h4>
+      <p>Para cada ejemplo del training set:</p>
+      <p>1. Identifica qué árboles NO usaron ese ejemplo (sus OOB trees).</p>
+      <p>2. Hace predicciones solo con esos árboles.</p>
+      <p>3. Agrega las predicciones por votación.</p>
+      <p>4. Compara con la etiqueta real.</p>
+    </div>
+    <div class="card" style="border-color:#3b82f6">
+      <h4 style="color:#60a5fa">Ventajas del OOB Score</h4>
+      <ul style="font-size:.85em; padding-left:1rem">
+        <li class="pro" style="font-size:.85em">No requiere separar datos para validación</li>
+        <li class="pro" style="font-size:.85em">Usa TODOS los datos para entrenamiento</li>
+        <li class="pro" style="font-size:.85em">Estimación imparcial del error real</li>
+        <li class="pro" style="font-size:.85em">Comparable a cross-validation (Semana 4)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.5rem">Con <code>oob_score=True</code>, sklearn calcula automáticamente el OOB accuracy sin que hagas nada más.</div>
+</section>
+
+<!-- S11: IMPORTANCIA DE VARIABLES -->
+<section>
+  <h2>Importancia de Variables en Random Forest</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">Igual que en un árbol individual, RF puede decir qué variables fueron más útiles — pero ahora es un promedio sobre 100 árboles, mucho más robusto.</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card">
+      <h4>¿Cómo se calcula?</h4>
+      <p>Para cada variable y cada árbol: cuánto redujo el Gini en los nodos donde fue usada. Promedio sobre todos los árboles y normalizado a suma = 1.</p>
+      <p style="margin-top:.4rem; font-size:.8em; color:#60a5fa"><code>rf.feature_importances_</code></p>
+    </div>
+    <div class="card" style="border-color:#4ade80">
+      <h4 style="color:#4ade80">Ventajas vs árbol individual</h4>
+      <ul style="font-size:.85em; padding-left:1rem">
+        <li class="pro" style="font-size:.85em">Más estable (promedio de 100 árboles)</li>
+        <li class="pro" style="font-size:.85em">Menos sesgado hacia variables con más categorías</li>
+        <li class="pro" style="font-size:.85em">Detecta variables que solo ayudan en combinación</li>
+      </ul>
+    </div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.5rem">La importancia de variables es una de las razones por las que RF es muy usado en la industria — es un modelo interpretable y robusto.</p>
+</section>
+
+<!-- S12: RF VS ÁRBOL -->
+<section>
+  <h2>Random Forest vs Árbol Solitario</h2>
+  <table>
+    <thead>
+      <tr><th>Característica</th><th style="color:#f87171">Árbol Solitario</th><th style="color:#4ade80">Random Forest</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Estabilidad</td><td class="con">Baja — sensible a cambios en los datos</td><td class="pro">Alta — promedia sobre 100 árboles</td></tr>
+      <tr><td>Overfitting</td><td class="con">Alto si no se controla max_depth</td><td class="pro">Bajo naturalmente por la agregación</td></tr>
+      <tr><td>Precisión</td><td class="con">Moderada</td><td class="pro">Alta en la mayoría de datasets</td></tr>
+      <tr><td>Interpretabilidad</td><td class="pro">Alta — se puede visualizar</td><td class="con">Baja — no hay un solo árbol para ver</td></tr>
+      <tr><td>Velocidad de entrenamiento</td><td class="pro">Muy rápido</td><td class="con">Más lento (pero paralelizable)</td></tr>
+      <tr><td>Importancia de variables</td><td>Sí, pero inestable</td><td class="pro">Sí, robusta y confiable</td></tr>
+      <tr><td>Parámetro principal</td><td><code>max_depth</code></td><td><code>n_estimators</code> + <code>max_features</code></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:.5em; color:#fbbf24; text-align:center; margin-top:.4rem">Regla práctica: usa Random Forest como modelo base antes de intentar algoritmos más complejos.</p>
+</section>
+
+<!-- S13: INTRO GRADIENT BOOSTING -->
+<section>
+  <h2>Introducción al Gradient Boosting</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.5rem">Random Forest construye árboles en <strong>paralelo</strong>. Gradient Boosting los construye en <strong>secuencia</strong> — cada árbol corrige los errores del anterior.</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card">
+      <h4>Random Forest — Paralelo</h4>
+      <div style="display:flex; gap:.3rem; margin:.4rem 0; align-items:center; font-size:.8em">
+        <span style="background:#1e3a5f; border:1px solid #3b82f6; border-radius:4px; padding:.2em .5em">Árbol 1</span>
+        <span style="background:#1e3a5f; border:1px solid #3b82f6; border-radius:4px; padding:.2em .5em">Árbol 2</span>
+        <span style="background:#1e3a5f; border:1px solid #3b82f6; border-radius:4px; padding:.2em .5em">Árbol 3</span>
+        <span style="color:#64748b">→ votan</span>
+      </div>
+      <p style="font-size:.8em">Cada árbol aprende de datos diferentes (bootstrap). Son independientes.</p>
+    </div>
+    <div class="card" style="border-color:#a78bfa">
+      <h4 style="color:#a78bfa">Gradient Boosting — Secuencial</h4>
+      <div style="font-size:.8em; color:#a78bfa">Árbol 1 → errores → Árbol 2 → errores → Árbol 3 → suma</div>
+      <p style="font-size:.8em; margin-top:.4rem">Cada árbol aprende de los errores del anterior. Los árboles son pequeños (stumps).</p>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.5rem">Gradient Boosting es más poderoso pero más propenso a overfitting y más lento. Se profundiza en Semana 4.</div>
+</section>
+
+<!-- S14: SEPARADOR EJERCICIOS -->
+<section data-background-gradient="linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)">
+  <div class="eyebrow">PARTE 3</div>
+  <h1 style="font-size:1.9em">Ejercicios<br><span style="color:#60a5fa">en Clase</span></h1>
+</section>
+
+<!-- S15: EJERCICIO 1 - VOTACIÓN -->
+<section>
+  <h2>Ejercicio 1 · Simulación de Votación</h2>
+  <p style="font-size:.62em; color:#fbbf24; margin-bottom:.5rem">Un RF tiene 7 árboles. Para un nuevo paciente, los árboles predicen: Maligno, Benigno, Maligno, Maligno, Benigno, Maligno, Benigno</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div>
+      <div class="step"><strong>Paso 1</strong> — Contar votos:<br>Maligno: árbol 1, 3, 4, 6 → <strong>4 votos</strong><br>Benigno: árbol 2, 5, 7 → <strong>3 votos</strong></div>
+      <div class="step"><strong>Paso 2</strong> — Mayoría simple:<br>4 &gt; 3 → predicción final: <strong style="color:#f87171">Maligno</strong></div>
+      <div class="result">El paciente se clasifica como Maligno (4/7 árboles coinciden).</div>
+    </div>
+    <div>
+      <p style="font-size:.65em; color:#fbbf24; margin-bottom:.4rem">Preguntas:</p>
+      <div class="step">1. ¿Qué pasaría si hubiera un empate (3 vs 3 con 6 árboles)? ¿Cómo lo resuelve sklearn?</div>
+      <div class="step">2. ¿Por qué se recomienda usar un número impar de árboles?</div>
+      <div class="step">3. Si el árbol 4 tuviera error y predijera Benigno, ¿cambiaría el resultado final?</div>
+    </div>
+  </div>
+</section>
+
+<!-- S16: EJERCICIO 2 - EFECTO DE N_ESTIMATORS -->
+<section>
+  <h2>Ejercicio 2 · Efecto de n_estimators</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">Se entrena un Random Forest en Breast Cancer con distintos valores de n_estimators. Analiza los resultados:</p>
+  <table>
+    <thead><tr><th>n_estimators</th><th>Train acc</th><th>Test acc</th><th>OOB acc</th><th>Tiempo (s)</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1.000</td><td>0.871</td><td>0.871</td><td>0.01</td></tr>
+      <tr><td>10</td><td>1.000</td><td>0.936</td><td>0.944</td><td>0.05</td></tr>
+      <tr><td>50</td><td>1.000</td><td>0.959</td><td>0.961</td><td>0.20</td></tr>
+      <tr><td style="color:#4ade80"><strong>100</strong></td><td>1.000</td><td style="color:#4ade80"><strong>0.965</strong></td><td>0.965</td><td>0.38</td></tr>
+      <tr><td>300</td><td>1.000</td><td>0.965</td><td>0.966</td><td>1.10</td></tr>
+      <tr><td>1000</td><td>1.000</td><td>0.965</td><td>0.966</td><td>3.60</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="font-size:.85em; margin-top:.5rem; gap:.4rem">
+    <div class="step">1. ¿A partir de qué n_estimators el test accuracy deja de mejorar significativamente?</div>
+    <div class="step">2. ¿Por qué el train accuracy siempre es 1.0 independientemente del número de árboles?</div>
+  </div>
+</section>
+
+<!-- S17: EJERCICIO 3 - IMPORTANCIA -->
+<section>
+  <h2>Ejercicio 3 · Importancia de Variables</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">Un RF entrenado en Breast Cancer produce estas importancias (top 5):</p>
+  <table>
+    <thead><tr><th>Variable</th><th>Importancia</th><th>Tipo</th></tr></thead>
+    <tbody>
+      <tr><td>worst perimeter</td><td style="color:#4ade80">0.218</td><td>Peor caso</td></tr>
+      <tr><td>worst concave points</td><td>0.147</td><td>Peor caso</td></tr>
+      <tr><td>mean concave points</td><td>0.132</td><td>Media</td></tr>
+      <tr><td>worst radius</td><td>0.089</td><td>Peor caso</td></tr>
+      <tr><td>worst area</td><td>0.075</td><td>Peor caso</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="font-size:.85em; margin-top:.4rem; gap:.4rem">
+    <div class="step">1. ¿Qué tipo de mediciones dominan (media, peor caso, error estándar)?</div>
+    <div class="step">2. ¿La suma de todas las importancias debe ser 1.0? ¿Por qué?</div>
+  </div>
+  <div class="result" style="margin-top:.3rem">Las variables de "peor caso" son más importantes que las medias — el tumor se detecta mejor en sus valores extremos.</div>
+</section>
+
+<!-- S18: TAREAS -->
+<section>
+  <h2>Tareas · Semana 3</h2>
+  <div>
+    <div class="task-row" style="background:rgba(5,150,105,.1); border:1px solid rgba(5,150,105,.3)">
+      <span style="background:#059669; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T1 · PYTHON</span>
+      <div>
+        <strong style="font-size:.68em">Comparativa: Árbol vs Random Forest</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Entrena un DecisionTreeClassifier y un RandomForestClassifier en el dataset Wine. Compara accuracy, OOB score e importancia de variables. Imprime una tabla con los resultados y escribe 3 conclusiones.</p>
+      </div>
+    </div>
+    <div class="task-row" style="background:rgba(124,58,237,.1); border:1px solid rgba(124,58,237,.3)">
+      <span style="background:#7c3aed; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T2 · ANÁLISIS</span>
+      <div>
+        <strong style="font-size:.68em">Efecto de n_estimators — gráfico y análisis</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">En el dataset Breast Cancer, grafica el test accuracy vs n_estimators para valores [1, 5, 10, 25, 50, 100, 200, 500]. ¿En qué punto la mejora deja de ser significativa?</p>
+      </div>
+    </div>
+    <div class="task-row" style="background:rgba(217,119,6,.1); border:1px solid rgba(217,119,6,.3)">
+      <span style="background:#d97706; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T3 · INVESTIGACIÓN</span>
+      <div>
+        <strong style="font-size:.68em">Random Forest en la industria</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Busca un caso real de uso de Random Forest (finanzas, salud, etc.). Media página: el problema, por qué eligieron RF sobre un árbol simple, y los resultados obtenidos.</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.4rem">✓ Entrega: próximo Lunes · Semana 4: Gradient Boosting + Evaluación de Modelos</p>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({ hash:true, progress:true, controls:true, transition:'slide', backgroundTransition:'fade' });
+</script>
+</body>
+</html>

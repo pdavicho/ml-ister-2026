@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 3 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <span class="week-link locked"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 3</div>
+    <h1>Técnicas de Ensamblado: Random Forest</h1>
+    <div class="topic-tags">
+      <span class="tag">Bagging</span>
+      <span class="tag">Bootstrap</span>
+      <span class="tag">RandomForestClassifier</span>
+      <span class="tag">n_estimators</span>
+      <span class="tag">OOB Score</span>
+      <span class="tag">Gradient Boosting</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 3</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 3</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Árbol vs Random Forest — comparativa directa ─────────
+from sklearn.datasets     import load_breast_cancer
+from sklearn.tree         import DecisionTreeClassifier
+from sklearn.ensemble     import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics      import accuracy_score
+import pandas as pd
+
+data = load_breast_cancer()
+X_train, X_test, y_train, y_test = train_test_split(
+    data.data, data.target, test_size=0.30, random_state=42)
+
+# Árbol de decisión
+arbol = DecisionTreeClassifier(max_depth=5, random_state=42)
+arbol.fit(X_train, y_train)
+
+# Random Forest
+rf = RandomForestClassifier(n_estimators=100, random_state=42,
+                             oob_score=True, n_jobs=-1)
+rf.fit(X_train, y_train)
+
+print("── Comparativa ──────────────────────────────────────")
+print(f"Árbol    | Train: {accuracy_score(y_train, arbol.predict(X_train)):.3f} | Test: {accuracy_score(y_test, arbol.predict(X_test)):.3f}")
+print(f"RF (100) | Train: {accuracy_score(y_train, rf.predict(X_train)):.3f} | Test: {accuracy_score(y_test, rf.predict(X_test)):.3f} | OOB: {rf.oob_score_:.3f}")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Efecto de n_estimators ────────────────────────────────
+import matplotlib.pyplot as plt
+
+n_trees = [1, 5, 10, 25, 50, 100, 200, 500]
+test_scores = []
+
+for n in n_trees:
+    m = RandomForestClassifier(n_estimators=n, random_state=42, n_jobs=-1)
+    m.fit(X_train, y_train)
+    test_scores.append(accuracy_score(y_test, m.predict(X_test)))
+
+plt.figure(figsize=(8, 4))
+plt.plot(n_trees, test_scores, 'o-', color='#3b82f6', linewidth=2)
+plt.xscale('log')
+plt.xlabel('Número de árboles (n_estimators)')
+plt.ylabel('Test Accuracy')
+plt.title('Efecto de n_estimators — Breast Cancer')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Importancia de variables ──────────────────────────────
+import pandas as pd
+
+importancias = pd.Series(
+    rf.feature_importances_,
+    index=data.feature_names
+).sort_values(ascending=False).head(10)
+
+importancias.plot(kind='barh', figsize=(8, 5), color='#3b82f6')
+plt.title('Top 10 Variables más importantes — Random Forest')
+plt.xlabel('Importancia (reducción media de Gini)')
+plt.gca().invert_yaxis()
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana3_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 3 — Random Forest con Dataset Digits (reconocimiento de dígitos)</h4>
+            <p>Compara árbol vs RF en un dataset de 10 clases, analiza estabilidad y visualiza qué píxeles son más importantes para clasificar cada dígito.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Capítulo sobre métodos de ensamblado, Bagging, Random Forest y Gradient Boosting.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — RandomForestClassifier</h4>
+              <p>Documentación completa: n_estimators, max_features, oob_score, feature_importances_.</p>
+              <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html" target="_blank" class="resource-link">→ sklearn.org — RandomForestClassifier</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — User Guide: Ensemble Methods</h4>
+              <p>Explicación conceptual de Bagging, Random Forest, AdaBoost y Gradient Boosting.</p>
+              <a href="https://scikit-learn.org/stable/modules/ensemble.html" target="_blank" class="resource-link">→ sklearn.org — ensemble methods</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próximo Lunes</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Comparativa Árbol vs Random Forest en Wine</h4>
+              <p>Entrena ambos modelos en el dataset Wine. Compara accuracy, OOB score e importancia de variables. Imprime una tabla de resultados y escribe 3 conclusiones.</p>
+              <div class="task-due">📅 Lunes próximo · Formato: PDF o Jupyter Notebook</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · ANÁLISIS</span>
+            <div class="task-content">
+              <h4>Gráfico del efecto de n_estimators</h4>
+              <p>En Breast Cancer, grafica test accuracy vs n_estimators para [1, 5, 10, 25, 50, 100, 200, 500]. ¿En qué punto deja de mejorar significativamente?</p>
+              <div class="task-due">📅 Lunes próximo · Incluir el gráfico en el PDF</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · INVESTIGACIÓN</span>
+            <div class="task-content">
+              <h4>Random Forest en la Industria</h4>
+              <p>Busca un caso real de uso de Random Forest (finanzas, salud, marketing, etc.). Media página: problema, por qué eligieron RF sobre un árbol simple, y los resultados obtenidos.</p>
+              <div class="task-due">📅 Lunes próximo · Formato: PDF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

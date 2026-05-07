@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 1 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .reveal pre { box-shadow: none; border-radius: 8px; }
+    .reveal pre code { max-height: 420px; font-size: .78em; line-height: 1.55; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .formula { font-family: 'Courier New', monospace; background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: .5em 1em; color: #93c5fd; display: inline-block; margin: .3rem 0; }
+    .step { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .pro  { color: #4ade80; }
+    .con  { color: #f87171; }
+    ul.pc { list-style: none; padding: 0; }
+    ul.pc li { font-size: .62em; padding: .18rem 0; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .nbox { display: inline-block; background: #1e3a5f; border: 2px solid #3b82f6; border-radius: 8px; padding: .25em .75em; font-size: .62em; }
+    .nbox.yes { background: #14532d; border-color: #22c55e; }
+    .nbox.no  { background: #7f1d1d; border-color: #ef4444; }
+    .task-row { display: flex; gap: .75rem; padding: .65rem .9rem; border-radius: 8px; margin-bottom: .5rem; align-items: flex-start; }
+    .tbadge { font-size: .55em; font-weight: 700; padding: .2em .5em; border-radius: 4px; white-space: nowrap; }
+    .tbadge p { background: #7c3aed; color: white; }
+    .tbadge py { background: #059669; color: white; }
+    .tbadge i  { background: #d97706; color: white; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .flex-row { display: flex; gap: .4rem; align-items: stretch; }
+    .flex-row .card { flex: 1; }
+    .arr { display: flex; align-items: center; color: #3b82f6; font-size: 1em; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 1 · MACHINE LEARNING ISTER 2026</div>
+  <h1 style="font-size:1.55em; line-height:1.2">
+    Introducción al <span style="color:#60a5fa">Machine Learning</span><br>
+    y Árboles de Decisión
+  </h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Aprendizaje automático</span>
+    <span class="tag">Gini</span>
+    <span class="tag">Entropía</span>
+    <span class="tag">Python</span>
+    <span class="tag">scikit-learn</span>
+  </div>
+  <div class="inst">Ing. Pablo Llumiquinga · ISTER — Sistemas y Gestión de Data · 2026</div>
+</section>
+
+<!-- S2: QUÉ ES ML -->
+<section>
+  <h2>¿Qué es Machine Learning?</h2>
+  <blockquote style="font-size:.68em">
+    "Es la capacidad de las máquinas de aprender a partir de datos sin ser explícitamente programadas para cada tarea." <br>
+    <strong>— Tom Mitchell, 1997</strong>
+  </blockquote>
+  <div class="cols cols-3">
+    <div class="card">
+      <h4>Inteligencia Artificial (IA)</h4>
+      <p>Todo sistema capaz de simular razonamiento, percepción o acción inteligente.</p>
+    </div>
+    <div class="card" style="border-color:#3b82f6; background:rgba(59,130,246,.15)">
+      <h4 style="color:#93c5fd">Machine Learning (ML) ←</h4>
+      <p>Aprende patrones a partir de datos sin ser programado regla a regla.</p>
+    </div>
+    <div class="card">
+      <h4>Deep Learning (DL)</h4>
+      <p>Redes neuronales profundas. Aprende representaciones jerárquicas automáticamente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S3: APLICACIONES -->
+<section>
+  <h2>ML en la Vida Cotidiana</h2>
+  <div class="cols cols-3">
+    <div class="card"><h4>📧 Filtro de Spam</h4><p>Gmail clasifica millones de correos usando árboles y Naive Bayes.</p></div>
+    <div class="card"><h4>🎬 Recomendaciones</h4><p>Netflix predice qué película verás basándose en tu historial.</p></div>
+    <div class="card"><h4>🏦 Crédito Bancario</h4><p>Los bancos aprueban préstamos con modelos ML en segundos.</p></div>
+    <div class="card"><h4>🏥 Diagnóstico Médico</h4><p>Detecta tumores con mayor precisión que el ojo humano.</p></div>
+    <div class="card"><h4>💰 Precios Dinámicos</h4><p>Amazon ajusta 2.5 millones de precios por día con ML.</p></div>
+    <div class="card"><h4>🚗 Conducción Autónoma</h4><p>Tesla analiza miles de sensores en tiempo real.</p></div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.6rem">Interactuamos con ML decenas de veces al día sin darnos cuenta.</p>
+</section>
+
+<!-- S4: TIPOS DE APRENDIZAJE -->
+<section>
+  <h2>Tipos de Aprendizaje en ML</h2>
+  <div class="cols cols-3">
+    <div class="card" style="border-color:#3b82f6">
+      <h4>01 · Supervisado</h4>
+      <p>Aprende con datos <strong style="color:#60a5fa">ETIQUETADOS</strong>.</p>
+      <p style="margin-top:.4rem">Ej: Foto → etiqueta "gato"</p>
+      <p style="margin-top:.4rem; color:#94a3b8; font-size:.75em">Árboles · SVM · Regresión</p>
+    </div>
+    <div class="card" style="border-color:#8b5cf6">
+      <h4 style="color:#a78bfa">02 · No Supervisado</h4>
+      <p>Aprende con datos <strong style="color:#a78bfa">SIN etiquetas</strong>.</p>
+      <p style="margin-top:.4rem">Ej: Agrupar clientes similares</p>
+      <p style="margin-top:.4rem; color:#94a3b8; font-size:.75em">K-means · DBScan · PCA</p>
+    </div>
+    <div class="card" style="border-color:#f59e0b">
+      <h4 style="color:#fbbf24">03 · Por Refuerzo</h4>
+      <p>Aprende por <strong style="color:#fbbf24">PRUEBA Y ERROR</strong>.</p>
+      <p style="margin-top:.4rem">Ej: AlphaGo aprendió a jugar Go</p>
+      <p style="margin-top:.4rem; color:#94a3b8; font-size:.75em">Q-Learning · PPO</p>
+    </div>
+  </div>
+</section>
+
+<!-- S5: TABLA COMPARATIVA -->
+<section>
+  <h2>¿Cuándo Usar Cada Tipo?</h2>
+  <table>
+    <thead>
+      <tr><th>Característica</th><th style="color:#60a5fa">Supervisado</th><th style="color:#a78bfa">No Supervisado</th><th style="color:#fbbf24">Por Refuerzo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>¿Necesita etiquetas?</td><td>Sí</td><td>No</td><td>No (usa recompensas)</td></tr>
+      <tr><td>¿Qué produce?</td><td>Predicciones</td><td>Grupos / Estructuras</td><td>Política de acción</td></tr>
+      <tr><td>Interpretabilidad</td><td>Alta</td><td>Media</td><td>Baja</td></tr>
+      <tr><td>Industria común</td><td>Finanzas, salud</td><td>Retail, segmentación</td><td>Robótica, videojuegos</td></tr>
+      <tr><td>Ejemplo típico</td><td>Detección de spam</td><td>Segmentación clientes</td><td>Robot aprendiendo a caminar</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- S6: FLUJO DE TRABAJO -->
+<section>
+  <h2>Flujo de Trabajo en ML</h2>
+  <div class="flex-row" style="font-size:.85em">
+    <div class="card" style="text-align:center"><div style="font-size:1.4em;margin-bottom:.2rem">1</div><h4>Datos</h4><p>CSV · APIs<br>Bases de datos</p></div>
+    <div class="arr">→</div>
+    <div class="card" style="text-align:center"><div style="font-size:1.4em;margin-bottom:.2rem">2</div><h4>Limpieza</h4><p>Nulos · Outliers<br>Normalización</p></div>
+    <div class="arr">→</div>
+    <div class="card" style="text-align:center"><div style="font-size:1.4em;margin-bottom:.2rem">3</div><h4>Modelo</h4><p>Árbol · SVM<br>¿Supervisado?</p></div>
+    <div class="arr">→</div>
+    <div class="card" style="text-align:center"><div style="font-size:1.4em;margin-bottom:.2rem">4</div><h4>Entrenamiento</h4><p>Ajustar pesos<br>min(Loss)</p></div>
+    <div class="arr">→</div>
+    <div class="card" style="text-align:center"><div style="font-size:1.4em;margin-bottom:.2rem">5</div><h4>Evaluación</h4><p>Accuracy · F1<br>Precisión</p></div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.6rem">◀ Se itera varias veces — el ML es un proceso cíclico</p>
+</section>
+
+<!-- S7: ECOSISTEMA PYTHON -->
+<section>
+  <h2>El Ecosistema Python para ML</h2>
+  <div class="cols cols-3">
+    <div class="card"><h4>NumPy</h4><p>Arrays N-dimensionales. Base de casi todo ML en Python.</p><code style="font-size:.7em;color:#4ade80">import numpy as np</code></div>
+    <div class="card"><h4>Pandas</h4><p>DataFrames y Series. Maneja CSV, Excel, SQL.</p><code style="font-size:.7em;color:#4ade80">import pandas as pd</code></div>
+    <div class="card"><h4>Matplotlib</h4><p>Gráficos, histogramas, scatterplots.</p><code style="font-size:.7em;color:#4ade80">import matplotlib.pyplot as plt</code></div>
+    <div class="card" style="border-color:#3b82f6"><h4 style="color:#60a5fa">scikit-learn ⭐</h4><p>Algoritmos ML, validación, métricas y pipelines.</p><code style="font-size:.65em;color:#4ade80">from sklearn.tree import DecisionTreeClassifier</code></div>
+    <div class="card"><h4>TensorFlow</h4><p>Deep Learning de Google. Redes neuronales y GPUs.</p><code style="font-size:.7em;color:#4ade80">import tensorflow as tf</code></div>
+  </div>
+</section>
+
+<!-- S8: SEPARADOR - ÁRBOLES -->
+<section data-background-gradient="linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)">
+  <div class="eyebrow">PARTE 2</div>
+  <h1 style="font-size:1.9em">Árboles de<br><span style="color:#60a5fa">Decisión</span></h1>
+  <p style="font-size:.6em; color:#94a3b8; margin-top:.8rem">Estructura · Terminología · Ejemplo cotidiano · Matemática</p>
+</section>
+
+<!-- S9: VENTAJAS Y DESVENTAJAS -->
+<section>
+  <h2>¿Cuándo Usar un Árbol de Decisión?</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.6rem">Algoritmo supervisado que imita la toma de decisiones humana mediante preguntas jerárquicas.</p>
+  <div class="cols cols-2">
+    <div class="card">
+      <h4 class="pro">✔ Ventajas</h4>
+      <ul class="pc">
+        <li class="pro">✓ Fácil de interpretar y visualizar</li>
+        <li class="pro">✓ No requiere normalización</li>
+        <li class="pro">✓ Maneja variables numéricas y categóricas</li>
+        <li class="pro">✓ Rápido para entrenar y predecir</li>
+        <li class="pro">✓ Muestra importancia de variables</li>
+        <li class="pro">✓ Base de Random Forest y Gradient Boosting</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="con">✗ Desventajas</h4>
+      <ul class="pc">
+        <li class="con">✗ Propenso al sobreajuste (overfitting)</li>
+        <li class="con">✗ Inestable: pequeños cambios = árbol diferente</li>
+        <li class="con">✗ No óptimo para datos muy continuos</li>
+        <li class="con">✗ Sesgado hacia clases con más ejemplos</li>
+      </ul>
+      <div style="background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.3); border-radius:6px; padding:.4rem .7rem; margin-top:.6rem; font-size:.6em; color:#fbbf24">
+        💡 Solución: controlar <code>max_depth</code> o usar Random Forest
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S10: ESTRUCTURA DEL ÁRBOL -->
+<section>
+  <h2>Estructura de un Árbol de Decisión</h2>
+  <div style="text-align:center; font-size:.85em; margin-top:.5rem">
+    <div style="margin-bottom:.8rem"><span class="nbox">Nodo Raíz — <strong>¿Edad > 30?</strong></span></div>
+    <div class="cols cols-2" style="gap:2rem; max-width:560px; margin:0 auto">
+      <div>
+        <div style="font-size:.65em; color:#60a5fa; margin-bottom:.4rem">No ≤ 30</div>
+        <div style="margin-bottom:.7rem"><span class="nbox">Nodo Interno<br><strong>¿Ingresos > 50k?</strong></span></div>
+        <div class="cols cols-2" style="gap:.4rem">
+          <span class="nbox no" style="font-size:.6em">RECHAZADO</span>
+          <span class="nbox yes" style="font-size:.6em">APROBADO</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.65em; color:#60a5fa; margin-bottom:.4rem">Sí > 30</div>
+        <div style="margin-bottom:.7rem"><span class="nbox">Nodo Interno<br><strong>¿Tiene empleo?</strong></span></div>
+        <div class="cols cols-2" style="gap:.4rem">
+          <span class="nbox yes" style="font-size:.6em">APROBADO</span>
+          <span class="nbox no" style="font-size:.6em">RECHAZADO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.7rem">Hojas (decisión final) · Nodo raíz (primera pregunta) · Nodos internos (preguntas intermedias)</p>
+</section>
+
+<!-- S11: TERMINOLOGÍA -->
+<section>
+  <h2>Terminología Clave</h2>
+  <div class="cols cols-2" style="gap:.4rem; font-size:.9em">
+    <div class="step"><strong>Profundidad (depth)</strong> — Niveles del árbol. Mayor depth = más complejo. <code>max_depth=3</code></div>
+    <div class="step"><strong>Poda (pruning)</strong> — Elimina ramas de poco valor predictivo. Reduce overfitting.</div>
+    <div class="step"><strong>Overfitting</strong> — Memoriza el entrenamiento, falla con datos nuevos. Train: 99% vs Test: 62%.</div>
+    <div class="step"><strong>Criterio de división</strong> — Mide cuál pregunta es mejor. <code>criterion='gini'</code> o <code>'entropy'</code></div>
+    <div class="step"><strong>Ganancia de Información</strong> — Cuánto reduce la impureza cada división. El árbol la maximiza.</div>
+    <div class="step"><strong>Muestra mínima</strong> — Mínimo de ejemplos para dividir un nodo. <code>min_samples_split=5</code></div>
+  </div>
+</section>
+
+<!-- S12: EJEMPLO PARAGUAS -->
+<section>
+  <h2>Ejemplo: ¿Debo Llevar Paraguas?</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.5rem">Tomamos decisiones con árboles mentales sin darnos cuenta.</p>
+  <div style="text-align:center; font-size:.8em">
+    <div style="margin-bottom:.7rem"><span class="nbox">¿Está nublado hoy?</span></div>
+    <div class="cols cols-2" style="gap:2rem; max-width:500px; margin:0 auto">
+      <div>
+        <div style="font-size:.65em; color:#f87171; margin-bottom:.35rem">No</div>
+        <div style="margin-bottom:.6rem"><span class="nbox">¿Dice lluvia el pronóstico?</span></div>
+        <div class="cols cols-2" style="gap:.4rem">
+          <span class="nbox yes" style="font-size:.6em">No, disfruta ☀️</span>
+          <span class="nbox" style="font-size:.6em">Lleva paraguas 🌂</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.65em; color:#4ade80; margin-bottom:.35rem">Sí</div>
+        <span class="nbox yes" style="font-size:.65em">¡SÍ lleva paraguas! 🌂</span>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.7rem">El árbol aprendió estas reglas de miles de días pasados con su resultado (lluvia o no).</p>
+</section>
+
+<!-- S13: GINI -->
+<section>
+  <h2>Índice de Impureza Gini</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.4rem">Mide la probabilidad de clasificar incorrectamente un ejemplo al azar. <span style="color:#4ade80">Gini = 0 → puro</span> · <span style="color:#f87171">Gini = 0.5 → máxima mezcla</span></p>
+  <div style="text-align:center; margin:.5rem 0">
+    <span class="formula" style="font-size:1.05em">Gini = 1 − Σ (p<sub>i</sub>)²</span>
+  </div>
+  <p style="font-size:.52em; color:#64748b; text-align:center; margin-bottom:.5rem">p<sub>i</sub> = proporción de la clase i en el nodo</p>
+  <div>
+    <div class="step"><strong>1.</strong> Nodo con 10 ejemplos: 7 Aprobados · 3 Rechazados</div>
+    <div class="step"><strong>2.</strong> p<sub>A</sub> = 7/10 = 0.70 &nbsp;&nbsp;&nbsp; p<sub>B</sub> = 3/10 = 0.30</div>
+    <div class="step"><strong>3.</strong> Gini = 1 − (0.70)² − (0.30)² = 1 − 0.49 − 0.09 = <strong style="color:#60a5fa">0.42</strong></div>
+    <div class="result">Gini = 0.42 → impureza media. El árbol buscará una pregunta para dividir mejor este nodo.</div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.4rem">★ scikit-learn usa Gini por defecto: <code>criterion='gini'</code></p>
+</section>
+
+<!-- S14: GANANCIA DE INFORMACIÓN -->
+<section>
+  <h2>Ganancia de Información</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.4rem">El árbol elige la pregunta que más reduce la impureza. Eso se mide con IG.</p>
+  <div style="text-align:center; margin:.4rem 0">
+    <span class="formula">IG = Gini(padre) − Σ [(N<sub>k</sub>/N) × Gini(hijo k)]</span>
+  </div>
+  <p style="font-size:.52em; color:#64748b; text-align:center; margin-bottom:.45rem">Ejemplo: 10 ejemplos (6 Sí + 4 No). División por "Nublado = Sí/No":</p>
+  <div>
+    <div class="step"><strong>Padre</strong> — Gini = 1 − (0.6)² − (0.4)² = <strong style="color:#60a5fa">0.48</strong></div>
+    <div class="step"><strong>Hijo Izq.</strong> — 4 ej. (4 Sí + 0 No) → Gini = <strong style="color:#4ade80">0.00</strong> ← ¡Puro!</div>
+    <div class="step"><strong>Hijo Der.</strong> — 6 ej. (2 Sí + 4 No) → Gini = <strong style="color:#fbbf24">0.44</strong></div>
+    <div class="result">IG = 0.48 − [(4/10)×0.00 + (6/10)×0.44] = 0.48 − 0.264 = <strong>0.216</strong></div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.4rem">El árbol evalúa TODAS las posibles preguntas y elige la de MAYOR IG.</p>
+</section>
+
+<!-- S15: ENTROPÍA -->
+<section>
+  <h2>Entropía de Shannon</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.4rem">Mide el desorden o incertidumbre de un nodo. <span style="color:#4ade80">Entropía = 0 → puro</span> · <span style="color:#f87171">Entropía = 1 → máxima mezcla</span></p>
+  <div style="text-align:center; margin:.4rem 0">
+    <span class="formula">H = − Σ p<sub>i</sub> × log<sub>2</sub>(p<sub>i</sub>)</span>
+  </div>
+  <p style="font-size:.52em; color:#64748b; text-align:center; margin-bottom:.45rem">Mismo nodo: 7 Aprobados + 3 Rechazados de 10</p>
+  <div>
+    <div class="step"><strong>1.</strong> p<sub>A</sub>=0.70 → 0.70 × log<sub>2</sub>(0.70) = 0.70 × (−0.515) = −0.3605</div>
+    <div class="step"><strong>2.</strong> p<sub>B</sub>=0.30 → 0.30 × log<sub>2</sub>(0.30) = 0.30 × (−1.737) = −0.5211</div>
+    <div class="step"><strong>3.</strong> H = −(−0.3605 + (−0.5211)) = −(−0.8816) = <strong style="color:#a78bfa">0.8816</strong></div>
+    <div class="result">Alta incertidumbre. El nodo necesita ser dividido para reducir el desorden.</div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.4rem">Python: <code>import math → math.log2(0.7) = −0.515</code></p>
+</section>
+
+<!-- S16: GINI VS ENTROPÍA -->
+<section>
+  <h2>Gini vs Entropía: Comparativa</h2>
+  <table>
+    <thead><tr><th>Distribución del nodo</th><th>Gini</th><th>Entropía</th><th>Interpretación</th></tr></thead>
+    <tbody>
+      <tr><td>100% clase A</td><td style="color:#4ade80">0.000</td><td style="color:#4ade80">0.000</td><td>Nodo perfectamente puro</td></tr>
+      <tr><td>90% / 10%</td><td>0.180</td><td>0.469</td><td>Muy puro</td></tr>
+      <tr><td>70% / 30%</td><td>0.420</td><td>0.881</td><td>Mezcla moderada</td></tr>
+      <tr><td>60% / 40%</td><td>0.480</td><td>0.971</td><td>Mezcla alta</td></tr>
+      <tr><td>50% / 50%</td><td style="color:#f87171">0.500</td><td style="color:#f87171">1.000</td><td>Máxima impureza</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-3" style="font-size:.85em; margin-top:.6rem; gap:.4rem">
+    <div class="card"><h4>⚡ Velocidad</h4><p>Gini es más rápido (sin logaritmo). Preferido en datasets grandes.</p></div>
+    <div class="card"><h4>📊 Diferencia real</h4><p>Mínima en la mayoría de problemas. Gini tiende a aislar la clase mayoritaria.</p></div>
+    <div class="card" style="border-color:#3b82f6"><h4 style="color:#60a5fa">✅ Práctica</h4><p>Usa <code>criterion='gini'</code> por defecto. Cambia solo si lo necesitas.</p></div>
+  </div>
+</section>
+
+<!-- S17: SEPARADOR - EJERCICIOS -->
+<section data-background-gradient="linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)">
+  <div class="eyebrow">PARTE 3</div>
+  <h1 style="font-size:1.9em">Ejercicios y<br><span style="color:#60a5fa">Práctica Python</span></h1>
+</section>
+
+<!-- S18: RECORDATORIO FÓRMULAS -->
+<section>
+  <h2>Recordatorio de Fórmulas</h2>
+  <div class="cols cols-2" style="gap:1rem">
+    <div class="card" style="border-color:#3b82f6">
+      <h4>Gini</h4>
+      <div class="formula" style="display:block; text-align:center; margin:.4rem 0">Gini = 1 − Σ (p<sub>i</sub>)²</div>
+      <p>Rango: 0 (puro) → 0.5 (máximo 2 clases)</p>
+      <p style="margin-top:.3rem">Python: <code>criterion='gini'</code> ← por defecto</p>
+    </div>
+    <div class="card" style="border-color:#8b5cf6">
+      <h4 style="color:#a78bfa">Entropía</h4>
+      <div class="formula" style="display:block; text-align:center; margin:.4rem 0; color:#c4b5fd">H = − Σ p<sub>i</sub> × log<sub>2</sub>(p<sub>i</sub>)</div>
+      <p>Rango: 0 (puro) → 1.0 (máximo 2 clases)</p>
+      <p style="margin-top:.3rem">Python: <code>criterion='entropy'</code></p>
+    </div>
+  </div>
+</section>
+
+<!-- S19: EJERCICIO 1 - GINI -->
+<section>
+  <h2>Ejercicio 1 · Cálculo de Gini</h2>
+  <p style="font-size:.65em; color:#fbbf24; margin-bottom:.5rem">Un banco analiza 20 solicitudes → 14 Aprobadas y 6 Rechazadas. Calcula el índice de Gini.</p>
+  <div>
+    <div class="step"><strong>Paso 1</strong> — Identificar: Aprobado=14 · Rechazado=6 · Total=20</div>
+    <div class="step"><strong>Paso 2</strong> — Proporciones: p<sub>A</sub> = 14/20 = <strong>0.70</strong> &nbsp;&nbsp; p<sub>B</sub> = 6/20 = <strong>0.30</strong></div>
+    <div class="step"><strong>Paso 3</strong> — Cuadrados: (0.70)² = 0.49 &nbsp;&nbsp; (0.30)² = 0.09</div>
+    <div class="step"><strong>Paso 4</strong> — Gini = 1 − 0.49 − 0.09 = 1 − 0.58 = <strong style="color:#60a5fa">0.42</strong></div>
+    <div class="result">Gini = 0.42 · Impureza media. Clase A domina pero el nodo no es puro. ¡El árbol intentará dividirlo!</div>
+  </div>
+  <p style="font-size:.52em; color:#64748b; text-align:center; margin-top:.4rem">✏️ Práctica: ¿Cuánto da Gini con 15 Aprobados y 5 Rechazados?</p>
+</section>
+
+<!-- S20: EJERCICIO 2 - ENTROPÍA -->
+<section>
+  <h2>Ejercicio 2 · Cálculo de Entropía</h2>
+  <p style="font-size:.65em; color:#fbbf24; margin-bottom:.5rem">Mismo nodo del banco — 14 Aprobadas y 6 Rechazadas de 20. Calcula la Entropía.</p>
+  <div>
+    <div class="step"><strong>Paso 1</strong> — p<sub>A</sub> = 0.70 &nbsp;&nbsp; p<sub>B</sub> = 0.30</div>
+    <div class="step"><strong>Paso 2</strong> — log<sub>2</sub>(0.70) = −0.5146 &nbsp;&nbsp; log<sub>2</sub>(0.30) = −1.7370</div>
+    <div class="step"><strong>Paso 3</strong> — 0.70 × (−0.5146) = −0.3602 &nbsp;·&nbsp; 0.30 × (−1.7370) = −0.5211</div>
+    <div class="step"><strong>Paso 4</strong> — H = −(−0.3602 + (−0.5211)) = −(−0.8813) = <strong style="color:#a78bfa">0.8813</strong></div>
+    <div class="result">Entropía ≈ 0.881 &nbsp;|&nbsp; Gini = 0.42 vs Entropía = 0.88 — misma conclusión: impureza media.</div>
+  </div>
+</section>
+
+<!-- S21: EJERCICIO 3 - ÁRBOL DE TENIS -->
+<section>
+  <h2>Ejercicio 3 · ¿Jugar Tenis Hoy?</h2>
+  <div class="cols cols-2" style="gap:1.5rem">
+    <table style="font-size:.62em">
+      <thead><tr><th>Clima</th><th>Viento</th><th>Humedad</th><th>¿Jugar?</th></tr></thead>
+      <tbody>
+        <tr><td>Soleado</td><td>Fuerte</td><td>Alta</td><td style="color:#f87171">NO</td></tr>
+        <tr><td>Soleado</td><td>Débil</td><td>Alta</td><td style="color:#f87171">NO</td></tr>
+        <tr><td>Nublado</td><td>Fuerte</td><td>Alta</td><td style="color:#4ade80">SÍ</td></tr>
+        <tr><td>Lluvia</td><td>Débil</td><td>Alta</td><td style="color:#4ade80">SÍ</td></tr>
+        <tr><td>Lluvia</td><td>Débil</td><td>Normal</td><td style="color:#4ade80">SÍ</td></tr>
+        <tr><td>Nublado</td><td>Fuerte</td><td>Normal</td><td style="color:#4ade80">SÍ</td></tr>
+        <tr><td>Soleado</td><td>Débil</td><td>Normal</td><td style="color:#4ade80">SÍ</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:.9em">
+      <p style="color:#fbbf24; margin-bottom:.4rem">Preguntas guía:</p>
+      <div class="step">1. ¿Qué atributo tiene mayor IG como raíz?</div>
+      <div class="step">2. Calcula Gini para "Clima" como primera división.</div>
+      <div class="step">3. ¿Qué pasa cuando Clima = Nublado?</div>
+      <div class="step">4. ¿Qué pregunta harías para Clima = Soleado?</div>
+      <div class="result" style="font-size:.85em">Raíz=Clima · Nublado→siempre SÍ · Soleado→preguntar Humedad</div>
+    </div>
+  </div>
+</section>
+
+<!-- S22: TAREAS -->
+<section>
+  <h2>Tareas · Semana 1</h2>
+  <div>
+    <div class="task-row" style="background:rgba(124,58,237,.1); border:1px solid rgba(124,58,237,.3)">
+      <span class="tbadge" style="background:#7c3aed; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T1 · MATEMÁTICA</span>
+      <div>
+        <strong style="font-size:.68em">Calcular Gini y Entropía</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Nodo: 18 Clase A y 12 Clase B. Calcula Gini y Entropía mostrando cada paso.</p>
+      </div>
+    </div>
+    <div class="task-row" style="background:rgba(5,150,105,.1); border:1px solid rgba(5,150,105,.3)">
+      <span class="tbadge" style="background:#059669; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T2 · PYTHON</span>
+      <div>
+        <strong style="font-size:.68em">Experimentar con max_depth y criterion</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Prueba max_depth de 1 a 5. Prueba criterion='gini' y 'entropy'. Registra el accuracy en cada caso.</p>
+      </div>
+    </div>
+    <div class="task-row" style="background:rgba(217,119,6,.1); border:1px solid rgba(217,119,6,.3)">
+      <span class="tbadge" style="background:#d97706; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T3 · INVESTIGACIÓN</span>
+      <div>
+        <strong style="font-size:.68em">Árbol de Decisión en la Industria</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Busca un caso real (medicina, finanzas o marketing). Media página: problema, datos, variables y resultados.</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.6rem">✓ Entrega: próximo Lunes · Formato: PDF · Próxima semana: Algoritmo CART · Random Forest</p>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    progress: true,
+    controls: true,
+    transition: 'slide',
+    backgroundTransition: 'fade',
+    plugins: [RevealHighlight]
+  });
+</script>
+</body>
+</html>

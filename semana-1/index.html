@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 1 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+
+    <a href="index.html" class="week-link active">
+      <span class="week-num">1</span>
+      <span class="week-link-text">Intro ML y Árboles</span>
+    </a>
+    <a href="../semana-2/index.html" class="week-link">
+      <span class="week-num">2</span>
+      <span class="week-link-text">Matemáticas CART</span>
+    </a>
+    <span class="week-link locked"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<!-- ── MAIN ────────────────────────────────────────────── -->
+<main class="main-content">
+
+  <header class="page-header">
+    <div class="eyebrow">Semana 1</div>
+    <h1>Introducción al Machine Learning<br>y Árboles de Decisión</h1>
+    <div class="topic-tags">
+      <span class="tag">Aprendizaje automático</span>
+      <span class="tag">Árboles de decisión</span>
+      <span class="tag">Gini</span>
+      <span class="tag">Entropía</span>
+      <span class="tag">Python · scikit-learn</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 1</a>
+  </nav>
+
+  <div class="content-body">
+
+    <!-- ── CLASE LUNES ──────────────────────────────────── -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 1</h2>
+      </div>
+      <div class="card-body">
+
+        <!-- Slides embebidas -->
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <!-- Código de la clase -->
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <!-- Bloque 1: Entrenar árbol -->
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code class="language-python"># ── 1. Importar herramientas ──────────────────────────────
+from sklearn.datasets import load_iris
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+
+# ── 2. Cargar datos ───────────────────────────────────────
+data = load_iris()
+X, y = data.data, data.target
+print('Clases:', data.target_names)   # ['setosa' 'versicolor' 'virginica']
+print('Forma del dataset:', X.shape)  # (150, 4)
+
+# ── 3. Dividir: 70% entrenamiento / 30% prueba ───────────
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.30, random_state=42)
+
+# ── 4. Crear modelo y entrenar ────────────────────────────
+model = DecisionTreeClassifier(max_depth=3, criterion='gini')
+model.fit(X_train, y_train)           # Aquí ocurre el aprendizaje
+
+# ── 5. Evaluar desempeño ──────────────────────────────────
+y_pred = model.predict(X_test)
+print('Accuracy:', accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))</code></pre>
+        </div>
+
+        <!-- Bloque 2: Visualizar árbol -->
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code class="language-python"># ── Visualización del árbol ───────────────────────────────
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(14, 6))
+plot_tree(
+    model,
+    feature_names=data.feature_names,
+    class_names=data.target_names,
+    filled=True,    # Colores por clase
+    rounded=True,
+    impurity=True,  # Muestra Gini en cada nodo
+    fontsize=10
+)
+plt.title('Árbol de Decisión — Dataset Iris')
+plt.savefig('arbol_iris.png', dpi=150)
+plt.show()
+
+# ── Importancia de variables ──────────────────────────────
+import pandas as pd
+importancias = pd.Series(
+    model.feature_importances_,
+    index=data.feature_names
+).sort_values(ascending=False)
+print(importancias)</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── CLASE VIERNES ────────────────────────────────── -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+
+        <div class="colab-block">
+          <a href="#" class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Google Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 1 — Clasificación con Árbol de Decisión (Dataset Iris)</h4>
+            <p>Entrena tu primer árbol, experimenta con max_depth, visualiza el árbol y analiza qué variables son más importantes.</p>
+          </div>
+        </div>
+
+        <div class="code-section-title">🧩 Punto de partida — completa las secciones marcadas con ✏️</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code class="language-python"># PRÁCTICA 1 — Árbol de Decisión con Dataset Iris
+from sklearn.datasets import load_iris
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+import pandas as pd
+
+data = load_iris()
+X, y = data.data, data.target
+
+# ✏️ PASO 1: Divide X e y en entrenamiento y prueba (30% prueba)
+# X_train, X_test, y_train, y_test = ...
+
+# ✏️ PASO 2: Entrena un DecisionTreeClassifier con max_depth=3
+# model = ...
+# model.fit(...)
+
+# ✏️ PASO 3: Calcula el accuracy en entrenamiento y prueba
+# print('Train accuracy:', ...)
+# print('Test  accuracy:', ...)
+
+# ✏️ PASO 4: Visualiza el árbol con plot_tree
+# plt.figure(figsize=(14,6))
+# plot_tree(...)
+# plt.show()
+
+# ── BONUS: Compara diferentes valores de max_depth ───────
+resultados = []
+for depth in [1, 2, 3, 5, None]:
+    m = DecisionTreeClassifier(max_depth=depth, random_state=42)
+    m.fit(X_train, y_train)
+    resultados.append({
+        'max_depth' : depth,
+        'train_acc' : round(accuracy_score(y_train, m.predict(X_train)), 3),
+        'test_acc'  : round(accuracy_score(y_test,  m.predict(X_test)),  3)
+    })
+print(pd.DataFrame(resultados))</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── FÓRMULAS DE REFERENCIA ───────────────────────── -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📐</span>
+        <h2>Fórmulas de Referencia</h2>
+      </div>
+      <div class="card-body">
+
+        <div class="code-section-title">Índice de Gini</div>
+        <div class="sourceCode" data-lang="fórmula">
+          <button class="btn-copy">Copiar</button>
+          <pre><code class="language-python"># Gini = 1 - Σ(pᵢ)²
+# donde pᵢ = proporción de la clase i en el nodo
+#
+# Ejemplo: nodo con 7 Aprobados y 3 Rechazados (total = 10)
+p_A = 7 / 10   # 0.70
+p_B = 3 / 10   # 0.30
+gini = 1 - (p_A**2 + p_B**2)
+print(f'Gini = {gini:.4f}')   # Gini = 0.4200
+# Gini = 0  → nodo puro   |   Gini = 0.5 → máxima mezcla (2 clases)</code></pre>
+        </div>
+
+        <div class="code-section-title">Entropía de Shannon</div>
+        <div class="sourceCode" data-lang="fórmula">
+          <button class="btn-copy">Copiar</button>
+          <pre><code class="language-python"># H = -Σ pᵢ × log₂(pᵢ)
+# donde pᵢ = proporción de la clase i en el nodo
+#
+# Ejemplo: mismo nodo — 7 Aprobados y 3 Rechazados
+import math
+p_A = 7 / 10   # 0.70
+p_B = 3 / 10   # 0.30
+H = -(p_A * math.log2(p_A) + p_B * math.log2(p_B))
+print(f'Entropía = {H:.4f}')  # Entropía = 0.8816
+# H = 0  → nodo puro   |   H = 1.0 → máxima mezcla (2 clases)</code></pre>
+        </div>
+
+        <div class="code-section-title">Ganancia de Información</div>
+        <div class="sourceCode" data-lang="fórmula">
+          <button class="btn-copy">Copiar</button>
+          <pre><code class="language-python"># IG = Gini(padre) - Σ[(Nₖ/N) × Gini(hijoₖ)]
+#
+# Ejemplo: 10 ejemplos en el padre (6 Sí + 4 No)
+# División por "¿Nublado?" → Izq: 4 ej. (4 Sí) | Der: 6 ej. (2 Sí + 4 No)
+
+def gini(pos, total):
+    if total == 0: return 0
+    p = pos / total
+    return 1 - p**2 - (1 - p)**2
+
+gini_padre    = gini(6, 10)               # 0.480
+gini_izq      = gini(4, 4)               # 0.000  ← nodo puro
+gini_der      = gini(2, 6)               # 0.444
+
+ig = gini_padre - ((4/10) * gini_izq + (6/10) * gini_der)
+print(f'IG = {ig:.4f}')                   # IG = 0.2160</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── RECURSOS ──────────────────────────────────────── -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big data, machine learning y data science en Python</h4>
+              <p>Bibliografía principal. Cubre fundamentos matemáticos, generalización, sobreajuste y validación de modelos.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Complementario. Análisis de datos mediante ML usando librerías de aprendizaje automatizado.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Documentación DecisionTreeClassifier</h4>
+              <p>Referencia de parámetros: max_depth, criterion, min_samples_split, feature_importances_.</p>
+              <a href="https://scikit-learn.org/stable/modules/tree.html" target="_blank" class="resource-link">→ scikit-learn.org/stable/modules/tree.html</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TAREAS ─────────────────────────────────────────── -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próximo Lunes</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-purple">T1 · MATEMÁTICA</span>
+            <div class="task-content">
+              <h4>Calcular Gini y Entropía paso a paso</h4>
+              <p>Nodo: 18 ejemplos de Clase A y 12 de Clase B. Calcula el índice Gini y la Entropía mostrando todo el procedimiento.</p>
+              <div class="task-due">📅 Lunes próximo · Formato: PDF</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-green">T2 · PYTHON</span>
+            <div class="task-content">
+              <h4>Experimentar con max_depth y criterion</h4>
+              <p>Cambia max_depth a 1, 2, 3, 4 y 5. Prueba criterion='gini' y 'entropy'. Registra el accuracy de train y test en cada caso y explica la tendencia.</p>
+              <div class="task-due">📅 Lunes próximo · Formato: PDF o Jupyter Notebook</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · INVESTIGACIÓN</span>
+            <div class="task-content">
+              <h4>Árbol de Decisión en la Industria</h4>
+              <p>Busca un caso real en medicina, finanzas o marketing. Media página con: el problema, los datos usados, las variables del árbol y los resultados obtenidos.</p>
+              <div class="task-due">📅 Lunes próximo · Formato: PDF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /content-body -->
+</main>
+
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

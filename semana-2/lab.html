@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 2 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link">
+      <span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span>
+    </a>
+    <a href="index.html" class="week-link active">
+      <span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span>
+    </a>
+    <span class="week-link locked"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+
+  <header class="page-header">
+    <div class="eyebrow">Semana 2</div>
+    <h1>Práctica 2 — Parámetros del Árbol con Breast Cancer</h1>
+    <div class="topic-tags">
+      <span class="tag">Dataset Breast Cancer</span>
+      <span class="tag">max_depth</span>
+      <span class="tag">min_samples_split</span>
+      <span class="tag">min_samples_leaf</span>
+      <span class="tag">Ganancia de Información</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 2</a>
+  </nav>
+
+  <div class="content-body">
+
+    <!-- COLAB -->
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana2_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en tu Drive antes de empezar: <strong>Archivo → Guardar una copia en Drive</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBJETIVOS -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Explorar el dataset Breast Cancer e identificar sus características principales.</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Investigar el efecto de <code>min_samples_split</code> y <code>min_samples_leaf</code> sobre el overfitting.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Construir una búsqueda de parámetros con un bucle anidado y encontrar la combinación óptima.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Calcular la Ganancia de Información manualmente para la primera división del árbol.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Argumentar qué combinación de parámetros es la mejor y por qué.</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTEXTO -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🏥</span>
+        <h2>El Dataset: Breast Cancer Wisconsin</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>Breast Cancer Wisconsin</strong> contiene características de imágenes digitalizadas de una aspiración con aguja fina (FNA) de una masa mamaria. El objetivo es clasificar si el tumor es <strong>maligno</strong> (canceroso) o <strong>benigno</strong> (no canceroso).
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">569 muestras</div>
+            <div style="color:var(--text-muted)">212 malignas · 357 benignas</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">30 variables</div>
+            <div style="color:var(--text-muted)">Radio, textura, perímetro, área, suavidad…</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">2 clases</div>
+            <div style="color:var(--text-muted)">0 = Maligno · 1 = Benigno</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTE 0: SETUP -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">⚙️</span>
+        <h2>Parte 0 — Setup</h2>
+        <span class="card-meta">Solo ejecutar</span>
+      </div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.datasets        import load_breast_cancer
+from sklearn.tree            import DecisionTreeClassifier, plot_tree, export_text
+from sklearn.model_selection import train_test_split
+from sklearn.metrics         import accuracy_score, classification_report
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTE 1: EXPLORACIÓN -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🔍</span>
+        <h2>Parte 1 — Exploración del Dataset</h2>
+        <span class="card-meta">~10 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>data = load_breast_cancer()
+X = pd.DataFrame(data.data, columns=data.feature_names)
+y = pd.Series(data.target, name='diagnostico')
+print(data.DESCR[:500])</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: estructura del dataset</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Imprime: forma del dataset, nombres de clases y distribución de clases
+# ¿Está balanceado el dataset? ¿Hay más tumores benignos o malignos?
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.3 — Tu código: comparar las 5 variables con mayor diferencia</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Agrega la columna 'diagnostico' al DataFrame (usa data.target_names[y])
+# Calcula la media por diagnóstico
+# Calcula la diferencia absoluta entre las medias de Maligno y Benigno
+# Muestra las 5 variables con MAYOR diferencia entre clases
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Antes de continuar:</strong></p>
+          <p>1. ¿Cuáles son las 5 variables con mayor diferencia entre maligno y benigno?<br>
+             2. ¿Esperas que esas variables aparezcan cerca del nodo raíz del árbol? ¿Por qué?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PARTE 2: MODELO BASE -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🌳</span>
+        <h2>Parte 2 — Modelo Base y Evaluación</h2>
+        <span class="card-meta">~12 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: dividir y entrenar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Divide data.data y data.target: 70% entrenamiento, 30% prueba, random_state=42
+# Entrena un DecisionTreeClassifier con max_depth=5, random_state=42
+# Calcula e imprime accuracy de entrenamiento y prueba
+
+X_train, X_test, y_train, y_test = ___________
+model_base = ___________
+___________
+
+# ___ imprimir accuracies ___</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: reporte completo</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Imprime el classification_report con target_names=data.target_names
+# ¿Qué clase tiene mayor Recall? ¿Por qué es importante el Recall en diagnóstico médico?
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre el Recall en diagnóstico médico:</strong></p>
+          <p>En un sistema de detección de cáncer, ¿es más grave tener un <em>Falso Negativo</em> (decir "benigno" cuando es maligno) o un <em>Falso Positivo</em> (decir "maligno" cuando es benigno)? ¿Qué métrica debería priorizarse y por qué?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PARTE 3: EXPLORACIÓN DE PARÁMETROS -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📊</span>
+        <h2>Parte 3 — Exploración de Parámetros</h2>
+        <span class="card-meta">~18 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Tu código: efecto de max_depth</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Entrena árboles con max_depth en [1, 2, 3, 4, 5, 7, 10, None]
+# Para cada uno, guarda train_acc y test_acc
+# Imprime la tabla y grafica train vs test accuracy
+# Marca con línea vertical el punto donde empieza el overfitting
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.2 — Tu código: búsqueda con min_samples_split</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Fija max_depth=5. Entrena árboles variando min_samples_split en [2, 5, 10, 20, 50]
+# Imprime tabla con train_acc y test_acc para cada valor
+# ¿Aumentar min_samples_split reduce el overfitting? ¿Por qué?
+
+valores_split = [2, 5, 10, 20, 50]
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.3 — Tu código: búsqueda con min_samples_leaf</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Fija max_depth=5. Entrena árboles variando min_samples_leaf en [1, 2, 5, 10, 20]
+# Imprime tabla con train_acc y test_acc para cada valor
+
+valores_leaf = [1, 2, 5, 10, 20]
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Comparando los tres parámetros:</strong></p>
+          <p>1. ¿Qué parámetro tiene mayor impacto en reducir el overfitting en este dataset?<br>
+             2. ¿Hay un punto donde aumentar el parámetro empieza a empeorar el test accuracy (underfitting)?<br>
+             3. Con los datos de las tablas, ¿qué combinación de parámetros elegiría para este problema médico?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PARTE 4: GRID SEARCH MANUAL -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🔎</span>
+        <h2>Parte 4 — Búsqueda Óptima con Bucle Anidado</h2>
+        <span class="card-meta">~12 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          Un Grid Search manual evalúa todas las combinaciones posibles de parámetros. Vas a implementarlo con dos bucles anidados.
+        </p>
+
+        <div class="step-header">Celda 4.1 — Tu código: grid search de max_depth × min_samples_leaf</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Implementa un doble bucle que pruebe TODAS las combinaciones de:
+#   max_depth       en [2, 3, 4, 5, 6]
+#   min_samples_leaf en [1, 2, 5, 10]
+# Para cada combinación, guarda los resultados en una lista de diccionarios
+# Al final, imprime el DataFrame ordenado por test_acc descendente
+# Imprime también cuál fue la MEJOR combinación
+
+max_depths   = [2, 3, 4, 5, 6]
+min_leaves   = [1, 2, 5, 10]
+resultados   = []
+
+for depth in max_depths:
+    for leaf in min_leaves:
+        # ___ tu código aquí ___
+        pass
+
+df_grid = pd.DataFrame(resultados)
+# ___ ordenar e imprimir ___</code></pre>
+        </div>
+
+        <div class="step-header">Celda 4.2 — Tu código: heatmap de resultados</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Crea un heatmap del test accuracy para visualizar todas las combinaciones
+# Usa pivot_table para reshapear el DataFrame
+# Visualiza con plt.imshow o sns.heatmap (si tienes seaborn)
+# Añade etiquetas de valor en cada celda
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis del grid search:</strong></p>
+          <p>1. ¿Cuál es la combinación óptima de max_depth y min_samples_leaf?<br>
+             2. ¿El heatmap muestra un patrón claro (por ejemplo, que profundidades mayores siempre son peores)?<br>
+             3. ¿Qué limitación tiene este enfoque de grid search manual comparado con sklearn's GridSearchCV?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PARTE 5: IG MANUAL -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧮</span>
+        <h2>Parte 5 — Calcular IG de la Primera División</h2>
+        <span class="card-meta">~8 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          El árbol eligió una variable y un umbral para la primera división. Vamos a calcular manualmente la Ganancia de Información de esa división.
+        </p>
+
+        <div class="step-header">Celda 5.1 — Dado: obtener información de la primera división</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># Entrenar modelo óptimo con los parámetros que encontraste
+model_opt = DecisionTreeClassifier(max_depth=4, min_samples_leaf=2, random_state=42)
+model_opt.fit(X_train, y_train)
+
+# Ver la primera división del árbol en texto
+print(export_text(model_opt, feature_names=list(data.feature_names))[:400])
+
+# Obtener información del nodo raíz (índice 0) y sus hijos (índice 1 e 2)
+tree = model_opt.tree_
+print(f'\nNodo raíz — variable usada: {data.feature_names[tree.feature[0]]}')
+print(f'Umbral de división: {tree.threshold[0]:.4f}')
+print(f'Gini nodo raíz: {tree.impurity[0]:.4f}')
+print(f'Gini hijo IZQ:  {tree.impurity[1]:.4f}  ({tree.n_node_samples[1]} ejemplos)')
+print(f'Gini hijo DER:  {tree.impurity[2]:.4f}  ({tree.n_node_samples[2]} ejemplos)')</code></pre>
+        </div>
+
+        <div class="step-header">Celda 5.2 — Tu código: calcular IG manualmente y verificar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Usando los valores de la celda anterior, calcula:
+# 1. El peso de cada hijo: N_hijo / N_total
+# 2. La impureza ponderada: suma de (peso × Gini_hijo)
+# 3. La Ganancia de Información: Gini_padre - impureza_ponderada
+
+# Después verifica el resultado: la IG que encontraste,
+# ¿tiene sentido que el árbol haya elegido esa variable para la raíz?
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Reflexión:</strong> La variable del nodo raíz, ¿aparece también en tu lista de las 5 variables con mayor diferencia entre clases (Parte 1)? ¿Por qué tiene sentido (o no) que sea la raíz?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BONUS -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🏆</span>
+        <h2>Desafío Bonus — Árbol Óptimo con Reporte Ejecutivo</h2>
+        <span class="card-meta">Opcional</span>
+      </div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 DESAFÍO
+# 1. Toma los mejores parámetros que encontraste en el Grid Search
+# 2. Entrena el modelo final con esos parámetros
+# 3. Visualiza el árbol con plot_tree
+# 4. Imprime un "reporte ejecutivo" en Markdown con:
+#    - Parámetros finales elegidos y justificación
+#    - Accuracy final en entrenamiento y prueba
+#    - Las 3 variables más importantes
+#    - Una recomendación: ¿usarías este modelo en producción?
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENTREGA -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">✅</span>
+        <h2>Entrega</h2>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas y preguntas respondidas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN</span>
+            <div class="task-content">
+              <h4>Párrafo de conclusiones en el notebook</h4>
+              <p>¿Cuál fue la combinación óptima de parámetros? ¿Cómo impacta cada parámetro en el overfitting? ¿Qué aprendiste sobre el balance underfitting-overfitting?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

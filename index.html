@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machine Learning 2026 — ISTER</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      color: white;
+      padding: 3.5rem 2.5rem 3rem;
+      text-align: center;
+    }
+    .hero .eyebrow {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #60a5fa;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.7;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-top: 1.5rem;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .num {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #60a5fa;
+    }
+    .hero-stat .label {
+      font-size: 0.72rem;
+      color: #64748b;
+      margin-top: 0.1rem;
+    }
+
+    .course-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .weeks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .week-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      text-decoration: none;
+      color: #1e293b;
+      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .week-card:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 4px 12px rgba(59,130,246,0.12);
+      transform: translateY(-2px);
+    }
+    .week-card.locked {
+      opacity: 0.45;
+      pointer-events: none;
+      background: #f8fafc;
+    }
+
+    .week-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .week-num-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: #eff6ff;
+      color: #3b82f6;
+      border: 1px solid #bfdbfe;
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+    }
+    .week-card.locked .week-num-badge {
+      background: #f1f5f9;
+      color: #94a3b8;
+      border-color: #e2e8f0;
+    }
+    .week-status { font-size: 0.8rem; }
+
+    .week-card h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .week-card .week-desc {
+      font-size: 0.75rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    .week-card .week-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.25rem;
+    }
+    .week-tag {
+      font-size: 0.65rem;
+      background: #f1f5f9;
+      color: #475569;
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .tools-section {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .tool-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-align: center;
+      color: #334155;
+    }
+  </style>
+</head>
+<body style="background:#f1f5f9; margin:0; font-family:'Inter','Segoe UI',sans-serif">
+
+  <div class="hero">
+    <div class="eyebrow">Instituto Superior Tecnológico Rumiñahui · 2026</div>
+    <h1>Machine Learning</h1>
+    <p>Aprende a construir, entrenar y evaluar modelos de aprendizaje automático con Python. Desde árboles de decisión hasta redes neuronales y visión por computadora.</p>
+    <div class="topic-tags" style="justify-content:center">
+      <span class="tag">Sistemas y Gestión de Data</span>
+      <span class="tag">Quinto Nivel</span>
+      <span class="tag">16 Semanas</span>
+      <span class="tag">Python · scikit-learn</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">16</div><div class="label">Semanas</div></div>
+      <div class="hero-stat"><div class="num">48h</div><div class="label">Clases</div></div>
+      <div class="hero-stat"><div class="num">32h</div><div class="label">Prácticas</div></div>
+      <div class="hero-stat"><div class="num">6</div><div class="label">Algoritmos</div></div>
+    </div>
+  </div>
+
+  <div class="course-body">
+
+    <div class="section-title">Contenido del curso</div>
+    <div class="weeks-grid">
+
+      <a href="semana-1/index.html" class="week-card">
+        <div class="week-card-top">
+          <span class="week-num-badge">Semana 1</span>
+          <span class="week-status">✅</span>
+        </div>
+        <h3>Introducción al ML y Árboles de Decisión</h3>
+        <p class="week-desc">Qué es Machine Learning, tipos de aprendizaje y fundamentos del árbol de decisión con Gini y Entropía.</p>
+        <div class="week-tags">
+          <span class="week-tag">Árbol de decisión</span>
+          <span class="week-tag">Gini</span>
+          <span class="week-tag">Entropía</span>
+        </div>
+      </a>
+
+      <a href="semana-2/index.html" class="week-card">
+        <div class="week-card-top">
+          <span class="week-num-badge">Semana 2</span>
+          <span class="week-status">✅</span>
+        </div>
+        <h3>Construcción del Árbol Paso a Paso</h3>
+        <p class="week-desc">Algoritmo CART, Ganancia de Información, parámetros del árbol y overfitting vs underfitting.</p>
+        <div class="week-tags">
+          <span class="week-tag">CART</span>
+          <span class="week-tag">Ganancia de Información</span>
+          <span class="week-tag">Overfitting</span>
+        </div>
+      </a>
+
+      <a href="semana-3/index.html" class="week-card">
+        <div class="week-card-top">
+          <span class="week-num-badge">Semana 3</span>
+          <span class="week-status">✅</span>
+        </div>
+        <h3>Técnicas de Ensamblado: Random Forest</h3>
+        <p class="week-desc">Bagging, Bootstrap, Random Forest, OOB Score, importancia de variables e intro a Gradient Boosting.</p>
+        <div class="week-tags">
+          <span class="week-tag">Random Forest</span>
+          <span class="week-tag">Bagging</span>
+          <span class="week-tag">OOB Score</span>
+        </div>
+      </a>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 4</span><span class="week-status">🔒</span></div>
+        <h3>Evaluación y Validación de Modelos</h3>
+        <p class="week-desc">Cross-validation, métricas de evaluación y Gradient Boosting.</p>
+        <div class="week-tags"><span class="week-tag">Cross-validation</span><span class="week-tag">Gradient Boosting</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 5</span><span class="week-status">🔒</span></div>
+        <h3>Fundamentos de SVM</h3>
+        <p class="week-desc">Máquinas de soporte vectorial, margen máximo e hiperplano de separación.</p>
+        <div class="week-tags"><span class="week-tag">SVM</span><span class="week-tag">Kernel</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 6</span><span class="week-status">🔒</span></div>
+        <h3>Fundamentos de K-NN</h3>
+        <p class="week-desc">K-Nearest Neighbors, distancias y elección del valor K.</p>
+        <div class="week-tags"><span class="week-tag">K-NN</span><span class="week-tag">Distancias</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 7</span><span class="week-status">🔒</span></div>
+        <h3>Implementación SVM y K-NN</h3>
+        <p class="week-desc">Implementación práctica de SVM y K-NN en Python con scikit-learn.</p>
+        <div class="week-tags"><span class="week-tag">SVM</span><span class="week-tag">K-NN</span><span class="week-tag">Python</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 8</span><span class="week-status">🔒</span></div>
+        <h3>Aprendizaje No Supervisado</h3>
+        <p class="week-desc">Introducción al clustering y diferencias con el aprendizaje supervisado.</p>
+        <div class="week-tags"><span class="week-tag">No supervisado</span><span class="week-tag">Clustering</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 9</span><span class="week-status">🔒</span></div>
+        <h3>K-means y DBScan</h3>
+        <p class="week-desc">Algoritmos de clustering: K-means y DBScan con aplicaciones prácticas.</p>
+        <div class="week-tags"><span class="week-tag">K-means</span><span class="week-tag">DBScan</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 10</span><span class="week-status">🔒</span></div>
+        <h3>Clustering Práctico</h3>
+        <p class="week-desc">Evaluación de clustering, métricas y aplicaciones reales de segmentación.</p>
+        <div class="week-tags"><span class="week-tag">Silhouette</span><span class="week-tag">Segmentación</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 11</span><span class="week-status">🔒</span></div>
+        <h3>Fundamentos de Redes Neuronales</h3>
+        <p class="week-desc">Neurona artificial, funciones de activación y arquitectura básica.</p>
+        <div class="week-tags"><span class="week-tag">Redes neuronales</span><span class="week-tag">Activación</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 12</span><span class="week-status">🔒</span></div>
+        <h3>Introducción al Deep Learning</h3>
+        <p class="week-desc">Backpropagation, capas ocultas y primeras redes profundas.</p>
+        <div class="week-tags"><span class="week-tag">Deep Learning</span><span class="week-tag">Backprop</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 13</span><span class="week-status">🔒</span></div>
+        <h3>Red Neuronal Simple</h3>
+        <p class="week-desc">Implementación de una red neuronal desde cero con Keras.</p>
+        <div class="week-tags"><span class="week-tag">Keras</span><span class="week-tag">TensorFlow</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 14</span><span class="week-status">🔒</span></div>
+        <h3>Evaluación y Optimización de Redes</h3>
+        <p class="week-desc">Regularización, dropout, batch normalization y optimización.</p>
+        <div class="week-tags"><span class="week-tag">Regularización</span><span class="week-tag">Dropout</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 15</span><span class="week-status">🔒</span></div>
+        <h3>Sistemas Expertos</h3>
+        <p class="week-desc">Sistemas basados en reglas, razonamiento lógico y casos de uso.</p>
+        <div class="week-tags"><span class="week-tag">Reglas</span><span class="week-tag">Inferencia</span></div>
+      </span>
+
+      <span class="week-card locked">
+        <div class="week-card-top"><span class="week-num-badge">Semana 16</span><span class="week-status">🔒</span></div>
+        <h3>Visión por Computadora</h3>
+        <p class="week-desc">OpenCV, CNN, detección de bordes y clasificación de imágenes.</p>
+        <div class="week-tags"><span class="week-tag">OpenCV</span><span class="week-tag">CNN</span><span class="week-tag">TensorFlow</span></div>
+      </span>
+
+    </div>
+
+    <div class="tools-section">
+      <div class="section-title">Herramientas del curso</div>
+      <div class="tools-grid">
+        <div class="tool-item">🐍 Python 3</div>
+        <div class="tool-item">📓 Google Colab</div>
+        <div class="tool-item">🔬 scikit-learn</div>
+        <div class="tool-item">🐼 Pandas</div>
+        <div class="tool-item">🔢 NumPy</div>
+        <div class="tool-item">📊 Matplotlib</div>
+        <div class="tool-item">🧠 TensorFlow</div>
+        <div class="tool-item">🛠️ Knime</div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

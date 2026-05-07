@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 1 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="index.html" class="week-link active">
+      <span class="week-num">1</span>
+      <span class="week-link-text">Intro ML y Árboles</span>
+    </a>
+    <a href="../semana-2/index.html" class="week-link">
+      <span class="week-num">2</span>
+      <span class="week-link-text">Matemáticas CART</span>
+    </a>
+    <span class="week-link locked"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<!-- ── MAIN ────────────────────────────────────────────── -->
+<main class="main-content">
+
+  <header class="page-header">
+    <div class="eyebrow">Semana 1</div>
+    <h1>Práctica 1 — Clasificación de Vinos con Árbol de Decisión</h1>
+    <div class="topic-tags">
+      <span class="tag">Dataset Wine</span>
+      <span class="tag">DecisionTreeClassifier</span>
+      <span class="tag">Overfitting</span>
+      <span class="tag">Código a completar</span>
+      <span class="tag">Google Colab</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 1</a>
+  </nav>
+
+  <div class="content-body">
+
+    <!-- ABRIR EN COLAB -->
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana1_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Descarga el notebook y trabaja en él</h4>
+            <p>Este notebook tiene celdas <strong>incompletas que debes completar</strong>. Lee cada instrucción, escribe el código y ejecuta. Al terminar: <strong>Archivo → Descargar .ipynb</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBJETIVOS -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Aplicar lo aprendido en clase sobre árboles de decisión a un dataset distinto.</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Escribir código de exploración, entrenamiento y evaluación de manera independiente.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Identificar overfitting ajustando <code>max_depth</code> y documentar los resultados.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Comparar dos modelos con distintos parámetros y argumentar cuál es mejor.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Calcular manualmente el índice Gini de un nodo real del árbol entrenado.</span></div>
+
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span><strong>Convención del notebook:</strong> Las celdas marcadas con <code># 🔧 TU CÓDIGO</code> son las que debes completar. Las celdas sin esa marca ya están dadas — solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTEXTO DEL DATASET -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🍷</span>
+        <h2>El Dataset: Wine Recognition</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>Wine</strong> contiene resultados de un análisis químico de vinos de tres cultivares (variedades de uva) de la misma región de Italia. El objetivo es clasificar cada vino en uno de los tres cultivares basándose en 13 variables químicas.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">178 muestras</div>
+            <div style="color:var(--text-muted)">Registros de vinos analizados</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">13 variables</div>
+            <div style="color:var(--text-muted)">Alcohol, fenoles, flavonoides, color…</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">3 clases</div>
+            <div style="color:var(--text-muted)">Cultivar 0, Cultivar 1, Cultivar 2</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTE 0: SETUP -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">⚙️</span>
+        <h2>Parte 0 — Setup</h2>
+        <span class="card-meta">Solo ejecutar</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">Esta celda ya está completa. Ejecútala para importar las librerías.</p>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.datasets        import load_wine
+from sklearn.tree            import DecisionTreeClassifier, plot_tree, export_text
+from sklearn.model_selection import train_test_split
+from sklearn.metrics         import accuracy_score, classification_report
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTE 1: EXPLORACIÓN -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🔍</span>
+        <h2>Parte 1 — Exploración del Dataset</h2>
+        <span class="card-meta">~12 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Cargar el dataset (dado)</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># Celda dada — solo ejecuta
+data = load_wine()
+X = pd.DataFrame(data.data, columns=data.feature_names)
+y = pd.Series(data.target, name='cultivar')
+print(data.DESCR[:800])  # descripción del dataset</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: explorar estructura</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Imprime: número de filas, número de columnas, nombres de las variables
+# y cuántos ejemplos hay de cada cultivar (usa value_counts)
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Responde antes de continuar:</strong></p>
+          <p>1. ¿Cuántas filas y columnas tiene el dataset?<br>
+             2. ¿Las tres clases tienen la misma cantidad de ejemplos?<br>
+             3. ¿Qué tipo de problema es este: regresión o clasificación? ¿Por qué?</p>
+        </div>
+
+        <div class="step-header">Celda 1.3 — Tu código: estadísticas por cultivar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Agrega la columna 'cultivar' al DataFrame X
+# Calcula la media de cada variable agrupando por cultivar
+# Imprime el resultado redondeado a 2 decimales
+# Luego elimina la columna 'cultivar' del DataFrame
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Analizando las estadísticas:</strong> ¿Qué variable tiene la mayor diferencia de media entre los tres cultivares? ¿Esa variable sería un buen candidato para el nodo raíz del árbol? Justifica.</p>
+        </div>
+
+        <div class="step-header">Celda 1.4 — Tu código: gráfico de dispersión</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Crea un scatterplot usando las columnas 'alcohol' (índice 0) y 'flavanoids' (índice 6)
+# Usa un color diferente por cultivar
+# Agrega: xlabel, ylabel, título y leyenda
+
+colores = ['#ef4444', '#3b82f6', '#22c55e']
+nombres = [f'Cultivar {i}' for i in range(3)]
+
+# ___ tu código aquí ___
+
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PARTE 2: PREPARAR Y ENTRENAR -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🌳</span>
+        <h2>Parte 2 — Preparar Datos y Entrenar el Árbol</h2>
+        <span class="card-meta">~15 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: dividir los datos</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Divide data.data y data.target en entrenamiento (75%) y prueba (25%)
+# Usa random_state=42
+# Imprime cuántos ejemplos quedaron en cada conjunto
+
+X_train, X_test, y_train, y_test = ___________
+
+print(f"Entrenamiento: ___ ejemplos")
+print(f"Prueba:        ___ ejemplos")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: entrenar el modelo</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Crea un DecisionTreeClassifier con max_depth=4, criterion='gini', random_state=42
+# Entrénalo con los datos de entrenamiento
+
+model = ___________
+___________
+
+print("Modelo entrenado ✅")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.3 — Tu código: evaluar el modelo</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Calcula e imprime:
+# - Accuracy en entrenamiento
+# - Accuracy en prueba
+# - El classification_report con target_names=data.target_names
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Interpretando resultados:</strong></p>
+          <p>1. ¿Cuál es la diferencia entre el accuracy de entrenamiento y el de prueba?<br>
+             2. ¿Qué cultivar tiene el F1-score más bajo? ¿Por qué crees que es el más difícil?<br>
+             3. Con max_depth=4, ¿hay overfitting? ¿Cómo lo sabes?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PARTE 3: BUSCAR EL MEJOR MAX_DEPTH -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📊</span>
+        <h2>Parte 3 — Encontrar el max_depth Óptimo</h2>
+        <span class="card-meta">~15 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Tu código: tabla comparativa</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Entrena un árbol para cada valor de max_depth en [1, 2, 3, 4, 5, 6, 10, None]
+# Para cada uno guarda: max_depth, train_accuracy, test_accuracy
+# Almacena los resultados en una lista de diccionarios
+# Imprime el DataFrame ordenado
+
+profundidades = [1, 2, 3, 4, 5, 6, 10, None]
+resultados = []
+
+for depth in profundidades:
+    # ___ tu código aquí ___
+    pass
+
+print(pd.DataFrame(resultados).to_string(index=False))</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.2 — Tu código: gráfico train vs test</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Usando los datos de la celda anterior (solo los valores numéricos de depth),
+# grafica train_accuracy y test_accuracy vs max_depth
+# Agrega una línea vertical en el max_depth óptimo que identificaste
+# Incluye: título, xlabel, ylabel, leyenda y grid
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis:</strong></p>
+          <p>1. ¿A partir de qué <code>max_depth</code> el train accuracy llega al 100%?<br>
+             2. ¿En qué punto el test accuracy deja de mejorar o empeora? Ese es el punto de overfitting.<br>
+             3. ¿Cuál es tu <code>max_depth</code> óptimo para el dataset Wine? Defiende tu elección con los números de la tabla.</p>
+        </div>
+
+        <div class="step-header">Celda 3.3 — Tu código: Gini vs Entropía</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Entrena dos modelos con tu max_depth óptimo:
+# - Uno con criterion='gini'
+# - Uno con criterion='entropy'
+# Compara su test accuracy e imprime los resultados
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PARTE 4: VISUALIZAR -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🖼️</span>
+        <h2>Parte 4 — Visualizar el Árbol Óptimo</h2>
+        <span class="card-meta">~10 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: visualizar el árbol</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Entrena el modelo final con el max_depth óptimo que encontraste
+# Visualízalo con plot_tree usando:
+#   - feature_names = data.feature_names
+#   - class_names = data.target_names
+#   - filled=True, rounded=True, impurity=True
+# Pon un título descriptivo
+
+model_final = DecisionTreeClassifier(max_depth=___, criterion='gini', random_state=42)
+model_final.fit(___, ___)
+
+plt.figure(figsize=(18, 8))
+# ___ plot_tree aquí ___
+plt.title("___")
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="step-header">Celda 4.2 — Tu código: importancia de variables</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Crea un pd.Series con feature_importances_ del modelo final
+# Ordena de mayor a menor
+# Imprime los resultados
+# Crea un gráfico de barras horizontales (kind='barh')
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Interpretando el árbol:</strong></p>
+          <p>1. ¿Cuál es la variable del nodo raíz? ¿Coincide con la que identificaste en la Parte 1?<br>
+             2. ¿Qué cultivar tiene un nodo puro (Gini = 0) más cerca de la raíz?<br>
+             3. Lista las 3 variables más importantes. ¿Tienen sentido químicamente para diferenciar tipos de vino?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PARTE 5: GINI MANUAL -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧮</span>
+        <h2>Parte 5 — Calcular Gini Manualmente y Verificar</h2>
+        <span class="card-meta">~8 min · Código a completar</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          El nodo raíz de tu árbol tiene un valor de Gini reportado por scikit-learn. Escribe el código para calcularlo manualmente y verifica que coincide.
+        </p>
+
+        <div class="step-header">Celda 5.1 — Dado: obtener distribución del nodo raíz</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># Celda dada — solo ejecuta
+clases, conteos = np.unique(y_train, return_counts=True)
+total = len(y_train)
+
+print("Distribución en el nodo raíz (datos de entrenamiento):")
+for c, n in zip(data.target_names, conteos):
+    print(f"  {c}: {n} ejemplos  →  p = {n/total:.4f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 5.2 — Tu código: calcular Gini y verificar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Calcula las proporciones de cada clase
+# 2. Aplica la fórmula: Gini = 1 - Σ(pᵢ²)
+# 3. Obtén el Gini reportado por sklearn: model_final.tree_.impurity[0]
+# 4. Compara ambos e imprime si coinciden
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Reflexión:</strong> ¿El Gini del nodo raíz está cerca de 0 o de 0.67 (máximo para 3 clases)? ¿Qué significa ese valor antes de la primera división del árbol?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DESAFÍO BONUS -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🏆</span>
+        <h2>Desafío Bonus — Función Reutilizable</h2>
+        <span class="card-meta">Opcional · Para los que terminan antes</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          Escribe una función que reciba cualquier dataset de sklearn y devuelva el mejor max_depth automáticamente.
+        </p>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 DESAFÍO: Completa la función
+def encontrar_mejor_depth(dataset, profundidades=None, test_size=0.25):
+    """
+    Entrena árboles con distintas profundidades y retorna el max_depth
+    que maximiza el test accuracy.
+
+    Parámetros:
+      dataset     : dataset de sklearn (con .data y .target)
+      profundidades: lista de valores de max_depth a probar
+      test_size   : proporción de datos para prueba
+
+    Retorna:
+      mejor_depth : int — el max_depth con mayor test accuracy
+      df_resultados: DataFrame con todos los resultados
+    """
+    if profundidades is None:
+        profundidades = [1, 2, 3, 4, 5, 6, 8, 10]
+
+    # ___ tu código aquí ___
+    pass
+
+
+# Prueba tu función con el dataset Wine
+mejor, resultados = encontrar_mejor_depth(load_wine())
+print(f"Mejor max_depth encontrado: {mejor}")
+print(resultados)</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENTREGA -->
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">✅</span>
+        <h2>Entrega</h2>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook completo con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas y ejecutadas. Todas las preguntas ❓ respondidas en celdas de texto. Exporta como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN</span>
+            <div class="task-content">
+              <h4>Párrafo de conclusiones al final del notebook</h4>
+              <p>Responde: ¿Cuál fue el max_depth óptimo y por qué? ¿Qué variable química resultó más importante para clasificar los vinos? ¿Qué diferencia notaste entre Gini y Entropía en este dataset?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

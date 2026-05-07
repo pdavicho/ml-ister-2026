@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 2 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .formula { font-family: 'Courier New', monospace; background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: .5em 1em; color: #93c5fd; display: inline-block; margin: .3rem 0; }
+    .step { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .pro  { color: #4ade80; }
+    .con  { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .task-row { display: flex; gap: .75rem; padding: .65rem .9rem; border-radius: 8px; margin-bottom: .5rem; align-items: flex-start; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .flex-row { display: flex; gap: .4rem; align-items: stretch; }
+    .arr { display: flex; align-items: center; color: #3b82f6; }
+    .over-box { text-align: center; border-radius: 10px; padding: .7rem; }
+    .over-box .acc { font-size: 1.6em; font-weight: 800; }
+    .over-box p { font-size: .55em; margin-top: .3rem; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 2 · LUNES Y VIERNES</div>
+  <h1 style="font-size:1.55em; line-height:1.2">
+    Construcción del Árbol<br><span style="color:#60a5fa">Paso a Paso</span>
+  </h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">CART</span>
+    <span class="tag">Gini</span>
+    <span class="tag">Entropía</span>
+    <span class="tag">Ganancia de Información</span>
+    <span class="tag">Parámetros</span>
+    <span class="tag">Overfitting</span>
+  </div>
+  <div class="inst">Ing. Pablo Llumiquinga · ISTER — Sistemas y Gestión de Data · 2026</div>
+</section>
+
+<!-- S2: RECAP SEMANA 1 -->
+<section>
+  <h2>¿Qué aprendimos la Semana 1?</h2>
+  <div class="cols cols-2" style="font-size:.9em; gap:.5rem">
+    <div class="card">
+      <h4>🤖 Machine Learning</h4>
+      <p>Las máquinas aprenden de datos sin ser programadas regla a regla. Tipos: Supervisado · No Supervisado · Por Refuerzo.</p>
+    </div>
+    <div class="card">
+      <h4>🌳 Árbol de Decisión</h4>
+      <p>Hace preguntas jerárquicas: nodo raíz → nodos internos → hojas. Es un algoritmo supervisado.</p>
+    </div>
+    <div class="card">
+      <h4>📐 Gini e Entropía</h4>
+      <p>Miden cuánta "mezcla" hay en un nodo. <span class="pro">Gini = 0 → puro</span> · <span class="con">Gini = 0.5 → máxima mezcla</span>.</p>
+    </div>
+    <div class="card">
+      <h4>🐍 Python · scikit-learn</h4>
+      <p><code>DecisionTreeClassifier</code>, <code>train_test_split</code>, <code>accuracy_score</code>, <code>plot_tree</code>.</p>
+    </div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.75rem">Hoy profundizamos en la MATEMÁTICA del árbol — paso a paso, sin saltarnos nada.</p>
+</section>
+
+<!-- S3: CART ALGORITMO -->
+<section>
+  <h2>¿Cómo Construye el Árbol? — Algoritmo CART</h2>
+  <blockquote style="font-size:.65em">"CART = Classification And Regression Trees. Busca la pregunta que más reduce la impureza en cada nodo."</blockquote>
+  <div style="font-size:.9em">
+    <div class="num-row"><span class="num-circle">1</span><span>Empezar con <strong>todos los datos</strong> en el nodo raíz.</span></div>
+    <div class="num-row"><span class="num-circle">2</span><span><strong>Probar todas las posibles preguntas</strong> para cada variable (¿Edad&gt;30? ¿Ingreso&gt;50k?…).</span></div>
+    <div class="num-row"><span class="num-circle">3</span><span><strong>Calcular Gini o Entropía</strong> para cada posible división. ¿Cuál produce los grupos más puros?</span></div>
+    <div class="num-row"><span class="num-circle">4</span><span><strong>Elegir la pregunta</strong> con mayor Ganancia de Información (= mayor reducción de impureza).</span></div>
+    <div class="num-row"><span class="num-circle">5</span><span><strong>Dividir</strong> los datos según esa pregunta y crear dos ramas.</span></div>
+    <div class="num-row"><span class="num-circle">6</span><span><strong>Repetir</strong> pasos 2–5 en cada rama hasta cumplir el criterio de parada.</span></div>
+  </div>
+  <div class="warn" style="margin-top:.5rem">CART prueba TODAS las preguntas posibles para CADA variable — puede ser miles de combinaciones.</div>
+</section>
+
+<!-- S4: CART EN ACCIÓN -->
+<section>
+  <h2>CART en Acción — Así Crece el Árbol</h2>
+  <div class="flex-row" style="font-size:.85em">
+    <div class="card" style="flex:1; text-align:center">
+      <h4>INICIO</h4>
+      <p>Todos los datos mezclados<br>14 Sí + 6 No<br>(1 solo nodo)<br><span class="con">Gini alto = desorden</span></p>
+    </div>
+    <div class="arr" style="font-size:1.3em">→</div>
+    <div class="card" style="flex:1; text-align:center">
+      <h4>PASO 1</h4>
+      <p>Primera pregunta elegida<br>Izq: 10 Sí + 2 No<br>Der: 4 Sí + 4 No<br><span class="pro">Gini baja en hijos</span></p>
+    </div>
+    <div class="arr" style="font-size:1.3em">→</div>
+    <div class="card" style="flex:1; text-align:center">
+      <h4>PASO 2</h4>
+      <p>Segunda pregunta en cada hijo<br>Izq-Izq: 8 Sí · 0 No ✓<br>...<br><span class="pro">Gini ≈ 0 en varios nodos</span></p>
+    </div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.6rem">El árbol para cuando: (1) nodo puro · (2) se alcanza max_depth · (3) muy pocos ejemplos en el nodo.</p>
+</section>
+
+<!-- S5: SEPARADOR MATEMÁTICAS -->
+<section data-background-gradient="linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)">
+  <div class="eyebrow">PARTE 2</div>
+  <h1 style="font-size:1.9em">Matemáticas<br><span style="color:#60a5fa">Paso a Paso</span></h1>
+  <p style="font-size:.6em; color:#94a3b8; margin-top:.8rem">Gini · Entropía · Ganancia de Información</p>
+</section>
+
+<!-- S6: GINI 2 CLASES -->
+<section>
+  <h2>Gini — 2 Clases (Paso a Paso)</h2>
+  <p style="font-size:.55em; color:#94a3b8; margin-bottom:.4rem">Analogía: caja con bolitas. Todas del mismo color = Gini 0. Mitad y mitad = Gini 0.5.</p>
+  <div style="text-align:center; margin:.4rem 0">
+    <span class="formula" style="font-size:1.05em">Gini = 1 − (p₁)² − (p₂)²</span>
+  </div>
+  <p style="font-size:.52em; color:#64748b; text-align:center; margin-bottom:.5rem">Nodo: 10 frutas → 8 Manzanas · 2 Naranjas</p>
+  <div>
+    <div class="step"><strong>Paso 1</strong> — Contar: Manzanas=8 · Naranjas=2 · Total=10</div>
+    <div class="step"><strong>Paso 2</strong> — Proporciones: p_M = 8÷10 = <strong>0.80</strong> &nbsp;&nbsp; p_N = 2÷10 = <strong>0.20</strong></div>
+    <div class="step"><strong>Paso 3</strong> — Cuadrados: (0.80)² = 0.64 &nbsp;&nbsp; (0.20)² = 0.04</div>
+    <div class="step"><strong>Paso 4</strong> — Gini = 1 − 0.64 − 0.04 = <strong style="color:#60a5fa">0.32</strong></div>
+    <div class="result">Gini = 0.32 → nodo mayormente puro. Manzanas dominan.</div>
+  </div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.4rem">Si todas las frutas son del mismo tipo: Gini = 1−(1)² = 0 — ¡nodo perfectamente puro!</p>
+</section>
+
+<!-- S7: GINI PADRE + HIJOS -->
+<section>
+  <h2>Gini — Padre y Dos Hijos</h2>
+  <p style="font-size:.55em; color:#94a3b8; margin-bottom:.5rem">Situación: 20 pacientes. División por «¿Fiebre &gt; 38°C?»</p>
+  <div class="cols cols-3" style="font-size:.9em; gap:.5rem">
+    <div class="card">
+      <h4>PADRE (20 pac.)</h4>
+      <p>12 Enfermos + 8 Sanos<br>p_E=0.60 · p_S=0.40<br>Gini = 1−0.36−0.16 = <strong style="color:#60a5fa">0.48</strong></p>
+    </div>
+    <div class="card">
+      <h4>HIJO IZQ — Fiebre SÍ (13)</h4>
+      <p>11 Enfermos + 2 Sanos<br>p_E=0.846 · p_S=0.154<br>Gini = 1−0.715−0.024 = <strong style="color:#4ade80">0.261</strong></p>
+    </div>
+    <div class="card">
+      <h4>HIJO DER — Fiebre NO (7)</h4>
+      <p>1 Enfermo + 6 Sanos<br>p_E=0.143 · p_S=0.857<br>Gini = 1−0.020−0.734 = <strong style="color:#4ade80">0.245</strong></p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem">Los hijos (0.261 y 0.245) tienen MENOS impureza que el padre (0.48). ¡La división mejoró!</div>
+</section>
+
+<!-- S8: GINI 3 CLASES -->
+<section>
+  <h2>Gini — Tres Clases (Dataset Iris)</h2>
+  <div style="text-align:center; margin:.4rem 0">
+    <span class="formula">Gini = 1 − (p_Setosa)² − (p_Versicolor)² − (p_Virginica)²</span>
+  </div>
+  <p style="font-size:.52em; color:#64748b; text-align:center; margin-bottom:.5rem">Nodo: 30 flores → 15 Setosa · 10 Versicolor · 5 Virginica</p>
+  <div>
+    <div class="step"><strong>Paso 1</strong> — p₁=15/30=0.50 · p₂=10/30=0.333 · p₃=5/30=0.167 &nbsp;→&nbsp; suma = 1.000 ✓</div>
+    <div class="step"><strong>Paso 2</strong> — (0.50)²=0.250 · (0.333)²=0.111 · (0.167)²=0.028</div>
+    <div class="step"><strong>Paso 3</strong> — Σ = 0.250+0.111+0.028 = 0.389</div>
+    <div class="step"><strong>Paso 4</strong> — Gini = 1 − 0.389 = <strong style="color:#60a5fa">0.611</strong></div>
+    <div class="result">Gini = 0.611 → alta impureza. Con 3 clases el máximo teórico es 0.667.</div>
+  </div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.4rem">Con N clases: Gini_máx = 1 − (1/N) &nbsp;·&nbsp; 2 clases: 0.5 &nbsp;·&nbsp; 3 clases: 0.667 &nbsp;·&nbsp; 4 clases: 0.75</p>
+</section>
+
+<!-- S9: ENTROPÍA INTRO -->
+<section>
+  <h2>Entropía de Shannon</h2>
+  <p style="font-size:.55em; color:#94a3b8; margin-bottom:.4rem">Analogía: desorden de una habitación. Todo ordenado = 0. Todo revuelto = 1.</p>
+  <div style="text-align:center; margin:.4rem 0">
+    <span class="formula">H = − Σ p<sub>i</sub> × log<sub>2</sub>(p<sub>i</sub>)</span>
+  </div>
+  <div style="font-size:.65em; margin-bottom:.5rem">
+    <p style="text-align:center; color:#94a3b8; margin-bottom:.3rem">Tabla de consulta rápida de log₂:</p>
+    <table style="font-size:.9em; max-width:600px; margin:0 auto">
+      <thead><tr><th>x</th><th>log₂(x)</th><th>x</th><th>log₂(x)</th><th>x</th><th>log₂(x)</th></tr></thead>
+      <tbody>
+        <tr><td>1.00</td><td style="color:#4ade80">0.000</td><td>0.70</td><td>−0.515</td><td>0.40</td><td>−1.322</td></tr>
+        <tr><td>0.90</td><td>−0.152</td><td>0.60</td><td>−0.737</td><td>0.30</td><td>−1.737</td></tr>
+        <tr><td>0.80</td><td>−0.322</td><td>0.50</td><td style="color:#f87171">−1.000</td><td>0.20</td><td>−2.322</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <div class="step"><strong>Ejemplo</strong> — 10 ej.: 8 Aprobados · 2 Rechazados → p_A=0.80 · p_B=0.20</div>
+    <div class="step">H = −(0.80×(−0.322) + 0.20×(−2.322)) = −(−0.258 + (−0.464)) = <strong style="color:#a78bfa">0.722</strong></div>
+  </div>
+</section>
+
+<!-- S10: ENTROPÍA NIVELES -->
+<section>
+  <h2>Entropía — Más Ejemplos</h2>
+  <div class="cols cols-2" style="gap:.6rem">
+    <div>
+      <p style="font-size:.6em; color:#fbbf24; margin-bottom:.35rem">Nivel 2 — 15 ej.: 9 Clase A · 6 Clase B</p>
+      <div class="step">p_A=0.60 · p_B=0.40</div>
+      <div class="step">0.60×(−0.737) = −0.442</div>
+      <div class="step">0.40×(−1.322) = −0.529</div>
+      <div class="result" style="font-size:.8em">H = −(−0.971) = <strong>0.971</strong> — Alta impureza</div>
+    </div>
+    <div>
+      <p style="font-size:.6em; color:#f87171; margin-bottom:.35rem">Nivel 3 — 3 Clases: 12 Setosa · 10 Versicolor · 8 Virginica</p>
+      <div class="step">p₁=0.400 · p₂=0.333 · p₃=0.267</div>
+      <div class="step">0.400×(−1.322)=−0.529 · 0.333×(−1.585)=−0.528 · 0.267×(−1.905)=−0.509</div>
+      <div class="result" style="font-size:.8em">H = −(−1.566) = <strong>1.566</strong> — Máximo con 3 clases: log₂(3) ≈ 1.585</div>
+    </div>
+  </div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.5rem">Con 3 clases la Entropía puede superar 1.0 — su máximo es log₂(N) donde N = número de clases.</p>
+</section>
+
+<!-- S11: GANANCIA DE INFORMACIÓN -->
+<section>
+  <h2>Ganancia de Información — ¿Para Qué Sirve?</h2>
+  <blockquote style="font-size:.65em">🔑 IG responde: «¿Cuánto MEJORÓ la pureza de los hijos respecto al padre?»<br>El árbol elige SIEMPRE la pregunta con MAYOR IG.</blockquote>
+  <div style="text-align:center; margin:.5rem 0">
+    <span class="formula">IG = Gini(padre) − [ (N<sub>izq</sub>/N) × Gini(izq) + (N<sub>der</sub>/N) × Gini(der) ]</span>
+  </div>
+  <div class="cols cols-3" style="font-size:.85em; margin-top:.5rem; gap:.4rem">
+    <div class="card">
+      <h4>📊 Gini(padre)</h4>
+      <p>Impureza ANTES de la división. El punto de partida.</p>
+    </div>
+    <div class="card">
+      <h4>← Gini ponderado izq.</h4>
+      <p>Impureza del hijo izquierdo pesada por su proporción de ejemplos.</p>
+    </div>
+    <div class="card">
+      <h4>→ Gini ponderado der.</h4>
+      <p>Impureza del hijo derecho pesada por su proporción de ejemplos.</p>
+    </div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.5rem">Si IG = 0 → la división no ayudó nada. Si IG &gt; 0 → mejoró la pureza. ¡Queremos IG máximo!</p>
+</section>
+
+<!-- S12: IG EJEMPLO HOSPITAL -->
+<section>
+  <h2>Ganancia de Información — Ejemplo Hospital</h2>
+  <p style="font-size:.55em; color:#94a3b8; margin-bottom:.4rem">20 pacientes. Pregunta: «¿Fiebre &gt; 38°C?» (ya calculamos los Gini antes)</p>
+  <div>
+    <div class="step"><strong>Padre</strong> — Gini = <strong style="color:#60a5fa">0.48</strong></div>
+    <div class="step"><strong>Hijo IZQ</strong> (13 pac.) — Gini = <strong style="color:#4ade80">0.261</strong></div>
+    <div class="step"><strong>Hijo DER</strong> (7 pac.) — Gini = <strong style="color:#4ade80">0.245</strong></div>
+    <div class="step"><strong>Paso 1</strong> — Ponderar IZQ: (13/20) × 0.261 = 0.65 × 0.261 = <strong>0.170</strong></div>
+    <div class="step"><strong>Paso 2</strong> — Ponderar DER: (7/20) × 0.245 = 0.35 × 0.245 = <strong>0.086</strong></div>
+    <div class="step"><strong>Paso 3</strong> — Promedio hijos: 0.170 + 0.086 = <strong>0.256</strong></div>
+    <div class="result">IG = 0.48 − 0.256 = <strong>0.224</strong> — La pregunta «¿Fiebre &gt; 38°C?» redujo la impureza en 0.224.</div>
+  </div>
+</section>
+
+<!-- S13: IG COMPARAR PREGUNTAS -->
+<section>
+  <h2>IG — ¿Cuál es la Mejor Pregunta?</h2>
+  <p style="font-size:.55em; color:#94a3b8; margin-bottom:.4rem">El árbol no elige la primera pregunta que encuentra — las prueba TODAS y se queda con la de mayor IG.</p>
+  <table>
+    <thead><tr><th>Pregunta candidata</th><th>Gini IZQ</th><th>Gini DER</th><th>Imp. ponderada</th><th>IG</th></tr></thead>
+    <tbody>
+      <tr><td>¿Fiebre &gt; 38°C?</td><td>0.261</td><td>0.245</td><td>0.256</td><td style="color:#4ade80"><strong>0.224</strong> 🏆</td></tr>
+      <tr><td>¿Tos persistente?</td><td>0.375</td><td>0.469</td><td>0.413</td><td style="color:#f87171">0.067</td></tr>
+      <tr><td>¿Dolor de cabeza?</td><td>0.420</td><td>0.480</td><td>0.444</td><td style="color:#f87171">0.036</td></tr>
+    </tbody>
+  </table>
+  <div class="result" style="margin-top:.6rem">Ganadora: «¿Fiebre &gt; 38°C?» con IG=0.224. ¡El árbol la usa como nodo raíz!</div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.4rem">El árbol repite este proceso en CADA nodo hasta cumplir el criterio de parada.</p>
+</section>
+
+<!-- S14: RESUMEN GINI/ENTROPÍA/IG -->
+<section>
+  <h2>Resumen — Gini · Entropía · IG</h2>
+  <table>
+    <thead><tr><th>Métrica</th><th>Fórmula</th><th>Rango</th><th>Cuándo usarla</th></tr></thead>
+    <tbody>
+      <tr><td style="color:#60a5fa"><strong>Gini</strong></td><td><code>1 − Σ(pᵢ)²</code></td><td>0 → 0.5 (2 clases)</td><td>Rápido, sin log. Defecto en sklearn.</td></tr>
+      <tr><td style="color:#a78bfa"><strong>Entropía</strong></td><td><code>−Σ pᵢ·log₂(pᵢ)</code></td><td>0 → 1 (2 clases)</td><td>Más balanceado. Usa <code>criterion='entropy'</code>.</td></tr>
+      <tr><td style="color:#4ade80"><strong>IG</strong></td><td><code>Imp(padre)−Σ[(Nₖ/N)·Imp(hijoₖ)]</code></td><td>≥ 0</td><td>El árbol la usa para elegir la mejor pregunta.</td></tr>
+    </tbody>
+  </table>
+  <div class="info-callout" style="background:rgba(59,130,246,.08); border:1px solid rgba(59,130,246,.2); border-radius:8px; padding:.6rem 1rem; font-size:.6em; margin-top:.6rem">
+    💡 En la práctica: Gini y Entropía dan resultados muy similares. La diferencia real es la velocidad de cómputo.
+  </div>
+</section>
+
+<!-- S15: PARÁMETROS -->
+<section>
+  <h2>Parámetros que Controlan el Árbol</h2>
+  <div class="cols cols-2" style="gap:.4rem; font-size:.9em">
+    <div class="step"><strong>max_depth</strong> (default: None) — Máxima profundidad. None = crece hasta nodos puros. Valores altos → overfitting.<br><span style="color:#64748b">max_depth=3 → árbol de 3 niveles máximo</span></div>
+    <div class="step"><strong>min_samples_split</strong> (default: 2) — Mínimo de ejemplos para poder dividir un nodo. Valores altos → árbol más simple.<br><span style="color:#64748b">min_samples_split=10 → divide si hay ≥10 ejemplos</span></div>
+    <div class="step"><strong>min_samples_leaf</strong> (default: 1) — Mínimo de ejemplos en cada hoja. Evita hojas con 1-2 ejemplos que son «ruido».<br><span style="color:#64748b">min_samples_leaf=5 → cada hoja tiene al menos 5</span></div>
+    <div class="step"><strong>criterion</strong> (default: 'gini') — Criterio de impureza: 'gini' o 'entropy'. Raramente afecta mucho el resultado.<br><span style="color:#64748b">criterion='entropy' → usa Entropía en lugar de Gini</span></div>
+    <div class="step"><strong>max_features</strong> (default: None) — Nro. de variables a considerar en cada división. Útil para datasets grandes.<br><span style="color:#64748b">max_features='sqrt' → raíz cuadrada del total</span></div>
+    <div class="step"><strong>random_state</strong> (default: None) — Semilla de reproducibilidad. Mismo valor = mismo árbol siempre.<br><span style="color:#64748b">random_state=42 → resultado idéntico siempre</span></div>
+  </div>
+  <p style="font-size:.48em; color:#fbbf24; text-align:center; margin-top:.5rem">Regla práctica: empieza con max_depth=3. Si accuracy prueba &lt; entrenamiento → reduce profundidad.</p>
+</section>
+
+<!-- S16: OVERFITTING VS UNDERFITTING -->
+<section>
+  <h2>Overfitting vs Underfitting</h2>
+  <div class="cols cols-3" style="gap:.5rem; font-size:.85em">
+    <div class="over-box" style="background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3)">
+      <p style="font-size:.65em; color:#f87171; font-weight:700; margin-bottom:.3rem">UNDERFITTING</p>
+      <p style="font-size:.6em">Árbol muy simple<br>max_depth=1</p>
+      <div class="acc" style="color:#f87171">60%</div>
+      <p style="font-size:.55em; color:#94a3b8">Train accuracy</p>
+      <div class="acc" style="color:#f87171; font-size:1.3em">58%</div>
+      <p style="font-size:.55em; color:#94a3b8">Test accuracy</p>
+      <p style="font-size:.6em; margin-top:.5rem">Demasiado simple. No aprendió bien ni los datos de entrenamiento.</p>
+    </div>
+    <div class="over-box" style="background:rgba(34,197,94,.1); border:2px solid rgba(34,197,94,.5)">
+      <p style="font-size:.65em; color:#4ade80; font-weight:700; margin-bottom:.3rem">BALANCE IDEAL ⭐</p>
+      <p style="font-size:.6em">Árbol equilibrado<br>max_depth=3–5</p>
+      <div class="acc" style="color:#4ade80">92%</div>
+      <p style="font-size:.55em; color:#94a3b8">Train accuracy</p>
+      <div class="acc" style="color:#4ade80; font-size:1.3em">90%</div>
+      <p style="font-size:.55em; color:#94a3b8">Test accuracy</p>
+      <p style="font-size:.6em; margin-top:.5rem">Aprendió los patrones reales. Generaliza bien.</p>
+    </div>
+    <div class="over-box" style="background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.3)">
+      <p style="font-size:.65em; color:#fbbf24; font-weight:700; margin-bottom:.3rem">OVERFITTING</p>
+      <p style="font-size:.6em">Árbol muy profundo<br>max_depth=50</p>
+      <div class="acc" style="color:#4ade80">99%</div>
+      <p style="font-size:.55em; color:#94a3b8">Train accuracy</p>
+      <div class="acc" style="color:#f87171; font-size:1.3em">65%</div>
+      <p style="font-size:.55em; color:#94a3b8">Test accuracy</p>
+      <p style="font-size:.6em; margin-top:.5rem">Memorizó el entrenamiento. Falla con datos nuevos.</p>
+    </div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.5rem">Señal de overfitting: train accuracy >> test accuracy. Solución: reducir max_depth.</p>
+</section>
+
+<!-- S17: SEPARADOR EJERCICIOS -->
+<section data-background-gradient="linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)">
+  <div class="eyebrow">PARTE 3</div>
+  <h1 style="font-size:1.9em">Ejercicios<br><span style="color:#60a5fa">en Clase</span></h1>
+</section>
+
+<!-- S18: EJERCICIO 1 - GINI 3 CLASES -->
+<section>
+  <h2>Ejercicio 1 · Gini con 3 Clases</h2>
+  <p style="font-size:.65em; color:#fbbf24; margin-bottom:.5rem">Un vivero tiene 45 plantas: 24 Rosas · 12 Tulipanes · 9 Girasoles. Calcula el Gini.</p>
+  <div>
+    <div class="step"><strong>Paso 1</strong> — Rosas=24 · Tulipanes=12 · Girasoles=9 · Total=45 &nbsp;✓</div>
+    <div class="step"><strong>Paso 2</strong> — p_R=24/45=0.533 · p_T=12/45=0.267 · p_G=9/45=0.200 → suma=1.000 ✓</div>
+    <div class="step"><strong>Paso 3</strong> — (0.533)²=0.284 · (0.267)²=0.071 · (0.200)²=0.040</div>
+    <div class="step"><strong>Paso 4</strong> — Gini = 1 − (0.284+0.071+0.040) = 1 − 0.395 = <strong style="color:#60a5fa">0.605</strong></div>
+    <div class="result">Gini = 0.605 → muy impuro. Cerca del máximo 0.667 para 3 clases.</div>
+  </div>
+  <p style="font-size:.5em; color:#64748b; text-align:center; margin-top:.4rem">✏️ Extra: ¿Cuánto daría si hubiera solo Rosas (45)? → Gini = 0</p>
+</section>
+
+<!-- S19: EJERCICIO 2 - IG COMPLETO -->
+<section>
+  <h2>Ejercicio 2 · Ganancia de Información Completa</h2>
+  <p style="font-size:.6em; color:#fbbf24; margin-bottom:.4rem">Tienda: 30 clientes (18 Compran · 12 No). Pregunta: «¿Tiene tarjeta de crédito?» → SÍ: 20 (16C+4N) · NO: 10 (2C+8N)</p>
+  <div style="font-size:.9em">
+    <div class="step"><strong>Padre</strong> — p_C=0.60 p_N=0.40 → Gini = 1−0.36−0.16 = <strong style="color:#60a5fa">0.480</strong></div>
+    <div class="step"><strong>Hijo SÍ</strong> — p_C=0.80 p_N=0.20 → Gini = 1−0.64−0.04 = <strong style="color:#4ade80">0.320</strong></div>
+    <div class="step"><strong>Hijo NO</strong> — p_C=0.20 p_N=0.80 → Gini = 1−0.04−0.64 = <strong style="color:#4ade80">0.320</strong></div>
+    <div class="step"><strong>Ponder.</strong> — (20/30)×0.320 + (10/30)×0.320 = 0.213 + 0.107 = <strong>0.320</strong></div>
+    <div class="result">IG = 0.480 − 0.320 = <strong>0.160</strong> — La división redujo la impureza de 0.48 a 0.32.</div>
+  </div>
+</section>
+
+<!-- S20: EJERCICIO 3 - MEJOR PREGUNTA -->
+<section>
+  <h2>Ejercicio 3 · ¿Cuál es la Mejor Pregunta?</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.4rem">50 estudiantes (30 Aprobaron · 20 Reprobaron) · Gini_padre = 0.480</p>
+  <table style="font-size:.62em">
+    <thead><tr><th>Pregunta candidata</th><th>Imp. pond.</th><th>IG</th></tr></thead>
+    <tbody>
+      <tr><td>¿Horas estudio &gt; 4/día?  (Sí:28 → 25A+3R · No:22 → 5A+17R)</td><td>0.276</td><td style="color:#4ade80"><strong>0.204</strong> 🏆</td></tr>
+      <tr><td>¿Asistencia &gt; 80%?  (Sí:35 → 22A+13R · No:15 → 8A+7R)</td><td>0.471</td><td style="color:#f87171">0.009</td></tr>
+      <tr><td>¿Tiene tutor privado?  (Sí:18 → 16A+2R · No:32 → 14A+18R)</td><td>0.387</td><td style="color:#f87171">0.093</td></tr>
+    </tbody>
+  </table>
+  <div class="result" style="margin-top:.5rem">Ganadora: «¿Horas de estudio &gt; 4/día?» — IG más alto (0.204).</div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.4rem">«¿Asistencia &gt; 80%?» tiene IG≈0 — casi no ayuda. Las ramas quedan igual de impuras que el padre.</p>
+</section>
+
+<!-- S21: TAREAS -->
+<section>
+  <h2>Tareas · Semana 2</h2>
+  <div>
+    <div class="task-row" style="background:rgba(124,58,237,.1); border:1px solid rgba(124,58,237,.3)">
+      <span style="background:#7c3aed; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T1 · MATEMÁTICA</span>
+      <div>
+        <strong style="font-size:.68em">Gini + Entropía + IG completo</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Padre: 40 ej. (25 Clase A + 15 Clase B). División: Hijo IZQ=18 (17A+1B) · Hijo DER=22 (8A+14B). Calcula Gini padre, Gini hijos, IG. Muestra CADA paso.</p>
+      </div>
+    </div>
+    <div class="task-row" style="background:rgba(5,150,105,.1); border:1px solid rgba(5,150,105,.3)">
+      <span style="background:#059669; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T2 · PYTHON</span>
+      <div>
+        <strong style="font-size:.68em">Experimentar con min_samples_split y min_samples_leaf</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Usa Breast Cancer. Prueba combinaciones de min_samples_split=[2,5,10,20] y min_samples_leaf=[1,2,5]. Tabla con train y test accuracy. ¿Cuál combinación da mejor resultado?</p>
+      </div>
+    </div>
+    <div class="task-row" style="background:rgba(217,119,6,.1); border:1px solid rgba(217,119,6,.3)">
+      <span style="background:#d97706; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T3 · REFLEXIÓN</span>
+      <div>
+        <strong style="font-size:.68em">¿Por qué falla un árbol solitario?</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Media página: explica el overfitting con tus palabras, cómo lo detectas en las métricas, y por qué usar 100 árboles (Random Forest) podría solucionarlo.</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.5rem">✓ Entrega: próximo Lunes · Formato: PDF · Semana 3: Random Forest + Gradient Boosting</p>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({ hash:true, progress:true, controls:true, transition:'slide', backgroundTransition:'fade' });
+</script>
+</body>
+</html>

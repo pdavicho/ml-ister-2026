@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 3 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <span class="week-link locked"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 3</div>
+    <h1>Práctica 3 — Random Forest con Reconocimiento de Dígitos</h1>
+    <div class="topic-tags">
+      <span class="tag">Dataset Digits</span>
+      <span class="tag">RandomForestClassifier</span>
+      <span class="tag">Estabilidad</span>
+      <span class="tag">n_estimators</span>
+      <span class="tag">Importancia de píxeles</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 3</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana3_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Explorar y visualizar el dataset Digits (imágenes de dígitos manuscritos 0–9).</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Comparar el desempeño de un árbol solitario vs Random Forest en un problema de 10 clases.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Demostrar la inestabilidad del árbol vs la estabilidad del Random Forest con múltiples ejecuciones.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Determinar cuántos árboles son suficientes (n_estimators óptimo).</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Visualizar la importancia de variables como un mapa de calor 8×8 de píxeles.</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🔢</span>
+        <h2>El Dataset: Digits</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>Digits</strong> contiene imágenes de dígitos manuscritos del 0 al 9, representadas como matrices de 8×8 píxeles (64 variables). Es un clásico de reconocimiento de patrones — el mismo tipo de problema que usa el correo postal para leer códigos ZIP.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">1 797 imágenes</div>
+            <div style="color:var(--text-muted)">~180 ejemplos por dígito (0–9)</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">64 variables</div>
+            <div style="color:var(--text-muted)">Píxeles de una imagen 8×8 (valores 0–16)</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">10 clases</div>
+            <div style="color:var(--text-muted)">Dígitos del 0 al 9</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.datasets        import load_digits
+from sklearn.tree            import DecisionTreeClassifier
+from sklearn.ensemble        import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics         import accuracy_score, classification_report
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔍</span><h2>Parte 1 — Exploración y Visualización</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar y describir</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>data = load_digits()
+X, y = data.data, data.target
+print(f"Forma: {X.shape}  →  {X.shape[0]} imágenes · {X.shape[1]} píxeles")
+print(f"Clases: {data.target_names}")
+print(f"Distribución: {np.bincount(y)}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Dado: visualizar 20 dígitos de ejemplo</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>fig, axes = plt.subplots(2, 10, figsize=(14, 3))
+for i, ax in enumerate(axes.flat):
+    ax.imshow(data.images[i], cmap='gray_r')
+    ax.set_title(str(data.target[i]), fontsize=9)
+    ax.axis('off')
+plt.suptitle('Muestra de imágenes del dataset Digits', fontsize=11)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.3 — Tu código: ¿cuántos píxeles son informativos?</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Calcula la varianza de cada uno de los 64 píxeles entre todos los ejemplos
+# Imprime cuántos píxeles tienen varianza > 5 (son informativos)
+# Visualiza la varianza como un mapa de calor 8x8
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Observando la varianza de píxeles:</strong></p>
+          <p>1. ¿Los píxeles del borde (orilla) tienen alta o baja varianza? ¿Por qué?<br>
+             2. ¿Qué zona de la imagen 8×8 tiene la mayor varianza? ¿Tiene sentido intuitivamente?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚔️</span><h2>Parte 2 — Árbol Solitario vs Random Forest</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: dividir datos y entrenar ambos modelos</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Divide X e y: 70% train, 30% test, random_state=42
+# Entrena:
+#   - DecisionTreeClassifier(max_depth=10, random_state=42)
+#   - RandomForestClassifier(n_estimators=100, random_state=42, oob_score=True, n_jobs=-1)
+# Imprime accuracy de entrenamiento, prueba y OOB (para RF)
+
+X_train, X_test, y_train, y_test = ___________
+arbol = ___________
+rf    = ___________
+
+# ___ entrenar y mostrar resultados ___</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: reporte de clasificación por dígito</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Imprime el classification_report del Random Forest
+# ¿Qué dígito tiene el F1-score más bajo? ¿Con qué otro dígito se confunde?
+# (Pista: usa target_names=[str(i) for i in range(10)])
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Comparando modelos:</strong></p>
+          <p>1. ¿Cuánto mejoró el test accuracy al pasar de árbol a Random Forest?<br>
+             2. ¿Qué dígitos se confunden más entre sí? ¿Por qué crees que pasa eso visualmente?<br>
+             3. El OOB score del RF, ¿es similar al test accuracy? ¿Qué concluyes?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📉</span><h2>Parte 3 — Inestabilidad del Árbol vs Estabilidad del RF</h2><span class="card-meta">~12 min · Código a completar</span></div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          Una de las ventajas clave de RF es la estabilidad. Vamos a comprobarlo empíricamente: entrenamos el mismo modelo 10 veces con diferentes semillas y medimos la variación en el accuracy.
+        </p>
+
+        <div class="step-header">Celda 3.1 — Tu código: demostrar inestabilidad del árbol</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Entrena un DecisionTreeClassifier(max_depth=10) con 10 semillas diferentes (0 a 9)
+# Para cada semilla, guarda el test accuracy
+# Imprime: media, desviación estándar y rango (max - min) de los accuracies
+
+semillas = range(10)
+accs_arbol = []
+
+for seed in semillas:
+    # ___ tu código aquí ___
+    pass
+
+print(f"Árbol — Media: {np.mean(accs_arbol):.4f} | Std: {np.std(accs_arbol):.4f} | Rango: {max(accs_arbol)-min(accs_arbol):.4f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.2 — Tu código: demostrar estabilidad del RF</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Haz lo mismo con RandomForestClassifier(n_estimators=100)
+# Compara la std y el rango con los del árbol
+
+accs_rf = []
+for seed in semillas:
+    # ___ tu código aquí ___
+    pass
+
+print(f"RF 100  — Media: {np.mean(accs_rf):.4f}   | Std: {np.std(accs_rf):.4f} | Rango: {max(accs_rf)-min(accs_rf):.4f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.3 — Tu código: gráfico de dispersión de accuracies</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Grafica en el mismo plot los accuracies del árbol y del RF para cada semilla
+# Añade líneas horizontales con la media de cada uno
+# Incluye: título, xlabel, ylabel, leyenda
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis de estabilidad:</strong></p>
+          <p>1. ¿Cuánto varía el accuracy del árbol entre semillas? ¿Y el del RF?<br>
+             2. ¿Por qué el RF es más estable? Explica con tus palabras usando los conceptos de bootstrap y votación.<br>
+             3. En un problema real donde necesitas reproducibilidad, ¿qué modelo preferirías? ¿Por qué?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📈</span><h2>Parte 4 — ¿Cuántos Árboles son Suficientes?</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: curva de aprendizaje n_estimators</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Entrena RF con n_estimators en [1, 5, 10, 20, 50, 100, 200, 500]
+# Para cada valor guarda train_acc, test_acc y oob_score
+# Grafica las tres curvas en el mismo plot
+
+n_trees = [1, 5, 10, 20, 50, 100, 200, 500]
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Conclusión:</strong> ¿A partir de qué n_estimators el test accuracy se estabiliza? ¿El OOB score converge al mismo valor que el test accuracy?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🗺️</span><h2>Parte 5 — Mapa de Importancia de Píxeles</h2><span class="card-meta">~8 min · Código a completar</span></div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          La importancia de variables en este dataset tiene una interpretación visual única: podemos ver qué píxeles de la imagen 8×8 son más importantes para clasificar los dígitos.
+        </p>
+
+        <div class="step-header">Celda 5.1 — Dado: entrenar RF óptimo</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>rf_final = RandomForestClassifier(n_estimators=200, random_state=42,
+                                   oob_score=True, n_jobs=-1)
+rf_final.fit(X_train, y_train)
+print(f"Test accuracy: {accuracy_score(y_test, rf_final.predict(X_test)):.4f}")
+print(f"OOB score:     {rf_final.oob_score_:.4f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 5.2 — Tu código: mapa de calor de importancia de píxeles</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# rf_final.feature_importances_ tiene 64 valores (uno por píxel)
+# Reshapéalo a 8x8 y visualízalo como un mapa de calor con imshow
+# Añade colorbar y título descriptivo
+
+importancias_pixeles = rf_final.feature_importances_.reshape(___, ___)
+
+plt.figure(figsize=(5, 4))
+# ___ tu código aquí ___
+plt.title("___")
+plt.colorbar()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Interpretación del mapa:</strong></p>
+          <p>1. ¿Qué zona de la imagen (centro, bordes, esquinas) tiene mayor importancia?<br>
+             2. ¿Los píxeles de los bordes tienen importancia alta o baja? ¿Por qué tiene sentido eso para dígitos escritos a mano?<br>
+             3. ¿Cambiaría el mapa si entrenaras con solo los dígitos 1 y 7? ¿Por qué?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🏆</span><h2>Desafío Bonus — Confusión entre Dígitos</h2><span class="card-meta">Opcional</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 DESAFÍO
+# 1. Crea una matriz de confusión completa (10x10) del RF final
+# 2. Visualízala como heatmap con anotaciones numéricas
+# 3. Identifica los 3 pares de dígitos que más se confunden entre sí
+# 4. Visualiza 5 ejemplos de cada uno de esos pares confundidos
+#    (un subplot con las imágenes que el modelo clasificó mal)
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN</span>
+            <div class="task-content">
+              <h4>Párrafo de conclusiones al final del notebook</h4>
+              <p>¿En qué situaciones usarías un árbol solitario vs un RF? ¿Cuántos árboles son "suficientes"? ¿Qué aporta la visualización de importancia de píxeles?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>
