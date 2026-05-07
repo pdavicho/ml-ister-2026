@@ -193,7 +193,7 @@
     <div class="section-title">Contenido del curso</div>
     <div class="weeks-grid">
 
-      <a href="semana-1/index.html" class="week-card">
+      <a href="locked.html?semana=1" class="week-card">
         <div class="week-card-top">
           <span class="week-num-badge">Semana 1</span>
           <span class="week-status">✅</span>
@@ -207,7 +207,7 @@
         </div>
       </a>
 
-      <a href="semana-2/index.html" class="week-card">
+      <a href="locked.html?semana=2" class="week-card">
         <div class="week-card-top">
           <span class="week-num-badge">Semana 2</span>
           <span class="week-status">✅</span>
@@ -221,7 +221,7 @@
         </div>
       </a>
 
-      <a href="semana-3/index.html" class="week-card">
+      <a href="locked.html?semana=3" class="week-card">
         <div class="week-card-top">
           <span class="week-num-badge">Semana 3</span>
           <span class="week-status">✅</span>
@@ -344,5 +344,21 @@
 
   </div>
 
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/utils.js"></script>
+<script>
+  // Hacer las tarjetas de semanas bloqueadas (span) clickeables desde el inicio
+  document.querySelectorAll('.week-card.locked').forEach(function(card) {
+    var badge = card.querySelector('.week-num-badge');
+    if (!badge) return;
+    var semana = parseInt(badge.textContent.replace('Semana ', ''));
+    if (!semana) return;
+    card.style.cursor = 'pointer';
+    card.style.pointerEvents = 'auto';
+    card.addEventListener('click', function() {
+      window.location.href = 'locked.html?semana=' + semana;
+    });
+  });
+</script>
 </body>
 </html>

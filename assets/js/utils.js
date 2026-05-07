@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
   setupLockedLinks();
 });
 
+/* ── Detectar si estamos dentro de una carpeta semana-X ── */
+var IN_SEMANA = /\/semana-\d+\//.test(window.location.pathname);
+
 /* ── Botones Copiar ──────────────────────────────────────── */
 function setupCopyButtons() {
   document.querySelectorAll('.sourceCode').forEach(function (wrapper) {
@@ -43,8 +46,9 @@ function markActiveWeek() {
   });
 }
 
-/* ── Botón Inicio del Curso ──────────────────────────────── */
+/* ── Botón inicio (solo en páginas de semana) ────────────── */
 function addHomeLink() {
+  if (!IN_SEMANA) return;
   var header = document.querySelector('.sidebar-header');
   if (!header) return;
   var a = document.createElement('a');
@@ -56,16 +60,17 @@ function addHomeLink() {
 
 /* ── Semanas bloqueadas: click → página de clave ─────────── */
 function setupLockedLinks() {
+  var prefix = IN_SEMANA ? '../' : '';
+
   document.querySelectorAll('.week-link.locked').forEach(function (link) {
     var num = link.querySelector('.week-num');
     if (!num) return;
     var semana = parseInt(num.textContent);
     link.style.pointerEvents = 'auto';
     link.style.cursor = 'pointer';
-    link.style.opacity = '0.5';
     link.addEventListener('click', function (e) {
       e.preventDefault();
-      window.location.href = '../locked.html?semana=' + semana;
+      window.location.href = prefix + 'locked.html?semana=' + semana;
     });
   });
 }
