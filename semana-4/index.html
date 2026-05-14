@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 4 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <span class="week-link locked"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 4</div>
+    <h1>Evaluación y Validación de Modelos</h1>
+    <div class="topic-tags">
+      <span class="tag">Matriz de Confusión</span>
+      <span class="tag">Precision</span>
+      <span class="tag">Recall</span>
+      <span class="tag">F1-Score</span>
+      <span class="tag">Cross-Validation</span>
+      <span class="tag">Curva ROC</span>
+      <span class="tag">AUC</span>
+      <span class="tag">Learning Curve</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 4</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 4</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: Matriz de Confusión y Métricas — Dataset Wine ──
+from sklearn.datasets        import load_wine
+from sklearn.ensemble        import RandomForestClassifier
+from sklearn.tree            import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics         import (confusion_matrix, classification_report,
+                                     accuracy_score, ConfusionMatrixDisplay)
+import matplotlib.pyplot as plt
+
+data = load_wine()
+X_train, X_test, y_train, y_test = train_test_split(
+    data.data, data.target, test_size=0.30, random_state=42)
+
+rf = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+rf.fit(X_train, y_train)
+y_pred = rf.predict(X_test)
+
+# Matriz de confusión visual
+fig, ax = plt.subplots(figsize=(6, 5))
+ConfusionMatrixDisplay.from_predictions(
+    y_test, y_pred,
+    display_labels=data.target_names,
+    colorbar=False,
+    ax=ax
+)
+ax.set_title('Matriz de Confusión — Random Forest en Wine')
+plt.tight_layout()
+plt.show()
+
+print("\n── Classification Report ────────────────────────────")
+print(classification_report(y_test, y_pred, target_names=data.target_names))</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: Cross-Validation — Árbol vs RF ───────────────
+from sklearn.model_selection import cross_val_score
+import numpy as np
+
+arbol = DecisionTreeClassifier(max_depth=5, random_state=42)
+rf100 = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+
+cv_arbol = cross_val_score(arbol, data.data, data.target, cv=10, scoring='accuracy')
+cv_rf    = cross_val_score(rf100, data.data, data.target, cv=10, scoring='accuracy')
+
+print("── Comparativa CV-10 — Dataset Wine ─────────────────")
+print(f"Árbol  | Media: {cv_arbol.mean():.4f} | Std: {cv_arbol.std():.4f} | Min: {cv_arbol.min():.4f} | Max: {cv_arbol.max():.4f}")
+print(f"RF 100 | Media: {cv_rf.mean():.4f} | Std: {cv_rf.std():.4f} | Min: {cv_rf.min():.4f} | Max: {cv_rf.max():.4f}")
+
+# Gráfico de barras de los 10 folds
+x = np.arange(1, 11)
+plt.figure(figsize=(9, 4))
+plt.bar(x - 0.2, cv_arbol, width=0.4, label=f'Árbol (μ={cv_arbol.mean():.3f})', color='#f59e0b', alpha=0.8)
+plt.bar(x + 0.2, cv_rf,    width=0.4, label=f'RF 100 (μ={cv_rf.mean():.3f})',   color='#3b82f6', alpha=0.8)
+plt.axhline(cv_arbol.mean(), color='#f59e0b', linestyle='--', linewidth=1.2)
+plt.axhline(cv_rf.mean(),    color='#3b82f6',  linestyle='--', linewidth=1.2)
+plt.xlabel('Fold')
+plt.ylabel('Accuracy')
+plt.title('Cross-Validation 10-Fold — Árbol vs RF en Wine')
+plt.legend()
+plt.ylim(0.7, 1.05)
+plt.grid(axis='y', alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: Curva ROC y AUC — Breast Cancer (binario) ────
+from sklearn.datasets import load_breast_cancer
+from sklearn.metrics  import roc_curve, roc_auc_score
+
+bc = load_breast_cancer()
+X_tr, X_te, y_tr, y_te = train_test_split(
+    bc.data, bc.target, test_size=0.30, random_state=42)
+
+arbol_bc = DecisionTreeClassifier(max_depth=5, random_state=42)
+rf_bc    = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+arbol_bc.fit(X_tr, y_tr)
+rf_bc.fit(X_tr, y_tr)
+
+prob_arbol = arbol_bc.predict_proba(X_te)[:, 1]
+prob_rf    = rf_bc.predict_proba(X_te)[:, 1]
+
+fpr_a, tpr_a, _ = roc_curve(y_te, prob_arbol)
+fpr_r, tpr_r, _ = roc_curve(y_te, prob_rf)
+
+auc_a = roc_auc_score(y_te, prob_arbol)
+auc_r = roc_auc_score(y_te, prob_rf)
+
+plt.figure(figsize=(6, 5))
+plt.plot(fpr_a, tpr_a, color='#f59e0b', lw=2, label=f'Árbol (AUC = {auc_a:.3f})')
+plt.plot(fpr_r, tpr_r, color='#3b82f6', lw=2, label=f'RF 100 (AUC = {auc_r:.3f})')
+plt.plot([0, 1], [0, 1], 'k--', lw=1, label='Aleatorio (AUC = 0.50)')
+plt.xlabel('False Positive Rate (1 - Especificidad)')
+plt.ylabel('True Positive Rate (Sensibilidad)')
+plt.title('Curva ROC — Árbol vs RF en Breast Cancer')
+plt.legend(loc='lower right')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: Curva de Aprendizaje — diagnosticar overfitting
+from sklearn.model_selection import learning_curve
+
+train_sizes, train_scores, val_scores = learning_curve(
+    RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1),
+    data.data, data.target,
+    train_sizes=np.linspace(0.1, 1.0, 10),
+    cv=5, scoring='accuracy', n_jobs=-1
+)
+
+train_mean = train_scores.mean(axis=1)
+train_std  = train_scores.std(axis=1)
+val_mean   = val_scores.mean(axis=1)
+val_std    = val_scores.std(axis=1)
+
+plt.figure(figsize=(8, 4))
+plt.plot(train_sizes, train_mean, 'o-', color='#f59e0b', lw=2, label='Train accuracy')
+plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.15, color='#f59e0b')
+plt.plot(train_sizes, val_mean, 'o-', color='#3b82f6', lw=2, label='Validación (CV-5)')
+plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.15, color='#3b82f6')
+plt.xlabel('Ejemplos de entrenamiento')
+plt.ylabel('Accuracy')
+plt.title('Curva de Aprendizaje — Random Forest en Wine')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.ylim(0.7, 1.05)
+plt.tight_layout()
+plt.show()
+
+brecha = train_mean[-1] - val_mean[-1]
+print(f"Train acc final:    {train_mean[-1]:.4f}")
+print(f"Val acc final:      {val_mean[-1]:.4f}")
+print(f"Brecha (overfitting? si > 0.05): {brecha:.4f}")</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana4_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 4 — Evaluación de Modelos con Dataset Penguins</h4>
+            <p>Aplica todas las métricas de evaluación (matriz de confusión, F1, cross-validation, curva ROC) al dataset de pingüinos Palmer — un dataset real con 3 especies y 4 variables morfológicas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Capítulo sobre evaluación de modelos: métricas de clasificación, matrices de confusión y validación cruzada.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Capítulo de validación cruzada, métricas de evaluación y selección de modelos.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Model Evaluation: Metrics and Scoring</h4>
+              <p>Documentación completa de todas las métricas: classification_report, roc_auc_score, cross_val_score, learning_curve.</p>
+              <a href="https://scikit-learn.org/stable/modules/model_evaluation.html" target="_blank" class="resource-link">→ sklearn.org — model evaluation</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Cross-validation: evaluating estimator performance</h4>
+              <p>Guía completa de K-Fold, StratifiedKFold, cross_val_score y cómo elegir K.</p>
+              <a href="https://scikit-learn.org/stable/modules/cross_validation.html" target="_blank" class="resource-link">→ sklearn.org — cross validation</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próximo Lunes</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Evaluación completa en Dataset Wine</h4>
+              <p>Entrena un DecisionTreeClassifier y un RandomForestClassifier en el dataset Wine. Para cada modelo: matriz de confusión, classification report y CV-10. Imprime una tabla comparativa de media ± std y escribe cuál elegirías y por qué.</p>
+              <div class="task-due">📅 Lunes próximo · Formato: PDF o Jupyter Notebook</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · ANÁLISIS</span>
+            <div class="task-content">
+              <h4>Curva ROC y AUC en Breast Cancer</h4>
+              <p>Entrena un árbol y un RF en Breast Cancer. Grafica ambas curvas ROC en el mismo plot con sus AUC. ¿Cuál modelo tiene mejor AUC? ¿Qué significa esa diferencia para el diagnóstico médico? Incluye el gráfico y tu interpretación.</p>
+              <div class="task-due">📅 Lunes próximo · Incluir el gráfico en el PDF</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · INVESTIGACIÓN</span>
+            <div class="task-content">
+              <h4>Métricas de evaluación en la industria</h4>
+              <p>Busca un caso real donde una empresa optimizó una métrica específica (distinta de accuracy). ¿Cuál métrica usaron y por qué? ¿Qué resultados lograron? Media página en PDF con fuente citada.</p>
+              <div class="task-due">📅 Lunes próximo · Formato: PDF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(4);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

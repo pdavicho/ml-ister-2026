@@ -13,7 +13,7 @@ var SEMANA_CONFIG = {
   1:  { titulo: 'Intro ML y Árboles de Decisión',    clave: CLAVE, disponible: true  },
   2:  { titulo: 'Matemáticas CART',                  clave: CLAVE, disponible: true  },
   3:  { titulo: 'Técnicas de Ensamblado',            clave: CLAVE, disponible: true  },
-  4:  { titulo: 'Evaluación y Validación',           clave: CLAVE, disponible: false },
+  4:  { titulo: 'Evaluación y Validación',           clave: CLAVE, disponible: true  },
   5:  { titulo: 'Fundamentos SVM',                   clave: CLAVE, disponible: false },
   6:  { titulo: 'Fundamentos K-NN',                  clave: CLAVE, disponible: false },
   7:  { titulo: 'Implementación SVM/K-NN',           clave: CLAVE, disponible: false },

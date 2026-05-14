@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 4 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .task-row { display: flex; gap: .75rem; padding: .65rem .9rem; border-radius: 8px; margin-bottom: .5rem; align-items: flex-start; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .cm-cell { text-align: center; font-weight: 700; font-size: .85em; padding: .4em .5em; border-radius: 4px; }
+    .cm-tp { background: rgba(34,197,94,.2); color: #4ade80; }
+    .cm-tn { background: rgba(34,197,94,.2); color: #4ade80; }
+    .cm-fp { background: rgba(239,68,68,.15); color: #f87171; }
+    .cm-fn { background: rgba(239,68,68,.15); color: #f87171; }
+    .metric-box { text-align: center; border-radius: 8px; padding: .6rem .5rem; background: rgba(30,41,59,.85); border: 1px solid #334155; }
+    .metric-box .val { font-size: 1.4em; font-weight: 800; color: #60a5fa; }
+    .metric-box .lbl { font-size: .55em; color: #94a3b8; margin-top: .2rem; }
+    .fold-bar { height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: .55em; font-weight: 700; margin: .12rem 0; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 4</div>
+  <h1 style="font-size:1.55em; line-height:1.2">Evaluación y Validación<br><span style="color:#60a5fa">de Modelos ML</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Matriz de Confusión</span>
+    <span class="tag">Precision · Recall · F1</span>
+    <span class="tag">Cross-Validation</span>
+    <span class="tag">Curva ROC · AUC</span>
+    <span class="tag">Overfitting</span>
+  </div>
+  <div class="inst">Ing. David Minango. PhD · ISTER — Sistemas y Gestión de Data · 2026</div>
+</section>
+
+<!-- S2: PROBLEMA CON ACCURACY -->
+<section>
+  <h2>¿Por qué Accuracy Sola Miente?</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">Imagina un dataset de detección de fraude: 970 transacciones normales y 30 fraudulentas.</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card" style="border-color:#f87171">
+      <h4 style="color:#f87171">Modelo "trampa"</h4>
+      <p>El modelo predice SIEMPRE "normal", sin aprender nada.</p>
+      <p style="margin-top:.5rem; font-size:.9em">Accuracy = <strong style="color:#fbbf24">970/1000 = 97%</strong></p>
+      <p style="font-size:.8em; color:#f87171; margin-top:.3rem">¿Es un buen modelo? NO — no detecta ni un fraude.</p>
+    </div>
+    <div class="card" style="border-color:#4ade80">
+      <h4 style="color:#4ade80">Modelo inteligente</h4>
+      <p>El modelo detecta correctamente 25 de los 30 fraudes.</p>
+      <p style="margin-top:.5rem; font-size:.9em">Accuracy = <strong style="color:#4ade80">985/1000 = 98.5%</strong></p>
+      <p style="font-size:.8em; color:#4ade80; margin-top:.3rem">Solo un 1.5% más, pero detecta el 83% de los fraudes.</p>
+    </div>
+  </div>
+  <div class="danger" style="margin-top:.6rem">Accuracy sola oculta si el modelo falla en la clase que más importa. Necesitamos métricas más detalladas.</div>
+</section>
+
+<!-- S3: MATRIZ DE CONFUSIÓN -->
+<section>
+  <h2>La Matriz de Confusión</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.5rem">Para clasificación binaria: la matriz de confusión compara lo que el modelo predijo vs la realidad.</p>
+  <table style="font-size:.75em; width:70%; margin:0 auto">
+    <thead>
+      <tr><th style="background:transparent"></th><th>Predice: Positivo</th><th>Predice: Negativo</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:700; color:#60a5fa">Real: Positivo</td>
+        <td class="cm-tp">TP<br><span style="font-size:.75em; font-weight:400">Verdadero Positivo<br>✅ Correcto</span></td>
+        <td class="cm-fn">FN<br><span style="font-size:.75em; font-weight:400">Falso Negativo<br>❌ Error Tipo II</span></td>
+      </tr>
+      <tr>
+        <td style="font-weight:700; color:#60a5fa">Real: Negativo</td>
+        <td class="cm-fp">FP<br><span style="font-size:.75em; font-weight:400">Falso Positivo<br>❌ Error Tipo I</span></td>
+        <td class="cm-tn">TN<br><span style="font-size:.75em; font-weight:400">Verdadero Negativo<br>✅ Correcto</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="font-size:.85em; margin-top:.5rem">
+    <div class="warn">FN (Falso Negativo) — "El paciente tiene cáncer pero dijimos que no". Muy peligroso.</div>
+    <div class="warn">FP (Falso Positivo) — "Dijimos que hay fraude pero era normal". Costoso pero menos peligroso.</div>
+  </div>
+</section>
+
+<!-- S4: ANALOGÍA - PRUEBA MÉDICA -->
+<section>
+  <h2>Analogía: Prueba de Diagnóstico Médico</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">Una prueba médica detecta si un paciente tiene o no una enfermedad. Analicemos los 4 resultados posibles.</p>
+  <div class="cols cols-2" style="font-size:.88em">
+    <div class="card" style="border-color:#4ade80">
+      <h4 style="color:#4ade80">✅ Verdadero Positivo (TP)</h4>
+      <p>El paciente TIENE la enfermedad y la prueba dijo "Positivo". Correcto — se trata a tiempo.</p>
+    </div>
+    <div class="card" style="border-color:#4ade80">
+      <h4 style="color:#4ade80">✅ Verdadero Negativo (TN)</h4>
+      <p>El paciente NO tiene la enfermedad y la prueba dijo "Negativo". Correcto — no necesita tratamiento.</p>
+    </div>
+    <div class="card" style="border-color:#f59e0b">
+      <h4 style="color:#fbbf24">⚠️ Falso Positivo (FP)</h4>
+      <p>El paciente NO tiene la enfermedad pero la prueba dijo "Positivo". Error — tratamiento innecesario, estrés, costo.</p>
+    </div>
+    <div class="card" style="border-color:#ef4444">
+      <h4 style="color:#f87171">🚨 Falso Negativo (FN)</h4>
+      <p>El paciente SÍ tiene la enfermedad pero la prueba dijo "Negativo". Error crítico — no recibe tratamiento.</p>
+    </div>
+  </div>
+  <div class="danger" style="margin-top:.4rem">En medicina, los FN son más peligrosos que los FP. Esto dicta qué métrica optimizar.</div>
+</section>
+
+<!-- S5: MÉTRICAS -->
+<section>
+  <h2>Métricas Derivadas de la Matriz</h2>
+  <div class="cols cols-2" style="font-size:.9em; margin-bottom:.5rem">
+    <div class="card">
+      <h4>Accuracy (Exactitud)</h4>
+      <p style="font-size:.9em; color:#fbbf24">Acc = (TP + TN) / (TP + TN + FP + FN)</p>
+      <p>Porcentaje total de predicciones correctas. Engañosa en clases desbalanceadas.</p>
+    </div>
+    <div class="card">
+      <h4>Precision (Precisión)</h4>
+      <p style="font-size:.9em; color:#60a5fa">Prec = TP / (TP + FP)</p>
+      <p>De todos los que predije como Positivo, ¿cuántos realmente lo eran? Importa cuando el FP es costoso.</p>
+    </div>
+    <div class="card">
+      <h4>Recall (Sensibilidad)</h4>
+      <p style="font-size:.9em; color:#4ade80">Rec = TP / (TP + FN)</p>
+      <p>De todos los Positivos reales, ¿cuántos detecté? Importa cuando el FN es peligroso (médico).</p>
+    </div>
+    <div class="card">
+      <h4>F1-Score</h4>
+      <p style="font-size:.9em; color:#a78bfa">F1 = 2 × (Prec × Rec) / (Prec + Rec)</p>
+      <p>Media armónica de Precision y Recall. Útil cuando ambas importan y hay desbalanceo.</p>
+    </div>
+  </div>
+  <div class="result">El F1-Score penaliza fuertemente si alguna de las dos (Precision o Recall) es muy baja.</div>
+</section>
+
+<!-- S6: TRADE-OFF PRECISION RECALL -->
+<section>
+  <h2>El Trade-off: Precision vs Recall</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">No puedes maximizar ambas al mismo tiempo. Aumentar Recall generalmente baja Precision y viceversa.</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card">
+      <h4>Umbral bajo (threshold ↓)</h4>
+      <p>El modelo predice "Positivo" más fácilmente.</p>
+      <p style="margin-top:.3rem">→ <span class="pro">Recall sube</span> (detecta más enfermos)</p>
+      <p>→ <span class="con">Precision baja</span> (más falsos positivos)</p>
+      <p style="font-size:.8em; color:#fbbf24; margin-top:.4rem">Útil en: detección de enfermedades, fraude bancario.</p>
+    </div>
+    <div class="card">
+      <h4>Umbral alto (threshold ↑)</h4>
+      <p>El modelo solo predice "Positivo" cuando está muy seguro.</p>
+      <p style="margin-top:.3rem">→ <span class="pro">Precision sube</span> (casi no hay FP)</p>
+      <p>→ <span class="con">Recall baja</span> (pierde algunos positivos)</p>
+      <p style="font-size:.8em; color:#fbbf24; margin-top:.4rem">Útil en: recomendaciones de productos, spam (no enviar a inbox válido).</p>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.4rem">La elección del umbral depende del problema. Siempre pregunta: ¿qué error es más costoso — FP o FN?</div>
+</section>
+
+<!-- S7: CLASSIFICATION REPORT -->
+<section>
+  <h2>El Reporte de Clasificación</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.4rem"><code>classification_report(y_test, y_pred)</code> muestra todas las métricas por clase en una tabla.</p>
+  <table style="font-size:.65em">
+    <thead>
+      <tr><th>Clase</th><th>Precision</th><th>Recall</th><th>F1-Score</th><th>Support</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Vino 0</td><td>1.00</td><td>1.00</td><td>1.00</td><td>19</td></tr>
+      <tr><td>Vino 1</td><td>0.96</td><td>0.96</td><td>0.96</td><td>23</td></tr>
+      <tr><td>Vino 2</td><td>0.93</td><td>0.93</td><td>0.93</td><td>12</td></tr>
+      <tr><td style="color:#fbbf24">macro avg</td><td>0.96</td><td>0.96</td><td>0.96</td><td>54</td></tr>
+      <tr><td style="color:#60a5fa">weighted avg</td><td>0.96</td><td>0.96</td><td>0.96</td><td>54</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="font-size:.85em; margin-top:.4rem">
+    <div class="step"><strong>Support</strong> — cuántos ejemplos reales hay de esa clase en el test set. Si una clase tiene Support=5, su F1 no es muy confiable.</div>
+    <div class="step"><strong>macro avg</strong> — promedio simple (todas las clases pesan igual). <strong>weighted avg</strong> — promedio ponderado por Support (recomendado en desbalanceo).</div>
+  </div>
+</section>
+
+<!-- S8: ¿QUÉ ES CROSS-VALIDATION? -->
+<section>
+  <h2>¿Qué es la Validación Cruzada?</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.5rem">El problema del train/test split simple: el resultado depende de CÓMO dividiste los datos (suerte).</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card" style="border-color:#f87171">
+      <h4 style="color:#f87171">Problema del split simple</h4>
+      <p>Si tienes mala suerte en el split, el test set puede contener solo ejemplos fáciles → accuracy inflada.</p>
+      <p style="margin-top:.3rem; font-size:.8em">O solo ejemplos difíciles → accuracy injustamente baja.</p>
+    </div>
+    <div class="card" style="border-color:#3b82f6">
+      <h4 style="color:#60a5fa">Solución: Cross-Validation</h4>
+      <p>Divide los datos en K partes (folds). Entrena K veces, cada vez usando una parte diferente como test.</p>
+      <p style="margin-top:.3rem; font-size:.8em; color:#4ade80">→ Todos los ejemplos son usados para test exactamente una vez.</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.5rem">CV da una estimación mucho más confiable del rendimiento real del modelo en datos nuevos.</div>
+</section>
+
+<!-- S9: K-FOLD CV PROCESO -->
+<section>
+  <h2>K-Fold Cross-Validation — El Proceso</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.4rem">Con K=5, los datos se dividen en 5 partes. El proceso repite 5 veces:</p>
+  <div style="font-size:.82em">
+    <div style="display:grid; gap:.15rem; margin-bottom:.4rem">
+      <div style="display:grid; grid-template-columns: 60px 1fr; gap:.3rem; align-items:center">
+        <span style="font-size:.7em; color:#94a3b8; text-align:right">Fold 1</span>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:.1rem">
+          <div class="fold-bar" style="background:#ef4444; color:white">TEST</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: 60px 1fr; gap:.3rem; align-items:center">
+        <span style="font-size:.7em; color:#94a3b8; text-align:right">Fold 2</span>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:.1rem">
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#ef4444; color:white">TEST</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: 60px 1fr; gap:.3rem; align-items:center">
+        <span style="font-size:.7em; color:#94a3b8; text-align:right">Fold 3</span>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:.1rem">
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#ef4444; color:white">TEST</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: 60px 1fr; gap:.3rem; align-items:center">
+        <span style="font-size:.7em; color:#94a3b8; text-align:right">Fold 4</span>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:.1rem">
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#ef4444; color:white">TEST</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: 60px 1fr; gap:.3rem; align-items:center">
+        <span style="font-size:.7em; color:#94a3b8; text-align:right">Fold 5</span>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:.1rem">
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#1e3a5f; color:#60a5fa; border:1px solid #3b82f6">train</div>
+          <div class="fold-bar" style="background:#ef4444; color:white">TEST</div>
+        </div>
+      </div>
+    </div>
+    <div class="result" style="font-size:.9em">Resultado final: promedio de los 5 scores + desviación estándar → estimación confiable y estable.</div>
+  </div>
+</section>
+
+<!-- S10: ¿CUÁNTOS FOLDS? -->
+<section>
+  <h2>¿Cuántos Folds Elegir?</h2>
+  <table>
+    <thead>
+      <tr><th>K</th><th>Nombre</th><th>Ventajas</th><th>Desventajas</th><th>Cuándo usar</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>5</strong></td><td>5-Fold CV</td><td class="pro">Rápido, buen balance</td><td class="con">Menos confiable que K=10</td><td>Dataset grande (&gt;500 ej.)</td></tr>
+      <tr><td><strong style="color:#4ade80">10</strong></td><td style="color:#4ade80">10-Fold CV</td><td class="pro">Estándar. Bajo sesgo, baja varianza</td><td class="con">Más lento</td><td style="color:#fbbf24">La mayoría de casos (recomendado)</td></tr>
+      <tr><td><strong>N</strong></td><td>Leave-One-Out (LOO)</td><td class="pro">Usa casi todo para train</td><td class="con">Muy lento en datasets grandes</td><td>Dataset muy pequeño (&lt;100 ej.)</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="font-size:.85em; margin-top:.5rem">
+    <div class="step"><strong>Regla práctica:</strong> usa K=10 como default. Si el dataset es pequeño (&lt;200 ejemplos), usa K=5 o incluso LOO.</div>
+    <div class="step"><strong>cross_val_score(modelo, X, y, cv=10)</strong> — sklearn hace todo automáticamente. Devuelve un array de K scores.</div>
+  </div>
+</section>
+
+<!-- S11: CURVA ROC y AUC -->
+<section>
+  <h2>Curva ROC y AUC</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.4rem">La curva ROC (Receiver Operating Characteristic) mide la calidad del modelo en todos los umbrales posibles.</p>
+  <div class="cols cols-2" style="font-size:.9em">
+    <div class="card">
+      <h4>¿Cómo se construye?</h4>
+      <p>Para cada umbral (de 0 a 1):</p>
+      <p>· Calcula FPR = FP / (FP + TN)</p>
+      <p>· Calcula TPR = TP / (TP + FN)</p>
+      <p>· Dibuja el punto (FPR, TPR)</p>
+      <p style="margin-top:.4rem; font-size:.8em; color:#60a5fa">La curva va de (0,0) a (1,1).</p>
+    </div>
+    <div class="card" style="border-color:#3b82f6">
+      <h4 style="color:#60a5fa">AUC — Área Bajo la Curva</h4>
+      <p>Resumen en un solo número: el área bajo la curva ROC.</p>
+      <table style="font-size:.82em; margin-top:.3rem">
+        <tbody>
+          <tr><td>AUC = 1.0</td><td class="pro">Perfecto</td></tr>
+          <tr><td>AUC &gt; 0.9</td><td class="pro">Excelente</td></tr>
+          <tr><td>AUC 0.8–0.9</td><td style="color:#fbbf24">Bueno</td></tr>
+          <tr><td>AUC = 0.5</td><td class="con">Igual que adivinar</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.4rem">La curva ROC y AUC son para clasificación <strong>binaria</strong>. Para multiclase se usa el enfoque One-vs-Rest.</div>
+</section>
+
+<!-- S12: OVERFITTING Y UNDERFITTING -->
+<section>
+  <h2>Overfitting vs Underfitting</h2>
+  <p style="font-size:.58em; color:#94a3b8; margin-bottom:.4rem">El diagnóstico clave: ¿el error en train y en validación están cercanos o muy separados?</p>
+  <div class="cols cols-3" style="font-size:.85em">
+    <div class="card" style="border-color:#f59e0b">
+      <h4 style="color:#fbbf24">Underfitting (alto sesgo)</h4>
+      <p>Train acc: baja</p>
+      <p>Val acc: baja</p>
+      <p style="margin-top:.3rem">El modelo es demasiado simple. Aumenta complejidad (más profundidad, más features).</p>
+    </div>
+    <div class="card" style="border-color:#4ade80">
+      <h4 style="color:#4ade80">Buena generalización</h4>
+      <p>Train acc: alta</p>
+      <p>Val acc: similar a train</p>
+      <p style="margin-top:.3rem">El modelo generaliza bien. Esta es la zona objetivo.</p>
+    </div>
+    <div class="card" style="border-color:#ef4444">
+      <h4 style="color:#f87171">Overfitting (alta varianza)</h4>
+      <p>Train acc: muy alta</p>
+      <p>Val acc: mucho más baja</p>
+      <p style="margin-top:.3rem">Memoriza el training. Reduce complejidad (menos profundidad, más datos, regularización).</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.5rem">La curva de aprendizaje muestra el accuracy de train y validación vs el tamaño del training set — revela si hay over/underfitting.</div>
+</section>
+
+<!-- S13: COMPARACIÓN DE MODELOS -->
+<section>
+  <h2>Cómo Comparar Modelos Correctamente</h2>
+  <div style="font-size:.9em">
+    <div class="num-row"><span class="num-circle">1</span><span>Usa la <strong>misma métrica</strong> para todos los modelos (ej. F1-weighted o AUC).</span></div>
+    <div class="num-row"><span class="num-circle">2</span><span>Usa la <strong>misma partición de datos</strong> (misma semilla en train_test_split, o el mismo CV).</span></div>
+    <div class="num-row"><span class="num-circle">3</span><span>Reporta <strong>media ± desviación estándar</strong> del CV, no solo el accuracy de un fold.</span></div>
+    <div class="num-row"><span class="num-circle">4</span><span>Considera la <strong>diferencia práctica</strong>: ¿0.965 vs 0.968 es significativo para tu problema?</span></div>
+    <div class="num-row"><span class="num-circle">5</span><span>Evalúa también <strong>tiempo de entrenamiento</strong> y <strong>interpretabilidad</strong>, no solo el score.</span></div>
+  </div>
+  <div class="warn" style="margin-top:.5rem">Un modelo más complejo que mejora el accuracy solo un 0.2% pero es 10× más lento puede no valer la pena.</div>
+</section>
+
+<!-- S14: SEPARADOR EJERCICIOS -->
+<section data-background-gradient="linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)">
+  <div class="eyebrow">PARTE 3</div>
+  <h1 style="font-size:1.9em">Ejercicios<br><span style="color:#60a5fa">en Clase</span></h1>
+</section>
+
+<!-- S15: EJERCICIO 1 - CALCULAR MÉTRICAS -->
+<section>
+  <h2>Ejercicio 1 · Calcular Métricas a Mano</h2>
+  <p style="font-size:.6em; color:#fbbf24; margin-bottom:.4rem">Un modelo de detección de spam produce esta matriz de confusión (Positivo = Spam):</p>
+  <table style="font-size:.72em; width:60%; margin:0 auto .5rem">
+    <thead><tr><th></th><th>Predice Spam</th><th>Predice Normal</th></tr></thead>
+    <tbody>
+      <tr><td style="color:#60a5fa">Real Spam</td><td class="cm-tp">TP = 80</td><td class="cm-fn">FN = 20</td></tr>
+      <tr><td style="color:#60a5fa">Real Normal</td><td class="cm-fp">FP = 10</td><td class="cm-tn">TN = 890</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="font-size:.85em; gap:.4rem">
+    <div>
+      <div class="step">1. Accuracy = (TP + TN) / Total = <strong style="color:#fbbf24">?</strong></div>
+      <div class="step">2. Precision = TP / (TP + FP) = <strong style="color:#fbbf24">?</strong></div>
+      <div class="step">3. Recall = TP / (TP + FN) = <strong style="color:#fbbf24">?</strong></div>
+      <div class="step">4. F1 = 2 × (Prec × Rec) / (Prec + Rec) = <strong style="color:#fbbf24">?</strong></div>
+    </div>
+    <div>
+      <div class="result" style="font-size:1em">Solución:<br>Acc = 97.0% | Prec = 88.9% | Rec = 80.0% | F1 = 84.2%</div>
+      <div class="step" style="margin-top:.4rem">5. ¿Debería el gerente de correo preocuparse más por los FP o FN? ¿Por qué?</div>
+    </div>
+  </div>
+</section>
+
+<!-- S16: EJERCICIO 2 - INTERPRETAR REPORTE -->
+<section>
+  <h2>Ejercicio 2 · Interpretar un Classification Report</h2>
+  <p style="font-size:.6em; color:#94a3b8; margin-bottom:.4rem">Un modelo clasifica pacientes en 3 grupos (bajo, medio, alto riesgo). Analiza el reporte:</p>
+  <table style="font-size:.67em">
+    <thead><tr><th>Clase</th><th>Precision</th><th>Recall</th><th>F1-Score</th><th>Support</th></tr></thead>
+    <tbody>
+      <tr><td>Bajo riesgo</td><td class="pro">0.95</td><td class="pro">0.98</td><td class="pro">0.96</td><td>200</td></tr>
+      <tr><td style="color:#fbbf24">Medio riesgo</td><td style="color:#fbbf24">0.71</td><td style="color:#fbbf24">0.65</td><td style="color:#fbbf24">0.68</td><td>150</td></tr>
+      <tr><td style="color:#f87171">Alto riesgo</td><td class="pro">0.88</td><td class="con">0.42</td><td class="con">0.57</td><td>50</td></tr>
+      <tr><td>weighted avg</td><td>0.87</td><td>0.86</td><td>0.86</td><td>400</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="font-size:.85em; margin-top:.4rem; gap:.4rem">
+    <div class="step">1. ¿Qué clase tiene el peor desempeño? ¿El modelo detecta bien a los pacientes de alto riesgo?</div>
+    <div class="step">2. El Recall de Alto riesgo es 0.42 — ¿qué significa esto en términos de FN? ¿Es aceptable médicamente?</div>
+  </div>
+  <div class="danger" style="margin-top:.3rem">El modelo falla en detectar el 58% de los pacientes de alto riesgo — esto no es aceptable en medicina.</div>
+</section>
+
+<!-- S17: EJERCICIO 3 - ELEGIR MÉTRICA -->
+<section>
+  <h2>Ejercicio 3 · ¿Qué Métrica Usar?</h2>
+  <p style="font-size:.62em; color:#fbbf24; margin-bottom:.4rem">Para cada problema, decide cuál es la métrica más importante y por qué:</p>
+  <div style="font-size:.9em">
+    <div class="step"><strong>Caso A:</strong> Detector de cáncer de mama. Predice si el tumor es maligno o benigno. Un resultado falso negativo significa no tratar un tumor real. ¿Accuracy, Precision o Recall?</div>
+    <div class="step"><strong>Caso B:</strong> Filtro de spam de correo. Si marca un email legítimo como spam (FP), el usuario pierde un correo importante. ¿Accuracy, Precision o Recall?</div>
+    <div class="step"><strong>Caso C:</strong> Clasificador de reseñas de restaurantes (positivo/negativo). El dataset tiene 50% de cada clase. ¿Accuracy, F1 o AUC?</div>
+    <div class="step"><strong>Caso D:</strong> Detección de fraude: 99% de transacciones son normales. ¿Accuracy, F1-weighted o AUC?</div>
+  </div>
+</section>
+
+<!-- S18: TAREAS -->
+<section>
+  <h2>Tareas · Semana 4</h2>
+  <div>
+    <div class="task-row" style="background:rgba(5,150,105,.1); border:1px solid rgba(5,150,105,.3)">
+      <span style="background:#059669; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T1 · PYTHON</span>
+      <div>
+        <strong style="font-size:.68em">Evaluación completa de modelos en Wine</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Entrena Árbol y RF en Wine. Para cada modelo: matriz de confusión, classification report y CV-10. Imprime una tabla comparativa con media ± std del CV. Escribe cuál elegirías y por qué.</p>
+      </div>
+    </div>
+    <div class="task-row" style="background:rgba(124,58,237,.1); border:1px solid rgba(124,58,237,.3)">
+      <span style="background:#7c3aed; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T2 · ANÁLISIS</span>
+      <div>
+        <strong style="font-size:.68em">Curva ROC y AUC en Breast Cancer</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Entrena un árbol y un RF en Breast Cancer. Grafica ambas curvas ROC en el mismo plot con sus AUC. ¿Cuál modelo tiene mejor AUC? ¿Qué significa para el diagnóstico médico?</p>
+      </div>
+    </div>
+    <div class="task-row" style="background:rgba(217,119,6,.1); border:1px solid rgba(217,119,6,.3)">
+      <span style="background:#d97706; color:white; font-size:.55em; padding:.2em .5em; border-radius:4px; white-space:nowrap">T3 · INVESTIGACIÓN</span>
+      <div>
+        <strong style="font-size:.68em">Métricas en la industria</strong>
+        <p style="font-size:.6em; color:#94a3b8; margin-top:.2rem">Busca un caso real donde una empresa optimizó una métrica específica (no accuracy). ¿Cuál eligieron? ¿Por qué? ¿Qué resultados obtuvo? Media página en PDF.</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.48em; color:#64748b; text-align:center; margin-top:.4rem">✓ Entrega: próximo Lunes · Semana 5: Fundamentos de SVM</p>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({ hash:true, progress:true, controls:true, transition:'slide', backgroundTransition:'fade' });
+</script>
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 4 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <span class="week-link locked"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 4</div>
+    <h1>Práctica 4 — Evaluación de Modelos con Dataset Penguins</h1>
+    <div class="topic-tags">
+      <span class="tag">Dataset Penguins</span>
+      <span class="tag">Matriz de Confusión</span>
+      <span class="tag">F1-Score</span>
+      <span class="tag">Cross-Validation</span>
+      <span class="tag">Curva ROC</span>
+      <span class="tag">Learning Curve</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 4</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana4_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Explorar y preparar el dataset Penguins (manejo de valores nulos, codificación de clases).</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Entrenar un árbol de decisión y un Random Forest, evaluar con matriz de confusión y classification report.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Comparar ambos modelos usando Cross-Validation 10-Fold y reportar media ± std.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Construir curvas ROC One-vs-Rest para clasificación multiclase y calcular AUC por especie.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Trazar la curva de aprendizaje e identificar si el modelo presenta overfitting o underfitting.</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🐧</span>
+        <h2>El Dataset: Palmer Penguins</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>Palmer Penguins</strong> contiene medidas morfológicas de 344 pingüinos pertenecientes a 3 especies: <em>Adelie</em>, <em>Chinstrap</em> y <em>Gentoo</em>, recolectadas en las islas del archipiélago Palmer, Antártida. Tiene valores nulos que debes manejar antes de entrenar.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">344 pingüinos</div>
+            <div style="color:var(--text-muted)">3 especies: Adelie, Chinstrap, Gentoo</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">4 variables numéricas</div>
+            <div style="color:var(--text-muted)">bill_length, bill_depth, flipper_length, body_mass</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">3 clases</div>
+            <div style="color:var(--text-muted)">Adelie (152), Gentoo (124), Chinstrap (68)</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:#f59e0b; margin-bottom:0.3rem">11 filas con NaN</div>
+            <div style="color:var(--text-muted)">Datos reales — hay que limpiarlos antes de modelar</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.tree            import DecisionTreeClassifier
+from sklearn.ensemble        import RandomForestClassifier
+from sklearn.model_selection import train_test_split, cross_val_score, learning_curve
+from sklearn.metrics         import (confusion_matrix, classification_report,
+                                     ConfusionMatrixDisplay, roc_curve, auc)
+from sklearn.preprocessing   import label_binarize
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔍</span><h2>Parte 1 — Carga y Preparación del Dataset</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar el dataset</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>df = sns.load_dataset('penguins')
+print(f"Forma original: {df.shape}")
+print(f"\nColumnas: {df.columns.tolist()}")
+print(f"\nValores nulos por columna:")
+print(df.isnull().sum())
+print(f"\nDistribución de especies:")
+print(df['species'].value_counts())</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: limpiar y preparar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Elimina filas con valores nulos usando dropna()
+# 2. Selecciona solo las 4 columnas numéricas como X:
+#    'bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g'
+# 3. Convierte la columna 'species' a código numérico (0, 1, 2) como y
+#    Usa: pd.Categorical(df_limpio['species']).codes
+# 4. Imprime el nuevo shape y las clases únicas de y
+
+df_limpio = ___________
+X = ___________
+y = ___________
+
+nombres_especies = df_limpio['species'].cat.categories.tolist()
+print(f"Forma limpia: {df_limpio.shape}")
+print(f"Clases: {nombres_especies}")
+print(f"y única: {np.unique(y, return_counts=True)}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.3 — Tu código: exploración visual</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Crea un pairplot con seaborn del dataframe limpio
+# Usa hue='species' para colorear por especie
+# ¿Qué variable separa mejor a las 3 especies?
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Observando el pairplot:</strong></p>
+          <p>1. ¿Qué par de variables separa mejor a Gentoo del resto? ¿Por qué tiene sentido biológicamente?<br>
+             2. ¿Adelie y Chinstrap son fáciles de separar? ¿Qué variable los diferencia mejor?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🧠</span><h2>Parte 2 — Entrenamiento y Métricas Básicas</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: dividir y entrenar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Divide X e y: 70% train, 30% test, random_state=42, stratify=y
+# Entrena:
+#   - DecisionTreeClassifier(max_depth=5, random_state=42)
+#   - RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+# Imprime la accuracy de train y test para cada modelo
+
+X_train, X_test, y_train, y_test = ___________
+arbol = ___________
+rf    = ___________
+
+# ___ entrenar y mostrar resultados ___</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: matrices de confusión</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Crea una figura con 2 subplots lado a lado
+# En cada uno: ConfusionMatrixDisplay.from_predictions(...)
+# Usa nombres_especies como display_labels
+# Título: 'Árbol de Decisión' y 'Random Forest'
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+# ___ tu código aquí ___
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.3 — Tu código: classification report</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Imprime el classification_report del Random Forest
+# Usa target_names=nombres_especies
+# ¿Qué especie tiene el F1-Score más bajo? ¿Por qué crees que el modelo se equivoca en esa especie?
+
+y_pred_rf = rf.predict(X_test)
+print("── Classification Report — Random Forest ────────────")
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis de métricas:</strong></p>
+          <p>1. ¿Cuánto mejoró el F1 al pasar de árbol a Random Forest?<br>
+             2. ¿Qué especie tiene más errores en la matriz de confusión? ¿Con cuál se confunde?<br>
+             3. El Support de Chinstrap es menor que el de Adelie — ¿cómo afecta eso a la confianza en su F1?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔄</span><h2>Parte 3 — Cross-Validation 10-Fold</h2><span class="card-meta">~12 min · Código a completar</span></div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          Un solo train/test split puede ser "con suerte". Con CV-10 obtenemos una estimación más confiable del rendimiento real de cada modelo.
+        </p>
+
+        <div class="step-header">Celda 3.1 — Tu código: CV-10 para árbol y RF</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Calcula cross_val_score con cv=10 y scoring='f1_weighted' para:
+#   - arbol (reusa el objeto ya definido)
+#   - rf    (reusa el objeto ya definido)
+# Imprime: media y desviación estándar de cada uno
+# ¿Cuál tiene menor std? ¿Por qué es importante eso?
+
+cv_arbol = ___________
+cv_rf    = ___________
+
+print(f"Árbol  | F1 media: {cv_arbol.mean():.4f} | Std: {cv_arbol.std():.4f}")
+print(f"RF 100 | F1 media: {cv_rf.mean():.4f} | Std: {cv_rf.std():.4f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.2 — Tu código: gráfico de boxplot de CV</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Crea un boxplot que compare los 10 scores del árbol vs RF
+# Usa plt.boxplot([cv_arbol, cv_rf], labels=['Árbol', 'RF 100'])
+# Incluye: título, ylabel='F1-Score', grid, colores distintos
+
+# ___ tu código aquí ___</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis de CV:</strong></p>
+          <p>1. ¿Cuál modelo tiene mayor F1 promedio? ¿Y cuál tiene menor variabilidad entre folds?<br>
+             2. ¿Hay algún fold donde el árbol supera al RF? ¿Qué puede explicarlo?<br>
+             3. ¿Por qué usamos F1-weighted en lugar de accuracy para este dataset?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📈</span><h2>Parte 4 — Curvas ROC One-vs-Rest (Multiclase)</h2><span class="card-meta">~12 min · Código a completar</span></div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          Para clasificación con más de 2 clases, calculamos una curva ROC por especie (One-vs-Rest): cada especie se trata como "Positivo" y el resto como "Negativo".
+        </p>
+
+        <div class="step-header">Celda 4.1 — Dado: binarizar etiquetas</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># Para ROC multiclase necesitamos binarizar y en formato one-hot
+y_test_bin = label_binarize(y_test, classes=[0, 1, 2])
+y_prob_rf  = rf.predict_proba(X_test)   # shape: (n_muestras, 3)
+print(f"y_test_bin shape: {y_test_bin.shape}")
+print(f"y_prob_rf  shape: {y_prob_rf.shape}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 4.2 — Tu código: curvas ROC por especie</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Para cada clase i en [0, 1, 2]:
+#   - Calcula fpr, tpr usando roc_curve(y_test_bin[:, i], y_prob_rf[:, i])
+#   - Calcula el AUC con auc(fpr, tpr)
+#   - Dibuja la curva con su etiqueta f'{nombres_especies[i]} (AUC = ...)'
+# Añade la línea diagonal punteada de referencia
+# Incluye: título, xlabel, ylabel, leyenda, grid
+
+colores = ['#3b82f6', '#10b981', '#f59e0b']
+plt.figure(figsize=(7, 5))
+
+for i in range(3):
+    # ___ tu código aquí ___
+    pass
+
+plt.plot([0, 1], [0, 1], 'k--', lw=1, label='Aleatorio')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Curvas ROC One-vs-Rest — RF en Penguins')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Interpretación de curvas ROC:</strong></p>
+          <p>1. ¿Qué especie tiene el AUC más alto? ¿Coincide con la que tiene mejor F1 en el reporte?<br>
+             2. ¿Qué especie es más difícil de distinguir del resto (AUC más bajo)? ¿Por qué?<br>
+             3. Si el AUC de Chinstrap fuera 0.72, ¿qué significaría en términos prácticos?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📉</span><h2>Parte 5 — Curva de Aprendizaje</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:0.75rem">
+          La curva de aprendizaje muestra cómo mejora el modelo a medida que dispone de más datos de entrenamiento. Ayuda a diagnosticar overfitting (brecha grande entre train y val) o underfitting (ambas curvas bajas).
+        </p>
+
+        <div class="step-header">Celda 5.1 — Tu código: calcular y graficar curva de aprendizaje</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Usa learning_curve con:
+#   - RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+#   - train_sizes=np.linspace(0.1, 1.0, 10)
+#   - cv=5, scoring='f1_weighted', n_jobs=-1
+# Grafica train_mean y val_mean con bandas de std
+# Incluye: título, xlabel ('Ejemplos de entrenamiento'), ylabel ('F1-Score'), leyenda, grid
+
+train_sizes, train_scores, val_scores = learning_curve(
+    ___________,
+    X, y,
+    train_sizes=np.linspace(0.1, 1.0, 10),
+    cv=5, scoring='f1_weighted', n_jobs=-1
+)
+
+train_mean = train_scores.mean(axis=1)
+train_std  = train_scores.std(axis=1)
+val_mean   = val_scores.mean(axis=1)
+val_std    = val_scores.std(axis=1)
+
+plt.figure(figsize=(8, 4))
+# ___ graficar aquí ___
+plt.tight_layout()
+plt.show()
+
+print(f"F1 train final:      {train_mean[-1]:.4f}")
+print(f"F1 validación final: {val_mean[-1]:.4f}")
+print(f"Brecha: {train_mean[-1] - val_mean[-1]:.4f}  (> 0.05 sugiere overfitting)")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Diagnóstico de la curva de aprendizaje:</strong></p>
+          <p>1. ¿Convergen las curvas de train y validación? ¿Qué diagnóstico hace eso?<br>
+             2. ¿El modelo mejora mucho al agregar más datos o ya estabilizó? ¿Necesitaríamos más datos?<br>
+             3. Con 50 ejemplos de entrenamiento, ¿el modelo ya es confiable? ¿Por qué sí o no?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🏆</span><h2>Desafío Bonus — Árbol con max_depth variable</h2><span class="card-meta">Opcional</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 DESAFÍO
+# 1. Entrena DecisionTreeClassifier con max_depth en [1, 2, 3, 5, 8, None]
+# 2. Para cada valor: calcula train accuracy, test accuracy y CV-5 F1-weighted
+# 3. Grafica las 3 curvas en función de max_depth
+# 4. Identifica el max_depth donde ocurre overfitting
+# 5. ¿Cuál es el max_depth óptimo para Penguins?
+
+depths = [1, 2, 3, 5, 8, None]
+# ___ tu código aquí ___</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN</span>
+            <div class="task-content">
+              <h4>Párrafo de conclusiones al final del notebook</h4>
+              <p>¿Cuál modelo elegirías para clasificar pingüinos en producción y con qué métrica lo justificas? ¿El modelo tiene overfitting o underfitting? ¿Qué harías para mejorarlo?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(4);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>
