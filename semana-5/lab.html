@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 5 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 5</div>
+    <h1>Práctica 5 — SVM en Dataset Pima Indians Diabetes</h1>
+    <div class="topic-tags">
+      <span class="tag">Pima Diabetes</span>
+      <span class="tag">SVM</span>
+      <span class="tag">Kernel RBF</span>
+      <span class="tag">Normalización</span>
+      <span class="tag">GridSearchCV</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 5</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana5_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Cargar y explorar el dataset Pima Indians Diabetes (768 muestras, 8 variables clínicas).</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Comparar SVM con kernel lineal vs RBF antes y después de normalizar con StandardScaler.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Ajustar los hiperparámetros C y gamma con GridSearchCV y reportar el mejor modelo.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Evaluar el mejor modelo con matriz de confusión, classification report y CV-10.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Interpretar los resultados en el contexto clínico: ¿qué importa más, Precision o Recall?</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🩺</span>
+        <h2>El Dataset: Pima Indians Diabetes</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>Pima Indians Diabetes</strong> proviene del Instituto Nacional de Diabetes y Enfermedades Digestivas de EE.UU. Contiene datos clínicos de mujeres de descendencia Pima (pueblo indígena de Arizona), con el objetivo de predecir si una paciente tiene diabetes basándose en medidas de diagnóstico.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">768 pacientes</div>
+            <div style="color:var(--text-muted)">Mujeres mayores de 21 años</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">8 variables</div>
+            <div style="color:var(--text-muted)">glucosa, BMI, insulina, edad, etc.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">2 clases</div>
+            <div style="color:var(--text-muted)">0 = no diabética · 1 = diabética</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:#f59e0b; margin-bottom:0.3rem">Desbalanceado</div>
+            <div style="color:var(--text-muted)">500 (0) vs 268 (1) — 35% positivos</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.svm             import SVC
+from sklearn.preprocessing   import StandardScaler
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+from sklearn.metrics         import (classification_report, confusion_matrix,
+                                     ConfusionMatrixDisplay, roc_curve, roc_auc_score)
+from sklearn.pipeline        import Pipeline
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔍</span><h2>Parte 1 — Carga y Exploración del Dataset</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar el dataset</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># Cargamos el dataset desde una URL pública
+columnas = ['embarazos', 'glucosa', 'presion', 'pliegue', 'insulina',
+            'imc', 'diabetes_pedigree', 'edad', 'resultado']
+df = pd.read_csv(
+    'https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv',
+    names=columnas
+)
+print(f"Forma: {df.shape}")
+print(f"\nPrimeras filas:\n{df.head()}")
+print(f"\nEstadísticas:\n{df.describe().round(2)}")
+print(f"\nClases: {df['resultado'].value_counts().to_dict()}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: preparar X e y</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Separa las features (X) de la variable objetivo (y)
+#    X = todas las columnas excepto 'resultado'
+#    y = columna 'resultado'
+# 2. Imprime el shape de X y los valores únicos de y
+
+X = ___________
+y = ___________
+
+print(f"X shape: {X.shape}")
+print(f"y valores únicos: {np.unique(y, return_counts=True)}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.3 — Tu código: visualización de distribuciones</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Crea un histograma de las 8 features separado por clase (0 vs 1)
+# Usa plt.subplots(2, 4, figsize=(14, 7))
+# Para cada feature: histograma de df[df['resultado']==0] (azul) y df[df['resultado']==1] (rojo)
+# Añade título de la feature en cada subplot
+# ¿Qué features tienen distribuciones más distintas entre clases?
+
+fig, axes = plt.subplots(2, 4, figsize=(14, 7))
+features = columnas[:-1]
+colores  = {0: '#3b82f6', 1: '#ef4444'}
+etiquetas = {0: 'No diabética', 1: 'Diabética'}
+
+for ax, feat in zip(axes.flat, features):
+    # ___ tu código aquí ___
+    pass
+
+plt.suptitle('Distribución de features por clase — Pima Diabetes', fontsize=11)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Exploración:</strong></p>
+          <p>1. ¿Qué feature tiene la distribución más diferente entre clases 0 y 1? ¿Tiene sentido clínico?<br>
+             2. ¿Hay valores de 0 en columnas como glucosa, presion, insulina? ¿Eso es biológicamente posible? ¿Son datos faltantes enmascarados como 0?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚖️</span><h2>Parte 2 — Impacto de la Normalización en SVM</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: SVM sin normalizar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Divide X e y en train/test: 70/30, random_state=42, stratify=y
+# 2. Entrena SVC(kernel='rbf', C=1, gamma='scale') SIN escalar
+# 3. Calcula test accuracy y CV-10 accuracy
+# 4. Repite CON StandardScaler (fit en train, transform en ambos)
+# 5. Imprime tabla comparativa
+
+X_train, X_test, y_train, y_test = ___________
+
+# Sin normalizar
+svm_sin = ___________
+
+# Con normalizar
+scaler  = StandardScaler()
+X_tr_sc = scaler.fit_transform(X_train)
+X_te_sc = scaler.transform(X_test)
+svm_con = ___________
+
+print("── Comparativa Normalización — SVM (RBF, C=1) ────────────")
+print(f"{'':20s} {'Sin scaler':>12s} {'Con scaler':>12s}")
+print(f"{'Test accuracy':20s} {svm_sin.score(X_test, y_test):>12.4f} {svm_con.score(X_te_sc, y_test):>12.4f}")
+# Agrega también CV-10 para cada uno</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: comparativa de kernels</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Con los datos normalizados, compara 4 kernels: 'linear', 'rbf', 'poly', 'sigmoid'
+# Para cada kernel: entrena, calcula test accuracy y CV-10
+# Presenta los resultados en una tabla ordenada de mayor a menor accuracy
+
+kernels = ['linear', 'rbf', 'poly', 'sigmoid']
+resultados = {}
+
+for kern in kernels:
+    clf = SVC(kernel=kern, C=1, gamma='scale', random_state=42 if kern in ['linear','rbf'] else None)
+    clf.fit(X_tr_sc, y_train)
+    acc_test = clf.score(X_te_sc, y_test)
+    cv_acc   = cross_val_score(SVC(kernel=kern, C=1, gamma='scale'), X_tr_sc, y_train, cv=10).mean()
+    resultados[kern] = (acc_test, cv_acc)
+    print(f"Kernel {kern:8s} | Test: {acc_test:.4f} | CV-10: {cv_acc:.4f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis:</strong></p>
+          <p>1. ¿Cuánto mejora la accuracy al normalizar? ¿Por qué tiene tanto impacto en SVM?<br>
+             2. ¿Qué kernel da mejor resultado en este dataset? ¿Tiene sentido dado que Pima Diabetes tiene datos clínicos continuos?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔧</span><h2>Parte 3 — GridSearchCV: Encontrar los Mejores Parámetros</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Tu código: GridSearchCV sobre C y gamma</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Construye un pipeline Pipeline([('scaler', StandardScaler()), ('svm', SVC())])
+# Define param_grid con:
+#   'svm__kernel': ['rbf', 'linear']
+#   'svm__C':      [0.01, 0.1, 1, 10, 100]
+#   'svm__gamma':  ['scale', 0.001, 0.01, 0.1]
+# Aplica GridSearchCV(pipe, param_grid, cv=5, scoring='f1', n_jobs=-1)
+# Imprime los mejores parámetros y la mejor puntuación F1
+
+pipe = Pipeline([('scaler', ___________), ('svm', ___________)])
+param_grid = ___________
+
+grid = ___________
+grid.fit(X_train, y_train)
+
+print("── Mejores parámetros ────────────────────────────────────")
+print(f"Params:    {grid.best_params_}")
+print(f"CV-5 F1:   {grid.best_score_:.4f}")
+print(f"Test acc:  {grid.score(X_test, y_test):.4f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.2 — Tu código: análisis del resultado del Grid</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Predice con el mejor modelo sobre el test set
+# 2. Imprime el classification_report completo
+# 3. Muestra la matriz de confusión visual
+
+y_pred_best = grid.predict(X_test)
+print("── Classification Report — Mejor SVM ────────────────────")
+print(classification_report(y_test, y_pred_best, target_names=['No Diabética', 'Diabética']))
+
+fig, ax = plt.subplots(figsize=(5, 4))
+# ___ Muestra ConfusionMatrixDisplay ___
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Interpretación clínica:</strong></p>
+          <p>1. ¿Qué es más grave en diagnóstico de diabetes: un falso positivo o un falso negativo? ¿Por qué?<br>
+             2. ¿El modelo tiene mejor Precision o Recall para la clase "Diabética"? ¿Cuál preferirías optimizar?<br>
+             3. ¿Por qué usamos F1 como métrica en GridSearchCV en lugar de accuracy?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📈</span><h2>Parte 4 — Curva ROC del Mejor SVM</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: curva ROC</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Obtén las probabilidades de predicción con grid.predict_proba(X_test)
+#    ATENCIÓN: el pipeline necesita SVC(probability=True) para predict_proba
+#    Si tu GridSearch no tiene probability=True, vuelve a entrenarlo con ese parámetro.
+# 2. Calcula fpr, tpr con roc_curve(y_test, proba[:, 1])
+# 3. Calcula el AUC con roc_auc_score
+# 4. Grafica la curva ROC con el AUC en la leyenda
+# 5. Añade la línea diagonal punteada de referencia aleatoria
+
+# ___ tu código aquí ___
+
+print(f"AUC del mejor SVM: {roc_auc_score(y_test, y_pred_best):.4f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis de la curva ROC:</strong></p>
+          <p>1. ¿El AUC indica un buen modelo para diagnóstico clínico? (Referencia: AUC > 0.80 = bueno)<br>
+             2. ¿En qué punto del umbral de decisión elegirías operar: máximo recall, máximo precision, o punto de equilibrio?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🏆</span><h2>Desafío Bonus — SVM con datos limpiados</h2><span class="card-meta">Opcional</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 DESAFÍO
+# Las columnas glucosa, presion, pliegue, insulina, imc contienen 0s que son
+# biológicamente imposibles (son datos faltantes enmascarados).
+# 1. Reemplaza los 0s en esas columnas por NaN
+# 2. Imputa los NaN con la mediana de cada columna (SimpleImputer o fillna)
+# 3. Reentrena el mejor SVM con estos datos limpiados
+# 4. ¿Mejora el F1? ¿Cuánto?
+
+cols_con_ceros = ['glucosa', 'presion', 'pliegue', 'insulina', 'imc']
+# ___ tu código aquí ___</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN</span>
+            <div class="task-content">
+              <h4>Párrafo de conclusiones al final del notebook</h4>
+              <p>¿Cuál fue el mejor kernel y por qué? ¿Cuánto mejoró la normalización? ¿Priorizarías Recall o Precision para diagnóstico de diabetes? Justifica.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(5);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

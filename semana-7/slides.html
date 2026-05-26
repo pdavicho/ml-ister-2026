@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 7 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .pipeline-step { background: rgba(30,41,59,.9); border: 1px solid #334155; border-radius: 6px; padding: .5rem .8rem; font-size: .6em; text-align: center; }
+    .pipeline-arrow { color: #60a5fa; font-size: .8em; text-align: center; padding: .1rem; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 7 · TEMA 2</div>
+  <h1 style="font-size:1.45em; line-height:1.2">Implementación en Python<br><span style="color:#60a5fa">SVM + K-NN — Aplicaciones Prácticas</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Pipeline</span>
+    <span class="tag">StandardScaler</span>
+    <span class="tag">GridSearchCV</span>
+    <span class="tag">Dígitos MNIST</span>
+    <span class="tag">SVM vs K-NN</span>
+  </div>
+  <p style="margin-top:1.2rem; font-size:.55em; color:#64748b">Machine Learning · ISTER 2026 · Ing. David Minango, PhD</p>
+</section>
+
+<!-- S2: REPASO -->
+<section>
+  <div class="eyebrow">Repaso rápido</div>
+  <h2>Lo Aprendido en Semanas 5 y 6</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>SVM (Semana 5)</h4>
+      <ul>
+        <li>Hiperplano de margen máximo</li>
+        <li>Vectores de soporte</li>
+        <li>Kernel Trick (lineal, RBF, polinomial)</li>
+        <li>Parámetros: C (margen), γ (radio RBF)</li>
+        <li>Normalización: obligatoria</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>K-NN (Semana 6)</h4>
+      <ul>
+        <li>Algoritmo basado en similitud (lazy learning)</li>
+        <li>K: número de vecinos a consultar</li>
+        <li>Distancias: Euclídea, Manhattan, Minkowski</li>
+        <li>Curse of dimensionality</li>
+        <li>Normalización: obligatoria</li>
+      </ul>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.7rem">Hoy: implementamos ambos con un pipeline completo y los comparamos en un problema real</div>
+</section>
+
+<!-- S3: EL DATASET DIGITS -->
+<section>
+  <div class="eyebrow">Problema real</div>
+  <h2>Dataset: Reconocimiento de Dígitos (MNIST-8x8)</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.5rem">El dataset <strong>load_digits</strong> de scikit-learn contiene imágenes 8×8 píxeles de dígitos escritos a mano (0–9).</p>
+      <div class="step"><strong>1,797 imágenes</strong> de dígitos manuscritos</div>
+      <div class="step" style="margin-top:.2rem"><strong>64 características</strong> (intensidad de cada píxel)</div>
+      <div class="step" style="margin-top:.2rem"><strong>10 clases</strong> (dígitos 0 al 9)</div>
+      <div class="warn" style="margin-top:.4rem">Con 64 características, K-NN puede verse afectado por la maldición de dimensionalidad. SVM (con kernel RBF) debería funcionar mejor.</div>
+    </div>
+    <div class="card">
+      <h4>¿Por qué es interesante?</h4>
+      <p>Es un problema de clasificación multiclase real donde:</p>
+      <ul>
+        <li>Los datos son imágenes → características muy correlacionadas</li>
+        <li>64 dimensiones → no tan alto para SVM</li>
+        <li>Dataset balanceado (~180 muestras/clase)</li>
+        <li>Usado históricamente para comparar clasificadores</li>
+      </ul>
+      <div class="result" style="margin-top:.3rem">Versión reducida del famoso MNIST (28×28 = 784 features)</div>
+    </div>
+  </div>
+</section>
+
+<!-- S4: PIPELINE COMPLETO -->
+<section>
+  <div class="eyebrow">Buenas prácticas</div>
+  <h2>Pipeline ML: La Forma Correcta</h2>
+  <div style="margin-top:.6rem">
+    <div style="display:grid; grid-template-columns: repeat(5, 1fr) auto; gap:.3rem; align-items:center">
+      <div class="pipeline-step" style="border-color:#60a5fa">
+        <div style="color:#60a5fa; font-weight:700; margin-bottom:.2rem">1. Datos</div>
+        <div>Cargar y dividir en train/test</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" style="border-color:#f59e0b">
+        <div style="color:#f59e0b; font-weight:700; margin-bottom:.2rem">2. Escalar</div>
+        <div>StandardScaler fit en train, transform en ambos</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" style="border-color:#10b981">
+        <div style="color:#10b981; font-weight:700; margin-bottom:.2rem">3. Modelo</div>
+        <div>SVC o KNN con hiperparámetros</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" style="border-color:#8b5cf6">
+        <div style="color:#8b5cf6; font-weight:700; margin-bottom:.2rem">4. Evaluar</div>
+        <div>CV, métricas, comparativa</div>
+      </div>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.7rem; font-size:.62em">
+    <strong>Fuga de datos (data leakage):</strong> ajustar el scaler con datos de test contamina la evaluación. Siempre fit_transform solo en train, transform en test.
+  </div>
+  <div class="step" style="margin-top:.4rem; font-size:.6em"><strong>sklearn.pipeline.Pipeline</strong> automatiza este flujo y previene el data leakage por construcción.</div>
+</section>
+
+<!-- S5: GRIDSEARCHCV -->
+<section>
+  <div class="eyebrow">Ajuste de hiperparámetros</div>
+  <h2>GridSearchCV: Búsqueda Exhaustiva</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.4rem">GridSearchCV prueba <strong>todas las combinaciones</strong> posibles de hiperparámetros y evalúa cada una con cross-validation.</p>
+      <div class="num-row"><span class="num-circle">1</span><span>Define la grilla de valores a explorar</span></div>
+      <div class="num-row"><span class="num-circle">2</span><span>Para cada combinación: CV de k folds</span></div>
+      <div class="num-row"><span class="num-circle">3</span><span>Selecciona la combinación con mejor métrica</span></div>
+      <div class="num-row"><span class="num-circle">4</span><span>Reentrena con la mejor combinación en todos los datos de training</span></div>
+    </div>
+    <div class="card">
+      <h4>Ejemplo SVM</h4>
+      <p style="font-family:monospace; font-size:.75em; color:#60a5fa">
+        param_grid = {<br>
+        &nbsp;&nbsp;'C': [0.1, 1, 10, 100],<br>
+        &nbsp;&nbsp;'gamma': [0.001, 0.01, 0.1],<br>
+        &nbsp;&nbsp;'kernel': ['rbf', 'linear']<br>
+        }
+      </p>
+      <p style="font-size:.6em; margin-top:.4rem">Total: 4 × 3 × 2 = 24 combinaciones × 5 folds = 120 entrenamientos</p>
+      <div class="warn" style="margin-top:.3rem">Costoso computacionalmente. Para grillas grandes, usar RandomizedSearchCV.</div>
+    </div>
+  </div>
+</section>
+
+<!-- S6: COMPARATIVA EN DÍGITOS -->
+<section>
+  <div class="eyebrow">Resultados esperados</div>
+  <h2>SVM vs K-NN en Dígitos MNIST-8x8</h2>
+  <table style="font-size:.6em; margin-top:.7rem">
+    <thead>
+      <tr><th>Métrica</th><th>SVM (RBF, C=10, γ=0.01)</th><th>K-NN (k=5)</th><th>K-NN (k=1)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Accuracy (test)</td><td style="color:#4ade80">~98.5%</td><td style="color:#60a5fa">~97.8%</td><td>~98.1%</td></tr>
+      <tr><td>F1 macro</td><td style="color:#4ade80">~0.985</td><td>~0.977</td><td>~0.980</td></tr>
+      <tr><td>CV-5 media</td><td style="color:#4ade80">~0.983</td><td>~0.974</td><td>~0.969</td></tr>
+      <tr><td>Tiempo entrenamiento</td><td>~2–5 s</td><td style="color:#4ade80">Instantáneo</td><td style="color:#4ade80">Instantáneo</td></tr>
+      <tr><td>Tiempo predicción (1797 muestras)</td><td style="color:#4ade80">~0.01 s</td><td>~0.5 s</td><td>~0.5 s</td></tr>
+    </tbody>
+  </table>
+  <div class="step" style="margin-top:.5rem; font-size:.6em"><strong>Conclusión:</strong> En este dataset, SVM supera ligeramente a K-NN en accuracy y CV, pero K-NN entrena más rápido. Para producción con muchas predicciones, SVM sería más veloz.</div>
+</section>
+
+<!-- S7: CUÁNDO USAR CADA UNO -->
+<section>
+  <div class="eyebrow">Guía de decisión</div>
+  <h2>¿SVM o K-NN? Guía Práctica</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>Elige SVM cuando:</h4>
+      <ul>
+        <li>Tienes ≤ 50,000 muestras</li>
+        <li>El número de features es similar o mayor al de muestras</li>
+        <li>Necesitas alta accuracy y puedes esperar a entrenar</li>
+        <li>Los datos tienen fronteras no lineales complejas</li>
+        <li>Necesitas predicción rápida en producción</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Elige K-NN cuando:</h4>
+      <ul>
+        <li>El dataset es pequeño (≤ 10,000 muestras)</li>
+        <li>Necesitas entrenamiento instantáneo (online learning)</li>
+        <li>El problema es fácil de entender por los vecinos</li>
+        <li>Las features son pocas (≤ 20) y bien escaladas</li>
+        <li>No tienes tiempo de ajustar hiperparámetros complejos</li>
+      </ul>
+    </div>
+  </div>
+  <blockquote style="margin-top:.6rem; font-size:.62em">
+    En la práctica: entrena ambos y compara con cross-validation. El ganador depende siempre de <strong>tus datos específicos</strong>.
+  </blockquote>
+</section>
+
+<!-- S8: CURVAS DE APRENDIZAJE COMPARATIVAS -->
+<section>
+  <div class="eyebrow">Diagnóstico de modelos</div>
+  <h2>Curvas de Aprendizaje: SVM vs K-NN</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>Patrón típico SVM</h4>
+      <ul>
+        <li>Train acc: empieza alto, baja levemente con más datos</li>
+        <li>Val acc: sube rápido y estabiliza</li>
+        <li>Brecha pequeña con C bien ajustado</li>
+        <li>Con C muy alto: overfitting visible (brecha grande)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Patrón típico K-NN</h4>
+      <ul>
+        <li>K=1: train acc = 100% siempre (memoriza todo)</li>
+        <li>K=1: val acc = alta pero con varianza</li>
+        <li>K grande: ambas curvas convergen → más estable</li>
+        <li>El modelo mejora moderadamente con más datos</li>
+      </ul>
+    </div>
+  </div>
+  <div class="step" style="margin-top:.5rem; font-size:.6em"><strong>Lo que buscamos:</strong> que train y val converjan, brecha pequeña, val alta. Eso indica un modelo bien calibrado sin overfitting severo.</div>
+</section>
+
+<!-- S9: ERRORES COMUNES -->
+<section>
+  <div class="eyebrow">Errores frecuentes</div>
+  <h2>Errores a Evitar con SVM y K-NN</h2>
+  <div style="margin-top:.7rem">
+    <div class="num-row"><span class="num-circle" style="background:#ef4444">!</span><span><strong>No normalizar:</strong> el error más común. SVM y K-NN con features no escaladas casi siempre dan malos resultados.</span></div>
+    <div class="num-row"><span class="num-circle" style="background:#ef4444">!</span><span><strong>Data leakage:</strong> ajustar el scaler con datos de test. Usar siempre fit_transform en train, transform en test.</span></div>
+    <div class="num-row"><span class="num-circle" style="background:#ef4444">!</span><span><strong>K par en K-NN binario:</strong> puede haber empates. Usar K impar para clasificación binaria.</span></div>
+    <div class="num-row"><span class="num-circle" style="background:#ef4444">!</span><span><strong>SVM sin GridSearch:</strong> los valores por defecto de C y γ en sklearn pueden ser muy malos para tu dataset.</span></div>
+    <div class="num-row"><span class="num-circle" style="background:#ef4444">!</span><span><strong>K-NN sin reducir dimensiones:</strong> en datasets con 100+ features, el rendimiento de K-NN cae significativamente.</span></div>
+  </div>
+</section>
+
+<!-- S10: RESUMEN TEMA 2 -->
+<section>
+  <div class="eyebrow">Cierre del Tema 2</div>
+  <h2>Resumen — Algoritmos de Clasificación SVM y K-NN</h2>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4>SVM (S5)</h4>
+      <p>Margen máximo, kernel trick, C y γ. Ideal para datasets medianos con fronteras complejas. Normalización obligatoria.</p>
+    </div>
+    <div class="card">
+      <h4>K-NN (S6)</h4>
+      <p>Lazy learning, distancias, K como hiperparámetro. Simple e intuitivo. Se degrada en alta dimensión.</p>
+    </div>
+    <div class="card">
+      <h4>Implementación (S7)</h4>
+      <p>Pipeline completo, GridSearchCV para ajuste. Comparativa en Digits. Elige según el contexto de tu problema.</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:.7rem; font-size:.62em">
+    Ahora tienes 3 algoritmos de clasificación poderosos: Árboles/RF (Tema 1), SVM y K-NN (Tema 2). Cada uno tiene su nicho de aplicación.
+  </blockquote>
+  <div class="inst">→ / ← para navegar · F para pantalla completa · Esc para vista general</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'slide',
+    width: 960, height: 620, margin: 0.04,
+    plugins: []
+  });
+</script>
+</body>
+</html>

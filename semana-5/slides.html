@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 5 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .margin-viz { display: flex; justify-content: center; align-items: center; gap: 2rem; margin: .8rem 0; font-size: .58em; }
+    .sv-box { background: rgba(239,68,68,.15); border: 2px solid #f87171; border-radius: 6px; padding: .4rem .7rem; color: #fca5a5; font-weight: 700; }
+    .margin-box { background: rgba(34,197,94,.1); border: 1px dashed #4ade80; border-radius: 6px; padding: .4rem .7rem; color: #86efac; }
+    .hp-box { background: rgba(59,130,246,.15); border: 2px solid #3b82f6; border-radius: 6px; padding: .4rem .7rem; color: #93c5fd; font-weight: 700; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 5 · TEMA 2</div>
+  <h1 style="font-size:1.55em; line-height:1.2">Máquinas de Soporte<br><span style="color:#60a5fa">Vectorial (SVM)</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Hiperplano</span>
+    <span class="tag">Margen Máximo</span>
+    <span class="tag">Vectores de Soporte</span>
+    <span class="tag">Kernel Trick</span>
+    <span class="tag">C · γ</span>
+  </div>
+  <p style="margin-top:1.2rem; font-size:.55em; color:#64748b">Machine Learning · ISTER 2026 · Ing. David Minango, PhD</p>
+</section>
+
+<!-- S2: MOTIVACIÓN -->
+<section>
+  <div class="eyebrow">Motivación</div>
+  <h2>¿Por qué SVM?</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>El problema de los árboles</h4>
+      <ul>
+        <li>Los árboles de decisión crean fronteras rectangulares</li>
+        <li>Son sensibles a pequeños cambios en los datos</li>
+        <li>Con datos ruidosos pueden sobreajustarse fácilmente</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>La propuesta SVM</h4>
+      <ul>
+        <li>Encuentra la frontera que <strong>maximiza la separación</strong> entre clases</li>
+        <li>Sólido fundamento matemático (optimización convexa)</li>
+        <li>Funciona bien en espacios de alta dimensión</li>
+      </ul>
+    </div>
+  </div>
+  <blockquote style="margin-top:1rem; font-size:.65em">
+    SVM no busca solo <em>cualquier</em> frontera de decisión — busca la <strong>mejor posible</strong>: la que está más lejos de todos los puntos.
+  </blockquote>
+</section>
+
+<!-- S3: SEPARABILIDAD LINEAL -->
+<section>
+  <div class="eyebrow">Concepto clave</div>
+  <h2>Separabilidad Lineal</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; margin-bottom:.5rem">Dados puntos de dos clases en el plano, existen <strong>infinitos hiperplanos</strong> que los separan correctamente.</p>
+      <div class="step"><strong>Pregunta:</strong> ¿Cuál de todos esos hiperplanos es el mejor?</div>
+      <div class="result" style="margin-top:.5rem">SVM elige el hiperplano que <strong>maximiza el margen</strong> entre las dos clases</div>
+    </div>
+    <div class="card">
+      <h4>Definición: Hiperplano</h4>
+      <p>En 2D: una recta. En 3D: un plano. En N dimensiones: un hiperplano.</p>
+      <p style="margin-top:.4rem">Ecuación general:</p>
+      <p style="font-family: monospace; color: #60a5fa; margin-top:.2rem">w · x + b = 0</p>
+      <p style="margin-top:.4rem">Donde <strong>w</strong> es el vector normal al hiperplano y <strong>b</strong> es el sesgo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S4: MARGEN MÁXIMO -->
+<section>
+  <div class="eyebrow">El corazón de SVM</div>
+  <h2>Margen Máximo</h2>
+  <div class="margin-viz">
+    <div class="sv-box">Clase −1<br>● ●<br>●</div>
+    <div style="text-align:center">
+      <div class="margin-box" style="font-size:.7em; padding:.3rem .6rem">← margen →</div>
+      <div class="hp-box" style="margin:.3rem 0">Hiperplano<br>w·x + b = 0</div>
+      <div class="margin-box" style="font-size:.7em; padding:.3rem .6rem">← margen →</div>
+    </div>
+    <div class="sv-box" style="background:rgba(59,130,246,.15); border-color:#60a5fa; color:#93c5fd">Clase +1<br>● ●<br>●</div>
+  </div>
+  <div class="cols cols-3" style="margin-top:.5rem">
+    <div class="card">
+      <h4>Margen</h4>
+      <p>Distancia entre el hiperplano y el punto más cercano de cada clase.</p>
+      <p style="color:#60a5fa; font-family:monospace; font-size:.9em">margen = 2 / ‖w‖</p>
+    </div>
+    <div class="card">
+      <h4>Objetivo SVM</h4>
+      <p>Maximizar el margen equivale a <strong>minimizar ‖w‖²</strong> sujeto a que todos los puntos estén correctamente clasificados.</p>
+    </div>
+    <div class="card">
+      <h4>Robustez</h4>
+      <p>Mayor margen → menor error de generalización → mejor rendimiento en datos nuevos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S5: VECTORES DE SOPORTE -->
+<section>
+  <div class="eyebrow">Pieza fundamental</div>
+  <h2>Vectores de Soporte</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6">Los <strong>vectores de soporte</strong> son los puntos de entrenamiento que están más cerca del hiperplano — están sobre los bordes del margen.</p>
+      <div class="warn" style="margin-top:.5rem">Dato crucial: <strong>solo los vectores de soporte</strong> determinan el hiperplano. El resto de los puntos no importan.</div>
+      <div class="step" style="margin-top:.4rem"><strong>Consecuencia práctica:</strong> Si eliminamos puntos que no son vectores de soporte, el hiperplano no cambia.</div>
+    </div>
+    <div class="card">
+      <h4>¿Por qué "vectores"?</h4>
+      <p>Porque matemáticamente son vectores en el espacio de características que "sostienen" (support) el margen.</p>
+      <h4 style="margin-top:.7rem">Condición matemática</h4>
+      <p>Para los vectores de soporte se cumple:</p>
+      <p style="font-family:monospace; color:#60a5fa; font-size:.9em">y_i (w · x_i + b) = 1</p>
+      <p>Para el resto de puntos: ≥ 1</p>
+    </div>
+  </div>
+</section>
+
+<!-- S6: SVM DURO VS BLANDO -->
+<section>
+  <div class="eyebrow">Parámetro C</div>
+  <h2>SVM Duro vs SVM Blando</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>⚔️ Margen Duro (Hard Margin)</h4>
+      <ul>
+        <li>No permite <em>ningún</em> punto dentro del margen</li>
+        <li>Solo funciona si los datos son <strong>perfectamente separables</strong></li>
+        <li>Muy sensible a datos atípicos (outliers)</li>
+      </ul>
+      <div class="danger" style="margin-top:.4rem">Rara vez aplicable en datos reales</div>
+    </div>
+    <div class="card">
+      <h4>🛡️ Margen Blando (Soft Margin)</h4>
+      <ul>
+        <li>Permite algunos puntos <em>dentro</em> del margen o mal clasificados</li>
+        <li>Controlado por el parámetro <strong>C</strong></li>
+        <li>Balance entre margen ancho y errores de clasificación</li>
+      </ul>
+      <div class="result" style="margin-top:.4rem">El SVM real que usamos en práctica</div>
+    </div>
+  </div>
+  <div class="cols cols-2" style="margin-top:.6rem; font-size:.6em">
+    <div class="step"><strong>C pequeño (ej. 0.01):</strong> margen más ancho, más errores permitidos → mayor generalización, posible underfitting</div>
+    <div class="step"><strong>C grande (ej. 100):</strong> margen más estrecho, menos errores → más ajuste a los datos, posible overfitting</div>
+  </div>
+</section>
+
+<!-- S7: DATOS NO LINEALES -->
+<section>
+  <div class="eyebrow">El gran salto</div>
+  <h2>Datos No Linealmente Separables</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.5rem">¿Qué pasa cuando los datos no se pueden separar con una línea recta? (Ej: puntos en círculos concéntricos)</p>
+      <div class="step"><strong>Idea clave:</strong> Si proyectamos los datos a un espacio de <em>mayor dimensión</em>, puede que sí sean separables linealmente.</div>
+      <div class="warn" style="margin-top:.5rem">Proyectar a dimensiones muy altas puede ser <strong>muy costoso</strong> computacionalmente.</div>
+    </div>
+    <div class="card">
+      <h4>Ejemplo intuitivo</h4>
+      <p>Puntos en 1D: {1, 2, 3, 4, 5} con clases {−, −, +, −, −}</p>
+      <p style="margin-top:.4rem">No son separables con un punto.</p>
+      <p style="margin-top:.4rem">Proyectar a 2D: (x, x²)</p>
+      <p>Ahora los "+" están arriba y los "−" abajo → <strong>¡separables linealmente!</strong></p>
+      <div class="result" style="margin-top:.3rem">El Kernel Trick hace esto eficientemente</div>
+    </div>
+  </div>
+</section>
+
+<!-- S8: KERNEL TRICK -->
+<section>
+  <div class="eyebrow">La magia de SVM</div>
+  <h2>El Kernel Trick</h2>
+  <blockquote style="font-size:.65em">
+    Un <strong>kernel</strong> es una función K(x, y) que calcula el producto punto en un espacio de alta dimensión <em>sin necesidad de calcular la proyección explícita</em>.
+  </blockquote>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4>Sin kernel</h4>
+      <p>1. Proyectar todos los puntos a ℝⁿ</p>
+      <p>2. Calcular producto punto en ℝⁿ</p>
+      <p style="color:#f87171; margin-top:.3rem">Costo: O(n²) — muy caro</p>
+    </div>
+    <div class="card">
+      <h4>Con kernel</h4>
+      <p>1. Calcular K(x_i, x_j) directamente en el espacio original</p>
+      <p style="color:#4ade80; margin-top:.3rem">Costo: O(1) — tan simple como una función</p>
+    </div>
+    <div class="card">
+      <h4>Por qué funciona</h4>
+      <p>El teorema de Mercer garantiza que ciertas funciones K(x,y) corresponden a un producto punto en algún espacio de Hilbert.</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem; font-size:.62em">El algoritmo SVM solo necesita el resultado de K(x_i, x_j) — nunca necesita ver la proyección φ(x)</div>
+</section>
+
+<!-- S9: TIPOS DE KERNEL -->
+<section>
+  <div class="eyebrow">Opciones de kernel</div>
+  <h2>Kernels más usados</h2>
+  <table style="font-size:.58em; margin-top:.7rem">
+    <thead>
+      <tr><th>Kernel</th><th>Fórmula</th><th>Parámetros</th><th>Cuándo usar</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong style="color:#60a5fa">Lineal</strong></td>
+        <td>K(x,y) = x · y</td>
+        <td>—</td>
+        <td>Datos linealmente separables, muchas características (texto, genómica)</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#60a5fa">RBF / Gaussiano</strong></td>
+        <td>K(x,y) = exp(−γ‖x−y‖²)</td>
+        <td>γ (gamma)</td>
+        <td>Fronteras no lineales. <strong>El más usado en la práctica.</strong></td>
+      </tr>
+      <tr>
+        <td><strong style="color:#60a5fa">Polinomial</strong></td>
+        <td>K(x,y) = (γ·x·y + r)ᵈ</td>
+        <td>d (grado), γ, r</td>
+        <td>Datos con interacciones polinomiales (visión, NLP)</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#60a5fa">Sigmoide</strong></td>
+        <td>K(x,y) = tanh(γ·x·y + r)</td>
+        <td>γ, r</td>
+        <td>Similar a red neuronal de 2 capas. Poco usado.</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="warn" style="margin-top:.5rem; font-size:.6em">Regla práctica: empieza siempre con <strong>kernel RBF</strong> y ajusta C y γ con validación cruzada.</div>
+</section>
+
+<!-- S10: PARÁMETRO GAMMA -->
+<section>
+  <div class="eyebrow">RBF Kernel</div>
+  <h2>El Parámetro Gamma (γ)</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.5rem">γ controla la <strong>influencia de cada punto de entrenamiento</strong> en la frontera de decisión.</p>
+      <div class="step"><strong>K(x,y) = exp(−γ‖x−y‖²)</strong></div>
+      <ul style="font-size:.6em; margin-top:.5rem">
+        <li><strong style="color:#4ade80">γ pequeño:</strong> función amplia → puntos lejanos también influyen → frontera suave → underfitting posible</li>
+        <li style="margin-top:.3rem"><strong style="color:#f87171">γ grande:</strong> función estrecha → solo puntos muy cercanos influyen → frontera irregular → overfitting posible</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Relación C ↔ γ</h4>
+      <p>C y γ se controlan juntos:</p>
+      <table style="font-size:.75em; margin-top:.4rem">
+        <thead><tr><th>C</th><th>γ</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td>pequeño</td><td>pequeño</td><td>Muy suave, underfitting</td></tr>
+          <tr><td>grande</td><td>grande</td><td>Muy complejo, overfitting</td></tr>
+          <tr><td>medio</td><td>medio</td><td style="color:#4ade80">Balance óptimo</td></tr>
+        </tbody>
+      </table>
+      <div class="result" style="margin-top:.4rem">Usar GridSearchCV para encontrar los mejores valores</div>
+    </div>
+  </div>
+</section>
+
+<!-- S11: SVM MULTICLASE -->
+<section>
+  <div class="eyebrow">Más de 2 clases</div>
+  <h2>SVM para Clasificación Multiclase</h2>
+  <p style="font-size:.62em; margin-bottom:.8rem">SVM es un clasificador binario por naturaleza. Para multiclase se usan dos estrategias:</p>
+  <div class="cols cols-2" style="margin-top:.5rem">
+    <div class="card">
+      <h4>OvO — One vs One</h4>
+      <p>Para K clases: entrena <strong>K(K−1)/2 clasificadores</strong>, uno por cada par de clases.</p>
+      <p style="margin-top:.4rem">Ejemplo (K=3): Clase1 vs Clase2 · Clase1 vs Clase3 · Clase2 vs Clase3</p>
+      <p style="margin-top:.4rem">Predicción: clase con más "votos" gana.</p>
+      <div class="result" style="margin-top:.3rem">Por defecto en scikit-learn</div>
+    </div>
+    <div class="card">
+      <h4>OvR — One vs Rest</h4>
+      <p>Para K clases: entrena <strong>K clasificadores</strong>, cada uno distingue una clase de todas las demás.</p>
+      <p style="margin-top:.4rem">Ejemplo (K=3): Clase1 vs {2,3} · Clase2 vs {1,3} · Clase3 vs {1,2}</p>
+      <p style="margin-top:.4rem">Predicción: clase con mayor puntuación de confianza.</p>
+      <div class="warn" style="margin-top:.3rem">Puede haber desbalance en las clases</div>
+    </div>
+  </div>
+  <div class="step" style="margin-top:.6rem; font-size:.6em"><strong>Scikit-learn:</strong> usa OvO por defecto en SVC. Para OvR usar LinearSVC o SVC con decision_function_shape='ovr'</div>
+</section>
+
+<!-- S12: NORMALIZACIÓN EN SVM -->
+<section>
+  <div class="eyebrow">Preprocesamiento crítico</div>
+  <h2>Normalización: Obligatoria en SVM</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.5rem">SVM calcula distancias entre puntos. Si las características tienen escalas muy distintas, las de mayor escala dominarán el cálculo del margen.</p>
+      <div class="danger" style="margin-top:.3rem">SVM sin normalizar → resultados poco confiables o muy malos</div>
+      <div class="result" style="margin-top:.4rem">SVM con StandardScaler → comportamiento correcto y estable</div>
+    </div>
+    <div class="card">
+      <h4>StandardScaler</h4>
+      <p>Transforma cada característica para tener media=0 y std=1:</p>
+      <p style="font-family:monospace; color:#60a5fa; font-size:.9em; margin-top:.4rem">x' = (x − μ) / σ</p>
+      <p style="margin-top:.4rem"><strong>Regla de oro:</strong> ajustar el scaler SOLO en los datos de entrenamiento, aplicarlo en test.</p>
+      <p style="font-family:monospace; color:#86efac; font-size:.8em; margin-top:.3rem">scaler.fit(X_train)<br>scaler.transform(X_train)<br>scaler.transform(X_test)  ← no fit aquí</p>
+    </div>
+  </div>
+</section>
+
+<!-- S13: VENTAJAS Y DESVENTAJAS -->
+<section>
+  <div class="eyebrow">Análisis crítico</div>
+  <h2>SVM — Ventajas y Desventajas</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4 class="pro">✅ Ventajas</h4>
+      <ul>
+        <li class="pro">Muy efectivo en espacios de alta dimensión</li>
+        <li>Funciona bien cuando hay más características que muestras</li>
+        <li>Usa solo los vectores de soporte → eficiente en memoria</li>
+        <li>Versátil: diferentes kernels para diferentes problemas</li>
+        <li>Sólida base teórica (optimización convexa → único mínimo global)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="con">❌ Desventajas</h4>
+      <ul>
+        <li class="con">Lento en datasets muy grandes (O(n²) a O(n³) en entrenamiento)</li>
+        <li>Sensible a la elección de kernel y parámetros C, γ</li>
+        <li>No produce probabilidades directamente (requiere calibración)</li>
+        <li>Difícil de interpretar: ¿qué aprendió el modelo?</li>
+        <li>Requiere normalización obligatoria</li>
+      </ul>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.6rem; font-size:.6em">SVM es ideal para: datasets medianos (≤ 10,000 muestras) con pocas clases y características relevantes. Para millones de datos, considera SGD o árboles.</div>
+</section>
+
+<!-- S14: SVM VS OTROS ALGORITMOS -->
+<section>
+  <div class="eyebrow">Contexto comparativo</div>
+  <h2>¿Cuándo usar SVM?</h2>
+  <table style="font-size:.58em; margin-top:.7rem">
+    <thead>
+      <tr><th>Criterio</th><th>Árbol/RF</th><th>SVM (RBF)</th><th>K-NN (próx. semana)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Datos pequeños (< 1,000)</td><td>✅ Bueno</td><td>✅✅ Muy bueno</td><td>✅ Bueno</td></tr>
+      <tr><td>Datos grandes (> 100,000)</td><td>✅✅ Muy bueno</td><td>❌ Lento</td><td>❌ Muy lento</td></tr>
+      <tr><td>Muchas características</td><td>✅ Bueno</td><td>✅✅ Excelente</td><td>❌ Se degrada</td></tr>
+      <tr><td>Datos no lineales</td><td>✅ Con profundidad</td><td>✅✅ Kernel RBF</td><td>✅ Con K pequeño</td></tr>
+      <tr><td>Interpretabilidad</td><td>✅✅ Alta (árbol)</td><td>❌ Baja</td><td>✅ Intuitivo</td></tr>
+      <tr><td>Normalización requerida</td><td>No</td><td>Sí (obligatoria)</td><td>Sí (obligatoria)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- S15: FLUJO DE TRABAJO -->
+<section>
+  <div class="eyebrow">Resumen práctico</div>
+  <h2>Flujo de Trabajo con SVM</h2>
+  <div style="margin-top:.7rem">
+    <div class="num-row"><span class="num-circle">1</span><span><strong>Preprocesar:</strong> normalizar con StandardScaler (fit solo en train)</span></div>
+    <div class="num-row"><span class="num-circle">2</span><span><strong>Elegir kernel:</strong> empezar con RBF, probar lineal si hay muchas características</span></div>
+    <div class="num-row"><span class="num-circle">3</span><span><strong>Ajustar hiperparámetros:</strong> GridSearchCV sobre C y γ con cross-validation</span></div>
+    <div class="num-row"><span class="num-circle">4</span><span><strong>Evaluar:</strong> accuracy, F1, curva ROC — ojo con clases desbalanceadas</span></div>
+    <div class="num-row"><span class="num-circle">5</span><span><strong>Comparar:</strong> SVM vs Random Forest en tus datos específicos</span></div>
+  </div>
+  <blockquote style="margin-top:.8rem; font-size:.62em">
+    No existe el "mejor algoritmo universal". SVM sobresale cuando los datos tienen <strong>estructura bien definida</strong> y son de tamaño medio.
+  </blockquote>
+  <div class="inst">→ / ← para navegar · F para pantalla completa · Esc para vista general</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'slide',
+    width: 960, height: 620, margin: 0.04,
+    plugins: []
+  });
+</script>
+</body>
+</html>

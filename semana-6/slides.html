@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 6 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .knn-point { display: inline-flex; align-items: center; justify-content: center; width: 2em; height: 2em; border-radius: 50%; font-weight: 700; font-size: .7em; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 6 · TEMA 2</div>
+  <h1 style="font-size:1.55em; line-height:1.2">K-Nearest Neighbors<br><span style="color:#60a5fa">(K-NN)</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Distancias</span>
+    <span class="tag">Elección de K</span>
+    <span class="tag">Normalización</span>
+    <span class="tag">Curse of Dimensionality</span>
+    <span class="tag">Lazy Learning</span>
+  </div>
+  <p style="margin-top:1.2rem; font-size:.55em; color:#64748b">Machine Learning · ISTER 2026 · Ing. David Minango, PhD</p>
+</section>
+
+<!-- S2: IDEA CENTRAL -->
+<section>
+  <div class="eyebrow">Intuición</div>
+  <h2>La Idea de K-NN</h2>
+  <blockquote style="font-size:.7em; margin-bottom:.8rem">
+    "Dime con quién andas y te diré quién eres."
+  </blockquote>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.7; margin-bottom:.5rem">Para clasificar un punto nuevo, K-NN busca los <strong>K vecinos más cercanos</strong> en los datos de entrenamiento y asigna la clase más frecuente entre ellos.</p>
+      <div class="step"><strong>Algoritmo entero:</strong> guardar los datos de entrenamiento. Para predecir: calcular distancias al nuevo punto, tomar los K más cercanos, votar.</div>
+    </div>
+    <div class="card">
+      <h4>¿Cómo clasifica un punto nuevo?</h4>
+      <p><strong>1.</strong> Calcula la distancia al nuevo punto desde cada punto de entrenamiento</p>
+      <p><strong>2.</strong> Selecciona los K puntos más cercanos (vecinos)</p>
+      <p><strong>3.</strong> Clase predicha = clase mayoritaria entre los K vecinos</p>
+      <div class="result" style="margin-top:.3rem">Sin entrenamiento — solo memoriza los datos</div>
+    </div>
+  </div>
+</section>
+
+<!-- S3: ALGORITMO PASO A PASO -->
+<section>
+  <div class="eyebrow">Paso a paso</div>
+  <h2>Algoritmo K-NN Detallado</h2>
+  <div style="margin-top:.7rem">
+    <div class="num-row"><span class="num-circle">1</span><span><strong>Almacenar</strong> todos los datos de entrenamiento (X_train, y_train) en memoria</span></div>
+    <div class="num-row"><span class="num-circle">2</span><span>Dado un nuevo punto x_q (query), <strong>calcular la distancia</strong> de x_q a cada punto x_i del training set</span></div>
+    <div class="num-row"><span class="num-circle">3</span><span><strong>Ordenar</strong> los puntos de menor a mayor distancia</span></div>
+    <div class="num-row"><span class="num-circle">4</span><span><strong>Seleccionar los K primeros</strong> (los K más cercanos)</span></div>
+    <div class="num-row"><span class="num-circle">5</span><span><strong>Votar:</strong> la clase más frecuente entre los K vecinos es la predicción</span></div>
+    <div class="num-row"><span class="num-circle">6</span><span>Para regresión: <strong>promediar</strong> los valores de los K vecinos en lugar de votar</span></div>
+  </div>
+  <div class="warn" style="margin-top:.6rem">K-NN no "aprende" un modelo. El costo computacional está en la predicción, no en el entrenamiento. Por eso se llama <strong>lazy learner</strong>.</div>
+</section>
+
+<!-- S4: MÉTRICAS DE DISTANCIA -->
+<section>
+  <div class="eyebrow">Medición de similitud</div>
+  <h2>Métricas de Distancia</h2>
+  <table style="font-size:.58em; margin-top:.6rem">
+    <thead>
+      <tr><th>Métrica</th><th>Fórmula</th><th>Intuición</th><th>Cuándo usar</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong style="color:#60a5fa">Euclídea</strong></td>
+        <td>√Σ(xᵢ−yᵢ)²</td>
+        <td>Distancia en línea recta ("a vuelo de pájaro")</td>
+        <td>Datos continuos, features en la misma escala</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#60a5fa">Manhattan</strong></td>
+        <td>Σ|xᵢ−yᵢ|</td>
+        <td>Distancia en cuadrícula ("caminando por manzanas")</td>
+        <td>Features en diferentes escalas, datos con outliers</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#60a5fa">Minkowski</strong></td>
+        <td>(Σ|xᵢ−yᵢ|ᵖ)^(1/p)</td>
+        <td>Generalización: p=1 Manhattan, p=2 Euclídea</td>
+        <td>Cuando quieres explorar la mejor métrica</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#60a5fa">Coseno</strong></td>
+        <td>1 − (x·y)/(‖x‖·‖y‖)</td>
+        <td>Ángulo entre vectores (ignora magnitud)</td>
+        <td>Texto (TF-IDF), datos de alta dimensión</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="step" style="margin-top:.5rem; font-size:.6em"><strong>Nota importante:</strong> todas estas métricas son sensibles a la escala de las características. Por eso normalizar es <strong>obligatorio</strong> en K-NN.</div>
+</section>
+
+<!-- S5: EFECTO DE K -->
+<section>
+  <div class="eyebrow">El hiperparámetro central</div>
+  <h2>Efecto del Valor de K</h2>
+  <div class="cols cols-3" style="margin-top:.8rem">
+    <div class="card">
+      <h4 class="con">K = 1 (muy pequeño)</h4>
+      <ul>
+        <li>Frontera de decisión muy irregular</li>
+        <li>Muy sensible a ruido y outliers</li>
+        <li>Overfitting: memoriza los datos</li>
+        <li>Accuracy train: 100% pero test: baja</li>
+      </ul>
+      <div class="danger" style="margin-top:.3rem">Alta varianza</div>
+    </div>
+    <div class="card">
+      <h4>K = √n (recomendado)</h4>
+      <ul>
+        <li>Frontera más suave</li>
+        <li>Balance entre sesgo y varianza</li>
+        <li>Regla heurística para el valor inicial: K = √(n_train)</li>
+      </ul>
+      <div class="result" style="margin-top:.3rem">Punto de partida ideal</div>
+    </div>
+    <div class="card">
+      <h4 class="con">K = n (muy grande)</h4>
+      <ul>
+        <li>Clasifica todo como la clase mayoritaria</li>
+        <li>Frontera completamente plana</li>
+        <li>Underfitting severo</li>
+      </ul>
+      <div class="warn" style="margin-top:.3rem">Alto sesgo</div>
+    </div>
+  </div>
+  <div class="step" style="margin-top:.6rem; font-size:.6em"><strong>Práctica:</strong> usar siempre K impar para evitar empates en clasificación binaria. Ajustar con cross-validation.</div>
+</section>
+
+<!-- S6: NORMALIZACIÓN OBLIGATORIA -->
+<section>
+  <div class="eyebrow">Error clásico</div>
+  <h2>Por qué Normalizar en K-NN</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.5rem">Ejemplo: clasificar personas por <strong>altura</strong> (1.60–1.90 m) e <strong>ingresos</strong> (500–5,000 USD/mes)</p>
+      <div class="danger">Sin normalizar: la distancia está dominada por los ingresos (escala 100x mayor). La altura se vuelve irrelevante.</div>
+      <div class="result" style="margin-top:.4rem">Con normalización: ambas features contribuyen equitativamente</div>
+    </div>
+    <div class="card">
+      <h4>Ejemplo numérico</h4>
+      <p>Persona A: (1.70 m, 1500 USD) → (0.0, 0.5)</p>
+      <p>Persona B: (1.80 m, 2000 USD) → (0.5, 0.67)</p>
+      <p>Persona C: (1.75 m, 1800 USD) → (0.25, 0.62)</p>
+      <p style="margin-top:.4rem">Con normalización: tanto la altura como los ingresos tienen igual peso en la distancia Euclídea.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S7: CURSE OF DIMENSIONALITY -->
+<section>
+  <div class="eyebrow">Limitación importante</div>
+  <h2>La Maldición de la Dimensionalidad</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.5rem">A medida que el número de features crece, el concepto de "vecino cercano" pierde significado:</p>
+      <div class="step"><strong>En 1D:</strong> para cubrir el 10% de los datos, necesitas el 10% del rango</div>
+      <div class="step" style="margin-top:.3rem"><strong>En 2D:</strong> necesitas cubrir el 32% en cada dimensión</div>
+      <div class="step" style="margin-top:.3rem"><strong>En 10D:</strong> necesitas cubrir el 80% en cada dimensión</div>
+      <div class="danger" style="margin-top:.4rem">Con muchas dimensiones, todos los puntos son igualmente "lejanos"</div>
+    </div>
+    <div class="card">
+      <h4>¿Cómo combatirlo?</h4>
+      <ul>
+        <li><strong>Feature selection:</strong> seleccionar solo las más relevantes</li>
+        <li><strong>PCA/reducción de dimensiones</strong></li>
+        <li><strong>Distancia Manhattan</strong> (menos sensible que Euclídea en alta dimensión)</li>
+        <li><strong>K más grande:</strong> para tener más vecinos confiables</li>
+      </ul>
+      <div class="warn" style="margin-top:.4rem">K-NN funciona bien cuando n_features ≤ 20. Para más features, usar SVM o RF.</div>
+    </div>
+  </div>
+</section>
+
+<!-- S8: K-NN PONDERADO -->
+<section>
+  <div class="eyebrow">Variante mejorada</div>
+  <h2>K-NN Ponderado por Distancia</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>K-NN estándar (weights='uniform')</h4>
+      <p>Cada vecino tiene el mismo peso en la votación, independientemente de su distancia.</p>
+      <p style="margin-top:.4rem; font-family:monospace; color:#60a5fa">KNeighborsClassifier(n_neighbors=5, weights='uniform')</p>
+    </div>
+    <div class="card">
+      <h4>K-NN ponderado (weights='distance')</h4>
+      <p>Los vecinos <strong>más cercanos tienen mayor peso</strong>. El peso es proporcional a 1/distancia.</p>
+      <p style="margin-top:.4rem">Vecino a 0.1 → peso 10×<br>Vecino a 1.0 → peso 1×</p>
+      <p style="font-family:monospace; color:#60a5fa; margin-top:.4rem">KNeighborsClassifier(n_neighbors=5, weights='distance')</p>
+      <div class="result" style="margin-top:.3rem">Generalmente mejor en la práctica</div>
+    </div>
+  </div>
+  <div class="step" style="margin-top:.6rem; font-size:.6em"><strong>Tip:</strong> con K pequeño y 'distance', el modelo se vuelve muy sensible a outliers cercanos. Siempre probar ambas opciones.</div>
+</section>
+
+<!-- S9: K-NN PARA REGRESIÓN -->
+<section>
+  <div class="eyebrow">Más allá de la clasificación</div>
+  <h2>K-NN para Regresión</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.5rem">El mismo algoritmo funciona para predecir valores numéricos:</p>
+      <div class="num-row"><span class="num-circle">1</span><span>Encontrar los K vecinos más cercanos</span></div>
+      <div class="num-row"><span class="num-circle">2</span><span>En lugar de votar, <strong>promediar</strong> sus valores de salida</span></div>
+      <div class="num-row"><span class="num-circle">3</span><span>Con weights='distance': promedio ponderado</span></div>
+    </div>
+    <div class="card">
+      <h4>Comparativa</h4>
+      <table style="font-size:.85em">
+        <thead><tr><th>Tarea</th><th>Salida K-NN</th><th>Clase en sklearn</th></tr></thead>
+        <tbody>
+          <tr><td>Clasificación</td><td>Clase mayoritaria</td><td>KNeighborsClassifier</td></tr>
+          <tr><td>Regresión</td><td>Promedio de valores</td><td>KNeighborsRegressor</td></tr>
+        </tbody>
+      </table>
+      <div class="warn" style="margin-top:.5rem">K-NN no extrapola: solo "interpola" entre los datos de training. No predice bien fuera del rango observado.</div>
+    </div>
+  </div>
+</section>
+
+<!-- S10: VENTAJAS Y DESVENTAJAS -->
+<section>
+  <div class="eyebrow">Análisis crítico</div>
+  <h2>K-NN — Ventajas y Desventajas</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4 class="pro">✅ Ventajas</h4>
+      <ul>
+        <li class="pro">Simple de entender e implementar</li>
+        <li>Sin suposiciones sobre la distribución de los datos</li>
+        <li>Entrenamiento instantáneo (solo guarda datos)</li>
+        <li>Naturalmente multiclase</li>
+        <li>Se adapta automáticamente a nuevos patrones (online learning)</li>
+        <li>Funciona bien cuando la frontera de decisión es irregular</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="con">❌ Desventajas</h4>
+      <ul>
+        <li class="con">Predicción lenta: O(n·d) por cada consulta</li>
+        <li>Almacena todos los datos de training en memoria</li>
+        <li>Muy afectado por la escala de las features</li>
+        <li>Se degrada en alta dimensión (curse of dimensionality)</li>
+        <li>Sensible a datos irrelevantes o ruidosos</li>
+        <li>No produce un modelo interpretable</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- S11: COMPARATIVA SVM VS KNN -->
+<section>
+  <div class="eyebrow">Tema 2 — Perspectiva global</div>
+  <h2>SVM vs K-NN: ¿Cuándo elegir cada uno?</h2>
+  <table style="font-size:.57em; margin-top:.6rem">
+    <thead>
+      <tr><th>Aspecto</th><th>SVM (kernel RBF)</th><th>K-NN (k=5)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Tipo de aprendizaje</td><td>Eager (entrena un modelo)</td><td>Lazy (memoriza los datos)</td></tr>
+      <tr><td>Velocidad de entrenamiento</td><td>Lento en datos grandes</td><td>Instantáneo</td></tr>
+      <tr><td>Velocidad de predicción</td><td>Rápida (una función)</td><td>Lenta (calcular n distancias)</td></tr>
+      <tr><td>Memoria requerida</td><td>Solo vectores de soporte</td><td>Todos los datos de training</td></tr>
+      <tr><td>Alta dimensión</td><td>✅ Funciona bien</td><td>❌ Se degrada</td></tr>
+      <tr><td>Datos pequeños</td><td>✅ Muy bueno</td><td>✅ Muy bueno</td></tr>
+      <tr><td>Datos grandes (>50k)</td><td>❌ Lento</td><td>❌ Muy lento</td></tr>
+      <tr><td>Interpretabilidad</td><td>Baja</td><td>Intuitiva ("vecinos")</td></tr>
+    </tbody>
+  </table>
+  <div class="result" style="margin-top:.5rem; font-size:.6em">Semana 7: implementaremos ambos en el mismo dataset y compararemos resultados con GridSearchCV</div>
+</section>
+
+<!-- S12: RESUMEN -->
+<section>
+  <div class="eyebrow">Cierre de la semana</div>
+  <h2>Resumen K-NN</h2>
+  <div class="cols cols-3" style="margin-top:.8rem">
+    <div class="card">
+      <h4>El algoritmo</h4>
+      <p>Memoriza los datos. Al predecir: busca los K vecinos más cercanos y vota.</p>
+    </div>
+    <div class="card">
+      <h4>El hiperparámetro K</h4>
+      <p>K pequeño → overfitting. K grande → underfitting. Usar K=√n como punto de partida.</p>
+    </div>
+    <div class="card">
+      <h4>La distancia</h4>
+      <p>Euclídea por defecto. Normalizar siempre. En alta dimensión, considerar Manhattan.</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:.8rem; font-size:.62em">
+    K-NN es el algoritmo más intuitivo de ML. Su fortaleza es su simplicidad; su debilidad, la escalabilidad.
+  </blockquote>
+  <div class="inst">→ / ← para navegar · F para pantalla completa · Esc para vista general</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'slide',
+    width: 960, height: 620, margin: 0.04,
+    plugins: []
+  });
+</script>
+</body>
+</html>

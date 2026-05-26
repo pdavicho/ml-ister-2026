@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 7 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 7</div>
+    <h1>Implementación en Python — SVM y K-NN Aplicados</h1>
+    <div class="topic-tags">
+      <span class="tag">Pipeline</span>
+      <span class="tag">GridSearchCV</span>
+      <span class="tag">Dígitos MNIST</span>
+      <span class="tag">SVM vs K-NN</span>
+      <span class="tag">Curva de Aprendizaje</span>
+      <span class="tag">Comparativa</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 7</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 7</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: Exploración del Dataset Digits ─────────────────
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_digits
+
+digits = load_digits()
+print(f"Imágenes: {digits.images.shape}  → {digits.data.shape[0]} muestras, {digits.data.shape[1]} features")
+print(f"Clases: {digits.target_names}")
+print(f"Muestras por clase: {np.bincount(digits.target)}")
+
+# Visualizar algunos dígitos
+fig, axes = plt.subplots(3, 10, figsize=(14, 4.5))
+for i, ax in enumerate(axes.flat):
+    ax.imshow(digits.images[i], cmap='gray_r')
+    ax.set_title(str(digits.target[i]), fontsize=9)
+    ax.axis('off')
+plt.suptitle('Dataset Digits — Primeros 30 ejemplos (8×8 píxeles)', fontsize=11)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: Pipeline SVM con GridSearchCV en Digits ─────────
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
+from sklearn.preprocessing   import StandardScaler
+from sklearn.svm             import SVC
+from sklearn.pipeline        import Pipeline
+from sklearn.metrics         import classification_report, ConfusionMatrixDisplay
+import time
+
+X = digits.data
+y = digits.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
+
+# Pipeline: escalar + SVM
+pipe_svm = Pipeline([
+    ('scaler', StandardScaler()),
+    ('svm',    SVC(probability=True))
+])
+
+param_grid_svm = {
+    'svm__kernel': ['rbf', 'linear'],
+    'svm__C':      [0.1, 1, 10],
+    'svm__gamma':  ['scale', 0.01],
+}
+
+t0 = time.time()
+grid_svm = GridSearchCV(pipe_svm, param_grid_svm, cv=5, scoring='accuracy', n_jobs=-1)
+grid_svm.fit(X_train, y_train)
+t1 = time.time()
+
+print("── SVM GridSearchCV ──────────────────────────────────────────")
+print(f"Mejores params: {grid_svm.best_params_}")
+print(f"CV-5 accuracy:  {grid_svm.best_score_:.4f}")
+print(f"Tiempo búsqueda: {t1-t0:.1f}s")
+
+y_pred_svm = grid_svm.predict(X_test)
+acc_svm    = grid_svm.score(X_test, y_test)
+print(f"\nTest accuracy: {acc_svm:.4f}")
+print(classification_report(y_test, y_pred_svm))</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: Pipeline K-NN con GridSearchCV en Digits ────────
+from sklearn.neighbors import KNeighborsClassifier
+
+pipe_knn = Pipeline([
+    ('scaler', StandardScaler()),
+    ('knn',    KNeighborsClassifier())
+])
+
+param_grid_knn = {
+    'knn__n_neighbors': [3, 5, 7, 11],
+    'knn__weights':     ['uniform', 'distance'],
+    'knn__metric':      ['euclidean', 'manhattan'],
+}
+
+t0 = time.time()
+grid_knn = GridSearchCV(pipe_knn, param_grid_knn, cv=5, scoring='accuracy', n_jobs=-1)
+grid_knn.fit(X_train, y_train)
+t1 = time.time()
+
+print("── K-NN GridSearchCV ─────────────────────────────────────────")
+print(f"Mejores params: {grid_knn.best_params_}")
+print(f"CV-5 accuracy:  {grid_knn.best_score_:.4f}")
+print(f"Tiempo búsqueda: {t1-t0:.1f}s")
+
+y_pred_knn = grid_knn.predict(X_test)
+acc_knn    = grid_knn.score(X_test, y_test)
+print(f"\nTest accuracy: {acc_knn:.4f}")
+print(classification_report(y_test, y_pred_knn))</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: Comparativa Visual SVM vs K-NN ─────────────────
+from sklearn.model_selection import learning_curve
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+# Matrices de confusión
+ConfusionMatrixDisplay.from_predictions(
+    y_test, y_pred_svm, ax=axes[0], colorbar=False, cmap='Blues')
+axes[0].set_title(f'SVM (RBF) — Test acc = {acc_svm:.4f}', fontsize=10)
+
+ConfusionMatrixDisplay.from_predictions(
+    y_test, y_pred_knn, ax=axes[1], colorbar=False, cmap='Greens')
+axes[1].set_title(f'K-NN (k=opt) — Test acc = {acc_knn:.4f}', fontsize=10)
+
+plt.suptitle('Matrices de Confusión — SVM vs K-NN en Dígitos', fontsize=11)
+plt.tight_layout()
+plt.show()
+
+# Tabla resumen
+print("\n══ TABLA COMPARATIVA ════════════════════════════════════════")
+print(f"{'Métrica':<25} {'SVM':>10} {'K-NN':>10}")
+print("─" * 47)
+print(f"{'Test Accuracy':<25} {acc_svm:>10.4f} {acc_knn:>10.4f}")
+print(f"{'CV-5 Accuracy':<25} {grid_svm.best_score_:>10.4f} {grid_knn.best_score_:>10.4f}")
+ganador = 'SVM' if acc_svm > acc_knn else 'K-NN'
+print(f"\n→ Ganador en este dataset: {ganador}")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 5: Curva de Aprendizaje — SVM vs K-NN ─────────────
+from sklearn.model_selection import learning_curve
+
+best_svm = grid_svm.best_estimator_
+best_knn = grid_knn.best_estimator_
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
+
+for ax, modelo, titulo, color in zip(
+        axes,
+        [best_svm, best_knn],
+        ['SVM (Mejor Pipeline)', 'K-NN (Mejor Pipeline)'],
+        ['#3b82f6', '#10b981']):
+
+    train_sizes, train_sc, val_sc = learning_curve(
+        modelo, X, y,
+        train_sizes=np.linspace(0.1, 1.0, 10),
+        cv=5, scoring='accuracy', n_jobs=-1
+    )
+    t_mean = train_sc.mean(axis=1)
+    t_std  = train_sc.std(axis=1)
+    v_mean = val_sc.mean(axis=1)
+    v_std  = val_sc.std(axis=1)
+
+    ax.plot(train_sizes, t_mean, 'o-', color=color, lw=2, label='Train')
+    ax.fill_between(train_sizes, t_mean-t_std, t_mean+t_std, alpha=0.15, color=color)
+    ax.plot(train_sizes, v_mean, 'o--', color='#f59e0b', lw=2, label='Validación (CV-5)')
+    ax.fill_between(train_sizes, v_mean-v_std, v_mean+v_std, alpha=0.15, color='#f59e0b')
+    ax.set_xlabel('Muestras de entrenamiento')
+    ax.set_ylabel('Accuracy')
+    ax.set_title(titulo)
+    ax.set_ylim(0.8, 1.02)
+    ax.legend()
+    ax.grid(alpha=0.3)
+
+plt.suptitle('Curvas de Aprendizaje — SVM vs K-NN en Digits', fontsize=11)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana7_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 7 — SVM y K-NN en Datos con Geometría Variable (make_blobs)</h4>
+            <p>Compara el rendimiento de SVM y K-NN en datasets sintéticos con diferente geometría. Analiza cuándo cada algoritmo falla y cuándo sobresale.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Capítulo de pipelines y selección de modelos: GridSearchCV, pipelines con sklearn, comparativa de algoritmos.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Implementación práctica de SVM y K-NN en datasets reales con optimización de hiperparámetros.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Pipeline y ColumnTransformer</h4>
+              <p>Cómo construir pipelines que encadenan transformaciones y modelos de forma segura. Previene data leakage.</p>
+              <a href="https://scikit-learn.org/stable/modules/compose.html" target="_blank" class="resource-link">→ sklearn.org — Pipelines</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Tuning the hyperparameters (GridSearchCV)</h4>
+              <p>Guía completa de GridSearchCV, RandomizedSearchCV y cómo elegir el espacio de búsqueda.</p>
+              <a href="https://scikit-learn.org/stable/modules/grid_search.html" target="_blank" class="resource-link">→ sklearn.org — Grid Search</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próxima clase</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Pipeline completo SVM vs K-NN en dataset Pima Diabetes</h4>
+              <p>Usa el dataset Pima Diabetes (de la práctica 5). Construye un pipeline para SVM y otro para K-NN, ambos con StandardScaler. Aplica GridSearchCV a cada uno. Reporta en una tabla: mejores parámetros, CV-5 accuracy y test accuracy. ¿Cuál gana en este dataset?</p>
+              <div class="task-due">📅 Próxima clase · Formato: notebook .ipynb</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · ANÁLISIS</span>
+            <div class="task-content">
+              <h4>Análisis de errores: dígitos mal clasificados</h4>
+              <p>Con el mejor modelo SVM entrenado en Digits, extrae los ejemplos mal clasificados. Visualiza los 10 errores más representativos (muestra la imagen, la clase real y la clase predicha). ¿Hay patrones? ¿Qué dígitos se confunden entre sí y por qué tiene sentido?</p>
+              <div class="task-due">📅 Próxima clase · Incluir visualizaciones</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · INTEGRADOR</span>
+            <div class="task-content">
+              <h4>Comparativa Tema 2: SVM y K-NN en tu propio dataset</h4>
+              <p>Busca un dataset de clasificación de tu interés (Kaggle, UCI, seaborn). Entrena y compara SVM y K-NN con pipeline + GridSearchCV. Escribe un párrafo argumentando cuál elegirías para ese problema específico y por qué (considera: tamaño, features, tiempo, interpretabilidad).</p>
+              <div class="task-due">📅 Próxima clase · Notebook + párrafo en Markdown</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(7);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

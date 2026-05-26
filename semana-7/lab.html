@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 7 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 7</div>
+    <h1>Práctica 7 — SVM y K-NN en Datos con Geometría Variable</h1>
+    <div class="topic-tags">
+      <span class="tag">make_blobs</span>
+      <span class="tag">make_moons</span>
+      <span class="tag">SVM vs K-NN</span>
+      <span class="tag">Comparativa</span>
+      <span class="tag">GridSearchCV</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 7</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana7_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Generar datasets sintéticos con diferentes geometrías: blobs esféricos, lunas y círculos concéntricos.</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Aplicar SVM (kernel lineal y RBF) y K-NN en cada geometría y observar qué algoritmo falla.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Usar GridSearchCV para optimizar ambos modelos y comparar sus mejores versiones.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Analizar el efecto del ruido (noise) en el rendimiento de SVM y K-NN.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Construir una tabla comparativa final y argumentar cuándo elegir SVM o K-NN.</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🔵</span>
+        <h2>El Dataset: Datos Sintéticos con Geometría Variable</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          En esta práctica generamos datasets controlados que representan distintas "geometrías" de clasificación. Esto nos permite estudiar cuándo SVM o K-NN son mejores en función de la <strong>forma de la frontera de decisión real</strong>.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">make_blobs</div>
+            <div style="color:var(--text-muted)">Nubes de puntos esféricas. Separables linealmente. Más cercano al mundo real con datos bien separados.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">make_moons</div>
+            <div style="color:var(--text-muted)">Dos medias lunas entrelazadas. NO separables linealmente. Frontera curva.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">make_circles</div>
+            <div style="color:var(--text-muted)">Círculos concéntricos. Completamente no lineal. Desafío máximo para kernel lineal.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets        import make_blobs, make_moons, make_circles
+from sklearn.svm             import SVC
+from sklearn.neighbors       import KNeighborsClassifier
+from sklearn.preprocessing   import StandardScaler
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+from sklearn.metrics         import accuracy_score
+from sklearn.pipeline        import Pipeline
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔵</span><h2>Parte 1 — Generación y Visualización de Datasets</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: generar los 3 datasets</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code">np.random.seed(42)
+datasets = {
+    'Blobs (lineal)':      make_blobs(n_samples=300, centers=2, cluster_std=1.5, random_state=42),
+    'Moons (curvo)':       make_moons(n_samples=300, noise=0.15, random_state=42),
+    'Circles (concéntrico)': make_circles(n_samples=300, noise=0.1, factor=0.4, random_state=42),
+}
+print("✅ Datasets generados")
+for nombre, (X_d, y_d) in datasets.items():
+    print(f"  {nombre}: X={X_d.shape}, clases={np.unique(y_d)}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: visualizar los 3 datasets</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Visualiza los 3 datasets en subplots lado a lado (1 fila, 3 columnas)
+# Colorea los puntos por clase (clase 0: rojo, clase 1: azul)
+# Añade el nombre del dataset como título de cada subplot
+
+fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+for ax, (nombre, (X_d, y_d)) in zip(axes, datasets.items()):
+    # ___ tu código aquí ___
+    pass
+
+plt.suptitle('Tres geometrías de clasificación — Datos sintéticos', fontsize=11)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Antes de modelar:</strong></p>
+          <p>1. ¿Qué geometría crees que SVM con kernel <em>lineal</em> resolverá bien? ¿Y cuál fallará?<br>
+             2. ¿Qué geometría crees que K-NN con K pequeño resolverá bien? ¿Y cuál le costará?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚔️</span><h2>Parte 2 — SVM vs K-NN en cada Geometría</h2><span class="card-meta">~20 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: comparativa en los 3 datasets</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Para cada uno de los 3 datasets:
+#   1. Divide en train/test (70/30, random_state=42)
+#   2. Escala con StandardScaler
+#   3. Entrena SVM lineal, SVM RBF y K-NN (k=5)
+#   4. Calcula y almacena la test accuracy de cada modelo
+# Presenta los resultados en una tabla
+
+fig, axes = plt.subplots(3, 3, figsize=(15, 12))
+modelos = {
+    'SVM Lineal': SVC(kernel='linear', C=1),
+    'SVM RBF':    SVC(kernel='rbf', C=1, gamma='scale'),
+    'K-NN k=5':  KNeighborsClassifier(n_neighbors=5),
+}
+
+for row, (nombre_data, (X_d, y_d)) in enumerate(datasets.items()):
+    X_tr, X_te, y_tr, y_te = train_test_split(X_d, y_d, test_size=0.30, random_state=42)
+    sc = StandardScaler()
+    X_tr_s = sc.fit_transform(X_tr)
+    X_te_s = sc.transform(X_te)
+
+    for col, (nombre_mod, clf) in enumerate(modelos.items()):
+        ax = axes[row][col]
+        # ___ entrena clf, calcula frontera de decisión y grafica ___
+        # ___ título: f'{nombre_data}\n{nombre_mod} | acc={...:.3f}' ___
+        pass
+
+plt.suptitle('SVM Lineal vs SVM RBF vs K-NN — Tres geometrías', fontsize=11)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis de resultados:</strong></p>
+          <p>1. ¿SVM lineal puede resolver Moons y Circles? ¿Por qué sí o no?<br>
+             2. ¿SVM RBF maneja los 3 datasets? ¿Qué dice eso sobre el poder del kernel RBF?<br>
+             3. ¿K-NN (k=5) resuelve bien los 3? ¿Hay alguna geometría donde falla?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔧</span><h2>Parte 3 — GridSearchCV en el Dataset más Difícil</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Tu código: elegir el dataset difícil y aplicar GridSearch</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Elige el dataset 'Circles' (el más difícil para kernel lineal)
+X_c, y_c = datasets['Circles (concéntrico)']
+X_tr, X_te, y_tr, y_te = train_test_split(X_c, y_c, test_size=0.30, random_state=42)
+
+# Pipeline SVM
+pipe_svm = Pipeline([('scaler', StandardScaler()), ('svm', SVC())])
+param_svm = {
+    'svm__kernel': ['rbf', 'poly'],
+    'svm__C':      [0.1, 1, 10],
+    'svm__gamma':  ['scale', 0.1, 1],
+}
+
+# Pipeline K-NN
+pipe_knn = Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])
+param_knn = {
+    'knn__n_neighbors': [3, 5, 7, 11],
+    'knn__weights':     ['uniform', 'distance'],
+}
+
+# Aplica GridSearchCV a ambos (cv=5, scoring='accuracy')
+grid_svm = ___________
+grid_knn = ___________
+grid_svm.fit(X_tr, y_tr)
+grid_knn.fit(X_tr, y_tr)
+
+print("── GridSearchCV — Dataset Circles ────────────────────────")
+print(f"SVM | Params: {grid_svm.best_params_} | CV-5: {grid_svm.best_score_:.4f} | Test: {grid_svm.score(X_te, y_te):.4f}")
+print(f"KNN | Params: {grid_knn.best_params_} | CV-5: {grid_knn.best_score_:.4f} | Test: {grid_knn.score(X_te, y_te):.4f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ GridSearch:</strong></p>
+          <p>1. ¿Qué kernel SVM ganó en Circles? ¿Con qué valores de C y gamma?<br>
+             2. ¿Qué K y pesos ganó en K-NN? ¿Es K pequeño o grande el ganador?<br>
+             3. ¿Cuál modelo (SVM o K-NN) tuvo mejor accuracy en Circles?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📊</span><h2>Parte 4 — Efecto del Ruido</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: SVM vs K-NN con diferente nivel de ruido</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Para el dataset make_moons, genera versiones con noise = [0.05, 0.15, 0.25, 0.40]
+# Para cada nivel de ruido:
+#   1. Genera el dataset (300 muestras, random_state=42)
+#   2. Entrena SVM RBF (C=1, gamma='scale') con escalado
+#   3. Entrena K-NN (k=5, weights='distance') con escalado
+#   4. Calcula CV-5 accuracy de cada uno
+# Grafica CV-5 accuracy vs nivel de ruido para SVM y K-NN en el mismo plot
+
+niveles_ruido = [0.05, 0.15, 0.25, 0.40]
+acc_svm_ruido = []
+acc_knn_ruido = []
+
+for noise in niveles_ruido:
+    X_n, y_n = make_moons(n_samples=300, noise=noise, random_state=42)
+    # ___ tu código: calcular CV-5 para SVM y K-NN ___
+    pass
+
+plt.figure(figsize=(8, 4))
+plt.plot(niveles_ruido, acc_svm_ruido, 'o-', color='#3b82f6', lw=2, label='SVM (RBF)')
+plt.plot(niveles_ruido, acc_knn_ruido, 's-', color='#10b981', lw=2, label='K-NN (k=5)')
+plt.xlabel('Nivel de ruido (noise)')
+plt.ylabel('CV-5 Accuracy')
+plt.title('Efecto del ruido en SVM vs K-NN — make_moons')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Análisis del ruido:</strong></p>
+          <p>1. ¿Cuál modelo es más robusto al ruido: SVM o K-NN? ¿A partir de qué nivel de ruido empiezan a degradarse?<br>
+             2. ¿Por qué SVM es teóricamente más robusto al ruido que K-NN (pista: vectores de soporte vs todos los vecinos)?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📋</span><h2>Parte 5 — Tabla Comparativa Final</h2><span class="card-meta">~5 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 5.1 — Tu código: tabla resumen</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Construye una tabla comparativa con los resultados de toda la práctica
+# Incluye al menos: dataset, SVM lineal acc, SVM RBF acc, K-NN acc
+
+import pandas as pd
+
+# ___ Completa con los valores que obtuviste en las partes anteriores ___
+tabla = pd.DataFrame({
+    'Dataset':       ['Blobs (lineal)', 'Moons (curvo)', 'Circles (concéntrico)'],
+    'SVM Lineal':    [___,              ___,             ___],
+    'SVM RBF':       [___,              ___,             ___],
+    'K-NN (k=5)':   [___,              ___,             ___],
+})
+print("── Tabla Comparativa — Accuracy ──────────────────────────")
+print(tabla.to_string(index=False))</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN INTEGRADORA</span>
+            <div class="task-content">
+              <h4>Párrafo final — ¿Cuándo elegir SVM y cuándo K-NN?</h4>
+              <p>Basándote en los resultados de esta práctica y las semanas 5 y 6, escribe un párrafo argumentando en qué tipo de problema elegirías SVM sobre K-NN y viceversa. Menciona al menos 3 criterios concretos (geometría de datos, ruido, escalabilidad, interpretabilidad).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(7);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 5 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <span class="week-link locked"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 5</div>
+    <h1>Máquinas de Soporte Vectorial (SVM)</h1>
+    <div class="topic-tags">
+      <span class="tag">Hiperplano</span>
+      <span class="tag">Margen Máximo</span>
+      <span class="tag">Vectores de Soporte</span>
+      <span class="tag">Kernel Trick</span>
+      <span class="tag">Kernel RBF</span>
+      <span class="tag">Parámetro C</span>
+      <span class="tag">StandardScaler</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 5</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 5</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: SVM Lineal — Visualización del Margen ────────
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets        import make_blobs
+from sklearn.svm             import SVC
+from sklearn.preprocessing   import StandardScaler
+from sklearn.model_selection import train_test_split
+
+# Datos sintéticos linealmente separables
+X, y = make_blobs(n_samples=80, centers=2, random_state=6, cluster_std=0.8)
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+svm_lin = SVC(kernel='linear', C=1.0)
+svm_lin.fit(X_scaled, y)
+
+# Visualización de la frontera de decisión
+xx, yy = np.meshgrid(np.linspace(-3, 3, 200), np.linspace(-3, 3, 200))
+Z = svm_lin.decision_function(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+
+plt.figure(figsize=(7, 5))
+plt.contourf(xx, yy, Z, levels=[-1, 0, 1], alpha=0.15, colors=['#ef4444', '#ffffff', '#3b82f6'])
+plt.contour(xx, yy, Z, levels=[-1, 0, 1], colors=['#ef4444', '#1e293b', '#3b82f6'],
+            linestyles=['--', '-', '--'], linewidths=[1.5, 2, 1.5])
+plt.scatter(X_scaled[y==0, 0], X_scaled[y==0, 1], color='#ef4444', s=50, label='Clase 0', zorder=3)
+plt.scatter(X_scaled[y==1, 0], X_scaled[y==1, 1], color='#3b82f6', s=50, label='Clase 1', zorder=3)
+
+# Vectores de soporte
+sv = svm_lin.support_vectors_
+plt.scatter(sv[:, 0], sv[:, 1], s=200, facecolors='none', edgecolors='yellow',
+            linewidths=2, label='Vectores de soporte', zorder=4)
+
+plt.title('SVM Lineal — Hiperplano de Margen Máximo')
+plt.xlabel('Feature 1 (escalada)')
+plt.ylabel('Feature 2 (escalada)')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+print(f"Vectores de soporte: {len(sv)} puntos")
+print(f"Margen = 2 / ‖w‖ = {2 / np.linalg.norm(svm_lin.coef_):.4f}")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: Efecto del Parámetro C ───────────────────────
+# C pequeño → margen ancho, más errores permitidos
+# C grande  → margen estrecho, menos errores, riesgo de overfitting
+
+X, y = make_blobs(n_samples=100, centers=2, random_state=42, cluster_std=1.2)
+X_sc = StandardScaler().fit_transform(X)
+
+valores_C = [0.01, 0.1, 1.0, 100.0]
+fig, axes = plt.subplots(1, 4, figsize=(16, 4))
+
+for ax, C in zip(axes, valores_C):
+    clf = SVC(kernel='linear', C=C)
+    clf.fit(X_sc, y)
+
+    xx, yy = np.meshgrid(np.linspace(-3.5, 3.5, 150), np.linspace(-3.5, 3.5, 150))
+    Z = clf.decision_function(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+
+    ax.contourf(xx, yy, Z, levels=[-1, 0, 1], alpha=0.15, colors=['#ef4444', '#ffffff', '#3b82f6'])
+    ax.contour(xx, yy, Z, levels=[-1, 0, 1], colors=['#ef4444', '#1e293b', '#3b82f6'],
+               linestyles=['--', '-', '--'], linewidths=[1, 2, 1])
+    ax.scatter(X_sc[y==0, 0], X_sc[y==0, 1], color='#ef4444', s=20, alpha=0.7)
+    ax.scatter(X_sc[y==1, 0], X_sc[y==1, 1], color='#3b82f6', s=20, alpha=0.7)
+    sv = clf.support_vectors_
+    ax.scatter(sv[:, 0], sv[:, 1], s=120, facecolors='none', edgecolors='yellow', linewidths=1.5)
+    margin = 2 / np.linalg.norm(clf.coef_)
+    ax.set_title(f'C = {C}\nMargen = {margin:.2f}  | SVs = {len(sv)}', fontsize=9)
+    ax.set_xlim(-3.5, 3.5)
+    ax.set_ylim(-3.5, 3.5)
+    ax.grid(alpha=0.2)
+
+plt.suptitle('Efecto del parámetro C en SVM Lineal', fontsize=11)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: Kernel RBF — Datos NO linealmente separables ──
+from sklearn.datasets import make_circles, make_moons
+
+fig, axes = plt.subplots(2, 3, figsize=(14, 8))
+
+datasets = [
+    ('make_moons',   *make_moons(n_samples=150, noise=0.15, random_state=42)),
+    ('make_circles', *make_circles(n_samples=150, noise=0.1, factor=0.4, random_state=42)),
+]
+
+kernels_C = [('linear', 1), ('rbf', 1), ('rbf', 10)]
+
+for row, (nombre, X_d, y_d) in enumerate(datasets):
+    X_s = StandardScaler().fit_transform(X_d)
+    for col, (kern, C_val) in enumerate(kernels_C):
+        ax = axes[row][col]
+        clf = SVC(kernel=kern, C=C_val, gamma='scale')
+        clf.fit(X_s, y_d)
+
+        xx, yy = np.meshgrid(np.linspace(-2.5, 2.5, 150), np.linspace(-2.5, 2.5, 150))
+        Z = clf.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+        ax.contourf(xx, yy, Z, alpha=0.25, cmap='coolwarm')
+        ax.scatter(X_s[y_d==0, 0], X_s[y_d==0, 1], color='#ef4444', s=20, alpha=0.8)
+        ax.scatter(X_s[y_d==1, 0], X_s[y_d==1, 1], color='#3b82f6', s=20, alpha=0.8)
+        acc = clf.score(X_s, y_d)
+        ax.set_title(f'{nombre}\nkernel={kern} | C={C_val} | acc={acc:.2f}', fontsize=8)
+        ax.grid(alpha=0.2)
+
+plt.suptitle('SVM: Kernel Lineal vs RBF en Datos No Lineales', fontsize=11)
+plt.tight_layout()
+plt.show()
+
+print("Observación: el kernel RBF puede aprender fronteras circulares y curvas")
+print("que el kernel lineal NO puede capturar.")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: SVM + GridSearchCV — Pipeline Completo ────────
+from sklearn.model_selection import GridSearchCV, cross_val_score
+from sklearn.pipeline        import Pipeline
+
+# Datos: make_moons (no lineales)
+X, y = make_moons(n_samples=300, noise=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=42)
+
+# Pipeline: escalado + SVM (previene data leakage)
+pipe = Pipeline([
+    ('scaler', StandardScaler()),
+    ('svm',    SVC())
+])
+
+param_grid = {
+    'svm__kernel': ['linear', 'rbf'],
+    'svm__C':      [0.1, 1, 10, 100],
+    'svm__gamma':  ['scale', 0.1, 0.01],   # 'scale' ignora gamma para kernel lineal
+}
+
+grid = GridSearchCV(pipe, param_grid, cv=5, scoring='accuracy', n_jobs=-1, verbose=0)
+grid.fit(X_train, y_train)
+
+print("── GridSearchCV — Mejores hiperparámetros ────────────────────")
+print(f"Mejores params: {grid.best_params_}")
+print(f"CV-5 accuracy:  {grid.best_score_:.4f}")
+
+y_pred = grid.predict(X_test)
+from sklearn.metrics import classification_report
+print("\n── Test set ───────────────────────────────────────────────────")
+print(classification_report(y_test, y_pred, target_names=['Clase 0', 'Clase 1']))</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana5_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 5 — SVM en Dataset Pima Indians Diabetes</h4>
+            <p>Aplica SVM con diferentes kernels al dataset de diabetes. Compara kernel lineal vs RBF, ajusta C y γ con GridSearchCV y evalúa el impacto de la normalización.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Capítulo de SVM: fundamentos matemáticos, kernel trick, y aplicación con scikit-learn.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Capítulo de Máquinas de Soporte Vectorial: teoría, kernels y casos de uso.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Support Vector Machines</h4>
+              <p>Documentación oficial: SVC, SVR, kernels disponibles, GridSearchCV con SVM y ejemplos de visualización.</p>
+              <a href="https://scikit-learn.org/stable/modules/svm.html" target="_blank" class="resource-link">→ sklearn.org — SVM</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Kernel Functions</h4>
+              <p>Detalle matemático de los kernels disponibles: lineal, RBF, polinomial, sigmoide y cómo elegir.</p>
+              <a href="https://scikit-learn.org/stable/modules/svm.html#kernel-functions" target="_blank" class="resource-link">→ sklearn.org — Kernel Functions</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próxima clase</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Comparativa de kernels SVM en make_moons</h4>
+              <p>Genera datos con make_moons(noise=0.25). Entrena SVM con los 4 kernels: lineal, RBF, polinomial (d=3) y sigmoide. Para cada uno: accuracy en test y número de vectores de soporte. Visualiza las 4 fronteras de decisión en un mismo figure con 4 subplots.</p>
+              <div class="task-due">📅 Próxima clase · Formato: notebook .ipynb</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · ANÁLISIS</span>
+            <div class="task-content">
+              <h4>Impacto de la normalización en SVM</h4>
+              <p>Usa el dataset Pima Diabetes de la práctica. Entrena SVM (kernel RBF, C=10) con y sin StandardScaler. Reporta accuracy en test y CV-5 en ambos casos. ¿Cuánto mejora la normalización? ¿Por qué?</p>
+              <div class="task-due">📅 Próxima clase · Incluir tabla comparativa</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · INVESTIGACIÓN</span>
+            <div class="task-content">
+              <h4>Aplicación real de SVM</h4>
+              <p>Busca un caso de uso real de SVM (clasificación de imágenes, bioinformática, detección de spam, etc.). Describe: qué kernel usaron, qué tamaño de dataset, y qué accuracy lograron. Media página con fuente citada.</p>
+              <div class="task-due">📅 Próxima clase · Formato: PDF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(5);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>
