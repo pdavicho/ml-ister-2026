@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 8 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 8</div>
+    <h1>Aprendizaje No Supervisado — Clustering con K-means</h1>
+    <div class="topic-tags">
+      <span class="tag">No supervisado</span>
+      <span class="tag">Clustering</span>
+      <span class="tag">K-means</span>
+      <span class="tag">StandardScaler</span>
+      <span class="tag">Método del codo</span>
+      <span class="tag">Silhouette</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 8</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 8</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: Cargar y Explorar el Dataset Auto MPG ──────────
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Auto MPG: características de automóviles clásicos (sin etiqueta objetivo)
+df = sns.load_dataset('mpg').dropna().reset_index(drop=True)
+print(f"Autos: {df.shape[0]}  |  Columnas: {list(df.columns)}")
+
+# Features numéricas para agrupar (NO usamos 'origin' ni 'name' como entrada)
+features = ['mpg', 'displacement', 'horsepower', 'weight', 'acceleration']
+X = df[features].copy()
+print(X.describe().round(1))
+
+# Nota: las escalas son MUY distintas (weight ~3000, mpg ~25) → habrá que escalar</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: Escalar y Aplicar K-means (k=3) ────────────────
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster       import KMeans
+
+# 1) Escalado: imprescindible antes de medir distancias
+scaler  = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# 2) K-means con 3 clústeres
+kmeans = KMeans(n_clusters=3, init='k-means++', n_init=10, random_state=42)
+clusters = kmeans.fit_predict(X_scaled)
+df['cluster'] = clusters
+
+print("Tamaño de cada clúster:")
+print(pd.Series(clusters).value_counts().sort_index())
+print(f"\nInercia (compacidad total): {kmeans.inertia_:.1f}")
+
+# Visualizar en 2 dimensiones intuitivas: peso vs consumo
+plt.figure(figsize=(8, 5))
+plt.scatter(df['weight'], df['mpg'], c=clusters, cmap='viridis', s=35, edgecolor='k', linewidth=0.3)
+plt.xlabel('Peso (weight)')
+plt.ylabel('Consumo (mpg)')
+plt.title('K-means (k=3) sobre automóviles — Peso vs Consumo')
+plt.colorbar(label='Clúster')
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: ¿Cuántos clústeres? Método del Codo ────────────
+inercias = []
+ks = range(1, 11)
+for k in ks:
+    km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+    km.fit(X_scaled)
+    inercias.append(km.inertia_)
+
+plt.figure(figsize=(8, 4.5))
+plt.plot(list(ks), inercias, 'o-', color='#3b82f6', lw=2)
+plt.xlabel('Número de clústeres (k)')
+plt.ylabel('Inercia')
+plt.title('Método del Codo — ¿Dónde se aplana la curva?')
+plt.xticks(list(ks))
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+for k, iner in zip(ks, inercias):
+    print(f"k={k}:  inercia = {iner:.1f}")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: Validar K con el Coeficiente de Silhouette ─────
+from sklearn.metrics import silhouette_score
+
+print("Silhouette promedio por valor de k (más alto = mejor):")
+mejor_k, mejor_sil = None, -1
+for k in range(2, 9):
+    km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+    etiquetas = km.fit_predict(X_scaled)
+    sil = silhouette_score(X_scaled, etiquetas)
+    marca = ""
+    if sil > mejor_sil:
+        mejor_sil, mejor_k, marca = sil, k, "  <- mejor hasta ahora"
+    print(f"k={k}:  silhouette = {sil:.3f}{marca}")
+
+print(f"\nMejor k según Silhouette: {mejor_k}  (silhouette = {mejor_sil:.3f})")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 5: Interpretar los Clústeres ──────────────────────
+# El algoritmo encontró los grupos; ahora les damos significado de negocio.
+perfil = df.groupby('cluster')[features].mean().round(1)
+print("Perfil promedio de cada clúster:")
+print(perfil)
+
+# ¿Coinciden los clústeres con el origen real del auto? (validación externa)
+print("\nOrigen de los autos en cada clúster:")
+print(pd.crosstab(df['cluster'], df['origin']))
+
+# Lectura típica:
+#  - un clúster de autos pesados, mucha cilindrada y poco mpg (muscle cars USA)
+#  - un clúster de autos ligeros y eficientes (japoneses/europeos)
+#  - un clúster intermedio
+print("\n💡 K-means descubrió perfiles de autos SIN ver la etiqueta 'origin'.")</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana8_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 8 — Clustering del Géiser Old Faithful</h4>
+            <p>Aplica K-means al dataset del géiser Old Faithful (duración de erupción vs tiempo de espera). Encuentra el K óptimo con el método del codo y Silhouette, y verifica si los clústeres coinciden con los dos tipos de erupción reales.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Capítulo de aprendizaje no supervisado: clustering, K-means y evaluación de agrupamientos.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Algoritmos de clustering, normalización de datos y métricas internas de validación.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Clustering (User Guide)</h4>
+              <p>Panorama de todos los algoritmos de clustering, sus supuestos y cuándo usar cada uno.</p>
+              <a href="https://scikit-learn.org/stable/modules/clustering.html" target="_blank" class="resource-link">→ sklearn.org — Clustering</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Selecting the number of clusters with silhouette analysis</h4>
+              <p>Cómo usar el coeficiente de Silhouette para elegir K y diagnosticar la calidad del agrupamiento.</p>
+              <a href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html" target="_blank" class="resource-link">→ sklearn.org — Silhouette</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próxima clase</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Segmentación de pingüinos sin etiquetas</h4>
+              <p>Carga el dataset <code>penguins</code> de seaborn, usa solo las 4 variables numéricas (largo/profundidad del pico, largo de aleta, masa). Escala, aplica K-means y encuentra el K óptimo con el codo y Silhouette. Compara tus clústeres con la columna real <code>species</code> usando una tabla cruzada. ¿K-means redescubre las 3 especies?</p>
+              <div class="task-due">📅 Próxima clase · Formato: notebook .ipynb</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · ANÁLISIS</span>
+            <div class="task-content">
+              <h4>El efecto de NO escalar</h4>
+              <p>Repite el clustering del Auto MPG de la clase pero <strong>sin</strong> StandardScaler. Compara los clústeres y los perfiles con los de la versión escalada. Explica en un párrafo por qué cambian y qué feature domina la distancia cuando no se escala.</p>
+              <div class="task-due">📅 Próxima clase · Incluir ambas visualizaciones</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · CONCEPTUAL</span>
+            <div class="task-content">
+              <h4>Supervisado vs No Supervisado</h4>
+              <p>Escribe un cuadro comparativo con 5 diferencias entre aprendizaje supervisado y no supervisado, y propón 3 problemas reales de tu carrera (Sistemas y Gestión de Data) que resolverías con clustering. Justifica por qué no son problemas supervisados.</p>
+              <div class="task-due">📅 Próxima clase · Documento o celda Markdown</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(8);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

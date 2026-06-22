@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 8 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 8</div>
+    <h1>Práctica 8 — Clustering del Géiser Old Faithful</h1>
+    <div class="topic-tags">
+      <span class="tag">K-means</span>
+      <span class="tag">Old Faithful</span>
+      <span class="tag">Método del codo</span>
+      <span class="tag">Silhouette</span>
+      <span class="tag">Validación externa</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 8</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana8_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Explorar el dataset del géiser Old Faithful y visualizar su estructura natural.</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Escalar las features y aplicar K-means para agrupar las erupciones.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Encontrar el número óptimo de clústeres con el método del codo.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Validar la elección de K con el coeficiente de Silhouette.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Comparar los clústeres encontrados con el tipo real de erupción (validación externa).</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🌋</span>
+        <h2>El Dataset: Géiser Old Faithful</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El géiser <strong>Old Faithful</strong> (Parque Yellowstone) es famoso por sus erupciones regulares. El dataset registra <strong>272 erupciones</strong> con dos variables: la <strong>duración</strong> de la erupción y el <strong>tiempo de espera</strong> hasta la siguiente. A simple vista parecen formar dos grupos naturales — el objetivo es que K-means los descubra <em>sin</em> usar la etiqueta.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">duration</div>
+            <div style="color:var(--text-muted)">Duración de la erupción en minutos.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">waiting</div>
+            <div style="color:var(--text-muted)">Minutos de espera hasta la siguiente erupción.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">kind</div>
+            <div style="color:var(--text-muted)">Tipo real de erupción (short / long). Solo para validar al final.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster       import KMeans
+from sklearn.metrics       import silhouette_score
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🌋</span><h2>Parte 1 — Explorar y Visualizar</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar el dataset</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>df = sns.load_dataset('geyser')
+print(f"Erupciones: {df.shape[0]}  |  Columnas: {list(df.columns)}")
+print(df.head())
+print("\nTipos reales de erupción:")
+print(df['kind'].value_counts())</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: graficar duration vs waiting</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Haz un scatter plot de 'duration' (eje X) vs 'waiting' (eje Y)
+# NO colorees por tipo todavía (estamos en modo "no supervisado")
+# ¿Ves grupos a simple vista? ¿Cuántos?
+
+plt.figure(figsize=(7, 5))
+# ___ tu código aquí: plt.scatter(...) ___
+plt.xlabel('Duración (min)')
+plt.ylabel('Espera (min)')
+plt.title('Old Faithful — ¿Cuántos grupos ves?')
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Antes de modelar:</strong></p>
+          <p>1. ¿Cuántos grupos crees que hay observando la nube de puntos?<br>
+             2. ¿Por qué este dataset es ideal para clustering (pista: forma de los grupos)?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📏</span><h2>Parte 2 — Escalar y Aplicar K-means</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: escalar las features</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Selecciona las features numéricas: 'duration' y 'waiting'
+# 2. Escálalas con StandardScaler
+
+features = ['duration', 'waiting']
+X = df[features].copy()
+
+scaler   = ___________          # crea el StandardScaler
+X_scaled = ___________          # ajusta y transforma X
+
+print("Media tras escalar (debe ser ~0):", X_scaled.mean(axis=0).round(2))
+print("Desv. tras escalar (debe ser ~1):", X_scaled.std(axis=0).round(2))</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: K-means con k=2</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Aplica K-means con n_clusters=2, init='k-means++', n_init=10, random_state=42
+# Guarda las etiquetas en df['cluster'] y visualiza coloreando por clúster
+
+kmeans   = ___________
+clusters = ___________          # usa fit_predict sobre X_scaled
+df['cluster'] = clusters
+
+plt.figure(figsize=(7, 5))
+plt.scatter(df['duration'], df['waiting'], c=clusters, cmap='viridis', s=35, edgecolor='k', linewidth=0.3)
+plt.scatter(scaler.inverse_transform(kmeans.cluster_centers_)[:, 0],
+            scaler.inverse_transform(kmeans.cluster_centers_)[:, 1],
+            c='red', marker='X', s=200, label='Centroides')
+plt.xlabel('Duración (min)')
+plt.ylabel('Espera (min)')
+plt.title('K-means (k=2) sobre Old Faithful')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+print(f"Inercia: {kmeans.inertia_:.2f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre el resultado:</strong></p>
+          <p>1. ¿Los centroides (X rojas) caen en el centro de cada grupo?<br>
+             2. ¿Qué representa cada clúster en términos del géiser (erupciones cortas vs largas)?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📐</span><h2>Parte 3 — Método del Codo</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Tu código: inercia para k = 1..10</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Para k de 1 a 10: ajusta K-means y guarda km.inertia_ en la lista
+# Luego grafica inercia vs k y busca el "codo"
+
+inercias = []
+ks = range(1, 11)
+for k in ks:
+    km = ___________            # KMeans con n_clusters=k, n_init=10, random_state=42
+    km.fit(X_scaled)
+    inercias.append(___________)   # añade la inercia
+
+plt.figure(figsize=(8, 4.5))
+plt.plot(list(ks), inercias, 'o-', color='#3b82f6', lw=2)
+plt.xlabel('Número de clústeres (k)')
+plt.ylabel('Inercia')
+plt.title('Método del Codo — Old Faithful')
+plt.xticks(list(ks))
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Lectura del codo:</strong></p>
+          <p>1. ¿En qué valor de k se "aplana" la curva?<br>
+             2. ¿Coincide con lo que viste a simple vista en la Parte 1?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📊</span><h2>Parte 4 — Validar con Silhouette</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: silhouette para k = 2..8</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Para k de 2 a 8: ajusta K-means, calcula silhouette_score y guárdalo
+# Imprime el k con el silhouette más alto
+
+print("Silhouette por k (más alto = mejor):")
+for k in range(2, 9):
+    km   = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+    lab  = km.fit_predict(X_scaled)
+    sil  = ___________          # silhouette_score(X_scaled, lab)
+    print(f"k={k}:  silhouette = {sil:.3f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Codo vs Silhouette:</strong></p>
+          <p>1. ¿El k con mayor silhouette coincide con el codo de la Parte 3?<br>
+             2. Si no coinciden, ¿con cuál te quedarías y por qué?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✔️</span><h2>Parte 5 — Validación Externa</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 5.1 — Tu código: comparar clústeres con el tipo real</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Con tu modelo de k=2, compara los clústeres con la columna real 'kind'
+# Usa una tabla cruzada (pd.crosstab) entre df['cluster'] y df['kind']
+# ¿K-means redescubrió los tipos de erupción sin verlos?
+
+tabla = ___________            # pd.crosstab(df['cluster'], df['kind'])
+print("Clúster encontrado vs tipo real de erupción:")
+print(tabla)</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Conclusión:</strong></p>
+          <p>1. ¿Cada clúster corresponde mayormente a un tipo de erupción (short / long)?<br>
+             2. ¿Qué % de aciertos lograría K-means si lo usáramos como "clasificador" sin etiquetas?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">REFLEXIÓN</span>
+            <div class="task-content">
+              <h4>Párrafo final — ¿Funcionó el clustering?</h4>
+              <p>En 4–6 líneas explica: ¿cuántos clústeres recomienda el codo y Silhouette? ¿Coinciden los clústeres con los tipos reales de erupción? ¿Por qué este dataset es "fácil" para K-means comparado con otros?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(8);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

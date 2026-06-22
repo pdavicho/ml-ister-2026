@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 9 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 9</div>
+    <h1>Práctica 9 — K-means vs DBScan en Diamantes</h1>
+    <div class="topic-tags">
+      <span class="tag">diamonds</span>
+      <span class="tag">K-means</span>
+      <span class="tag">DBScan</span>
+      <span class="tag">k-distance</span>
+      <span class="tag">Outliers</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 9</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana9_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Preparar una muestra del dataset de diamantes y escalar sus features numéricas.</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Segmentar los diamantes con K-means y encontrar el K óptimo.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Elegir un buen eps para DBScan usando el gráfico de k-distancias.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Aplicar DBScan para detectar diamantes "outlier" (combinaciones raras de precio/tamaño).</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Comparar K-means y DBScan y decidir cuál es mejor para este problema.</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">💎</span>
+        <h2>El Dataset: Diamantes</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>diamonds</strong> de seaborn contiene casi 54.000 diamantes con su precio y características físicas. Tomaremos una <strong>muestra</strong> para que el clustering sea ágil. El objetivo es doble: <strong>segmentar</strong> los diamantes en grupos de mercado (K-means) y <strong>detectar outliers</strong> — diamantes con combinaciones inusuales de tamaño y precio (DBScan).
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">carat</div>
+            <div style="color:var(--text-muted)">Peso del diamante en quilates.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">price</div>
+            <div style="color:var(--text-muted)">Precio en dólares.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">x · y · z</div>
+            <div style="color:var(--text-muted)">Dimensiones físicas (mm).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster       import KMeans, DBSCAN
+from sklearn.neighbors     import NearestNeighbors
+from sklearn.metrics       import silhouette_score
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">💎</span><h2>Parte 1 — Preparar y Escalar</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar una muestra</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>df = sns.load_dataset('diamonds').sample(1500, random_state=42).reset_index(drop=True)
+print(f"Diamantes en la muestra: {df.shape[0]}")
+print(df[['carat', 'price', 'x', 'y', 'z']].describe().round(2))</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: seleccionar features y escalar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Usa las features numéricas: 'carat', 'price', 'x', 'y', 'z'
+# 2. Escala con StandardScaler (carat ~0.8 y price ~4000 → escalas MUY distintas)
+
+features = ['carat', 'price', 'x', 'y', 'z']
+X = df[features].copy()
+
+scaler   = ___________          # StandardScaler
+X_scaled = ___________          # fit_transform sobre X
+
+print("Forma de X_scaled:", X_scaled.shape)
+print("Media (~0):", X_scaled.mean(axis=0).round(2))</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Antes de modelar:</strong></p>
+          <p>1. ¿Por qué es crítico escalar aquí (compara los rangos de carat y price)?<br>
+             2. ¿Qué grupos de mercado esperarías encontrar (pista: diamantes pequeños/baratos vs grandes/caros)?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🎯</span><h2>Parte 2 — Segmentar con K-means</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: método del codo + Silhouette</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Para k de 2 a 8: calcula inercia y silhouette_score
+# Imprime ambos para elegir el mejor k
+
+print(f"{'k':>3} {'inercia':>12} {'silhouette':>12}")
+for k in range(2, 9):
+    km  = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+    lab = km.fit_predict(X_scaled)
+    sil = ___________          # silhouette_score(X_scaled, lab)
+    print(f"{k:>3} {km.inertia_:>12.1f} {sil:>12.3f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: K-means con tu k elegido</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Elige tu mejor k (según codo/silhouette) y ajusta K-means
+# Guarda las etiquetas en df['cluster_km'] y grafica carat vs price coloreado
+
+mejor_k = ___________          # tu elección, p.ej. 3
+km = KMeans(n_clusters=mejor_k, init='k-means++', n_init=10, random_state=42)
+df['cluster_km'] = km.fit_predict(X_scaled)
+
+plt.figure(figsize=(7.5, 5))
+plt.scatter(df['carat'], df['price'], c=df['cluster_km'], cmap='viridis', s=20, edgecolor='k', linewidth=0.2)
+plt.xlabel('Quilates (carat)')
+plt.ylabel('Precio (USD)')
+plt.title(f'K-means (k={mejor_k}) — Segmentos de diamantes')
+plt.colorbar(label='Clúster')
+plt.tight_layout()
+plt.show()
+
+# Perfil de cada segmento
+print(df.groupby('cluster_km')[features].mean().round(1))</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre los segmentos:</strong></p>
+          <p>1. ¿Qué k elegiste y por qué?<br>
+             2. Describe cada segmento en palabras (p.ej. "diamantes pequeños y económicos").</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📐</span><h2>Parte 3 — Elegir eps para DBScan</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Tu código: gráfico de k-distancias</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. min_samples = 6 (regla: dimensiones + 1, aquí 5 features)
+# 2. Calcula la distancia de cada punto a su 6º vecino
+# 3. Ordénalas y grafícalas: el "codo" sugiere el eps
+
+min_samples = 6
+nn = NearestNeighbors(n_neighbors=min_samples)
+nn.fit(X_scaled)
+distancias, _ = nn.kneighbors(X_scaled)
+k_dist = np.sort(distancias[:, -1])   # distancia al 6º vecino
+
+plt.figure(figsize=(8, 4.5))
+# ___ tu código: plt.plot(k_dist, ...) ___
+plt.xlabel('Puntos ordenados')
+plt.ylabel(f'Distancia al vecino {min_samples}')
+plt.title('Gráfico de k-distancias — busca el codo para eps')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre eps:</strong></p>
+          <p>1. ¿A qué altura está el codo de la curva? Ese es tu candidato a <code>eps</code>.<br>
+             2. ¿Qué pasaría con eps mucho más pequeño? ¿Y mucho más grande?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🚨</span><h2>Parte 4 — DBScan y Detección de Outliers</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: aplicar DBScan</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Aplica DBSCAN con el eps que leíste del codo (p.ej. 0.5) y min_samples=6
+# Guarda las etiquetas en df['cluster_db']
+# Cuenta clústeres y outliers (-1)
+
+db = ___________               # DBSCAN(eps=..., min_samples=6)
+df['cluster_db'] = db.fit_predict(X_scaled)
+
+n_clusters = len(set(df['cluster_db'])) - (1 if -1 in df['cluster_db'].values else 0)
+n_outliers = (df['cluster_db'] == -1).sum()
+print(f"Clústeres encontrados: {n_clusters}")
+print(f"Outliers detectados:   {n_outliers}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 4.2 — Tu código: visualizar outliers</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Grafica carat vs price. Pinta los clústeres normales en color
+# y marca los outliers (-1) con una X roja.
+
+es_outlier = df['cluster_db'] == -1
+
+plt.figure(figsize=(7.5, 5))
+# ___ scatter de los NO outliers (df[~es_outlier]) coloreado por cluster_db ___
+# ___ scatter de los outliers (df[es_outlier]) en rojo con marker='x' ___
+plt.xlabel('Quilates (carat)')
+plt.ylabel('Precio (USD)')
+plt.title('DBScan — Diamantes outlier marcados en rojo')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# Inspecciona los diamantes outlier
+print("Algunos diamantes marcados como outlier:")
+print(df[es_outlier][['carat', 'price', 'x', 'y', 'z']].head(10))</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre los outliers:</strong></p>
+          <p>1. ¿Qué tienen de "raro" los diamantes marcados como outlier (precio vs tamaño)?<br>
+             2. ¿Para qué le serviría esto a una joyería o a un sistema de detección de fraude?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚖️</span><h2>Parte 5 — Comparativa Final</h2><span class="card-meta">~5 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 5.1 — Tu código: K-means vs DBScan lado a lado</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Dibuja dos subplots (carat vs price): izquierda K-means, derecha DBScan
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+# ___ izquierda: colorear por df['cluster_km'] ___
+axes[0].set_title('K-means')
+# ___ derecha: colorear por df['cluster_db'] ___
+axes[1].set_title('DBScan (rojo = outlier)')
+for ax in axes:
+    ax.set_xlabel('carat'); ax.set_ylabel('price')
+plt.suptitle('K-means vs DBScan en diamantes', fontsize=12)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Decisión final:</strong></p>
+          <p>1. Para <em>segmentar el mercado</em> de diamantes, ¿cuál algoritmo prefieres y por qué?<br>
+             2. Para <em>detectar diamantes anómalos</em>, ¿cuál es claramente mejor?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN INTEGRADORA</span>
+            <div class="task-content">
+              <h4>Párrafo final — Centroides vs Densidad</h4>
+              <p>Basándote en esta práctica, argumenta cuándo usarías K-means y cuándo DBScan. Menciona al menos 3 criterios concretos (forma de los grupos, número conocido o no de clústeres, necesidad de detectar outliers, escala/velocidad).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(9);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 9 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .pipeline-step { background: rgba(30,41,59,.9); border: 1px solid #334155; border-radius: 6px; padding: .5rem .8rem; font-size: .6em; text-align: center; }
+    .pipeline-arrow { color: #60a5fa; font-size: .8em; text-align: center; padding: .1rem; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 9 · TEMA 3</div>
+  <h1 style="font-size:1.45em; line-height:1.2">K-means en Profundidad<br><span style="color:#60a5fa">y DBScan</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">K-means++</span>
+    <span class="tag">Densidad</span>
+    <span class="tag">DBScan</span>
+    <span class="tag">eps · min_samples</span>
+    <span class="tag">Outliers</span>
+  </div>
+  <p style="margin-top:1.2rem; font-size:.55em; color:#64748b">Machine Learning · ISTER 2026 · Ing. David Minango, PhD</p>
+</section>
+
+<!-- S2: REPASO -->
+<section>
+  <div class="eyebrow">Repaso Semana 8</div>
+  <h2>Dónde Estamos en Clustering</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>Ya sabemos (S8)</h4>
+      <ul>
+        <li>Clustering = agrupar por similitud (distancia)</li>
+        <li>K-means: K centroides, asignar y actualizar</li>
+        <li>Escalar siempre antes de agrupar</li>
+        <li>Elegir K: método del codo + Silhouette</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Hoy resolvemos (S9)</h4>
+      <ul>
+        <li>¿Qué hace K-means por dentro? (k-means++)</li>
+        <li>¿Cuándo K-means <span class="con">falla</span>?</li>
+        <li><strong>DBScan:</strong> clustering por densidad</li>
+        <li>Detectar outliers automáticamente</li>
+      </ul>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem">Dos algoritmos, dos filosofías: centroides vs densidad</div>
+</section>
+
+<!-- S3: K-MEANS A FONDO -->
+<section>
+  <div class="eyebrow">Por dentro de K-means</div>
+  <h2>k-means++ y la Inicialización</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.4rem">La posición inicial de los centroides importa: una mala inicialización lleva a un mal agrupamiento (mínimo local).</p>
+      <div class="step"><strong>k-means++:</strong> elige centroides iniciales bien separados entre sí</div>
+      <div class="step" style="margin-top:.2rem"><strong>n_init=10:</strong> repite 10 veces y se queda con la menor inercia</div>
+      <div class="result" style="margin-top:.4rem">En sklearn ambos son el comportamiento por defecto</div>
+    </div>
+    <div class="card">
+      <h4>Recordatorio: inercia</h4>
+      <p>Suma de distancias al cuadrado de cada punto a su centroide. Mide compacidad: más baja = clústeres más apretados.</p>
+      <p style="margin-top:.3rem">K-means <strong>minimiza la inercia</strong> en cada iteración hasta converger.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S4: DONDE FALLA K-MEANS -->
+<section>
+  <div class="eyebrow">El talón de Aquiles</div>
+  <h2>¿Cuándo Falla K-means?</h2>
+  <p style="font-size:.62em; line-height:1.6; margin-top:.5rem">K-means asume que los clústeres son <strong>esféricos, de tamaño similar y separados</strong>. Cuando no es así, se equivoca:</p>
+  <div class="cols cols-3" style="margin-top:.5rem">
+    <div class="card">
+      <h4 class="con">Formas alargadas</h4>
+      <p>Dos lunas (moons) entrelazadas: K-means las parte por la mitad en vez de seguir la curva.</p>
+    </div>
+    <div class="card">
+      <h4 class="con">Círculos anidados</h4>
+      <p>Un anillo alrededor de un núcleo: K-means no puede separar el centro del borde.</p>
+    </div>
+    <div class="card">
+      <h4 class="con">Densidades distintas</h4>
+      <p>Grupos densos junto a grupos dispersos: K-means los mezcla por usar solo distancia al centro.</p>
+    </div>
+  </div>
+  <div class="danger" style="margin-top:.5rem; font-size:.6em">Además, K-means asigna <strong>todos</strong> los puntos a un clúster: no sabe decir "esto es ruido".</div>
+</section>
+
+<!-- S5: DBSCAN IDEA -->
+<section>
+  <div class="eyebrow">Otra filosofía</div>
+  <h2>DBScan: Clustering por Densidad</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div>
+      <p style="font-size:.62em; line-height:1.6; margin-bottom:.4rem">DBScan (<em>Density-Based Spatial Clustering</em>) agrupa puntos que están <strong>densamente juntos</strong> y marca como ruido los que quedan solos.</p>
+      <div class="step">Un clúster = una región densa de puntos</div>
+      <div class="step" style="margin-top:.2rem">Las regiones vacías separan los clústeres</div>
+      <div class="result" style="margin-top:.4rem">No necesitas decir cuántos clústeres hay: los descubre solo</div>
+    </div>
+    <div class="card">
+      <h4>Sus dos parámetros</h4>
+      <p><strong>eps (ε):</strong> radio de vecindad. ¿Qué tan cerca deben estar dos puntos para ser "vecinos"?</p>
+      <p style="margin-top:.3rem"><strong>min_samples:</strong> mínimo de vecinos para formar una región densa (un "núcleo").</p>
+    </div>
+  </div>
+</section>
+
+<!-- S6: TIPOS DE PUNTO -->
+<section>
+  <div class="eyebrow">El vocabulario de DBScan</div>
+  <h2>Tres Tipos de Punto</h2>
+  <div class="cols cols-3" style="margin-top:.8rem">
+    <div class="card">
+      <h4 class="pro">● Núcleo (core)</h4>
+      <p>Tiene al menos <strong>min_samples</strong> vecinos dentro del radio eps. Es el corazón de un clúster.</p>
+    </div>
+    <div class="card">
+      <h4 style="color:#fbbf24">● Frontera (border)</h4>
+      <p>Está dentro del radio de un núcleo, pero no tiene suficientes vecinos propios. Vive en el borde del clúster.</p>
+    </div>
+    <div class="card">
+      <h4 class="con">● Ruido (noise)</h4>
+      <p>No es núcleo ni frontera. Queda aislado. DBScan lo etiqueta como <strong>−1</strong> (outlier).</p>
+    </div>
+  </div>
+  <div class="step" style="margin-top:.6rem; font-size:.6em">Un clúster se forma encadenando puntos núcleo vecinos y absorbiendo sus puntos frontera. Lo demás es ruido.</div>
+</section>
+
+<!-- S7: ALGORITMO DBSCAN -->
+<section>
+  <div class="eyebrow">Cómo trabaja</div>
+  <h2>DBScan Paso a Paso</h2>
+  <div style="margin-top:.6rem">
+    <div class="num-row"><span class="num-circle">1</span><span>Toma un punto sin visitar y mira cuántos vecinos tiene dentro de eps</span></div>
+    <div class="num-row"><span class="num-circle">2</span><span>Si tiene ≥ min_samples → es núcleo → abre un clúster nuevo</span></div>
+    <div class="num-row"><span class="num-circle">3</span><span>Expande el clúster a todos los vecinos densamente conectados</span></div>
+    <div class="num-row"><span class="num-circle">4</span><span>Si no alcanza el mínimo y no es vecino de un núcleo → lo marca como ruido</span></div>
+    <div class="num-row"><span class="num-circle">5</span><span>Repite hasta visitar todos los puntos</span></div>
+  </div>
+  <div class="result" style="margin-top:.5rem">Resultado: clústeres de forma arbitraria + un conjunto de outliers (etiqueta −1)</div>
+</section>
+
+<!-- S8: COMPARATIVA -->
+<section>
+  <div class="eyebrow">Cara a cara</div>
+  <h2>K-means vs DBScan</h2>
+  <table style="font-size:.6em; margin-top:.7rem">
+    <thead>
+      <tr><th></th><th>K-means</th><th>DBScan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Nº de clústeres</strong></td><td>Lo eliges tú (K)</td><td class="pro">Lo descubre solo</td></tr>
+      <tr><td><strong>Forma de clúster</strong></td><td>Esférica</td><td class="pro">Arbitraria</td></tr>
+      <tr><td><strong>Outliers</strong></td><td>Asigna todo a un grupo</td><td class="pro">Los detecta (−1)</td></tr>
+      <tr><td><strong>Densidades distintas</strong></td><td>Maneja bien</td><td class="con">Le cuesta</td></tr>
+      <tr><td><strong>Parámetros</strong></td><td>K</td><td>eps, min_samples</td></tr>
+      <tr><td><strong>Escalabilidad</strong></td><td class="pro">Muy rápido</td><td>Bueno (con índices)</td></tr>
+    </tbody>
+  </table>
+  <div class="step" style="margin-top:.5rem; font-size:.6em"><strong>Regla práctica:</strong> grupos redondos y sabes cuántos → K-means. Formas raras, ruido o no sabes cuántos → DBScan.</div>
+</section>
+
+<!-- S9: ELEGIR EPS -->
+<section>
+  <div class="eyebrow">El parámetro clave</div>
+  <h2>Cómo Elegir eps y min_samples</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div>
+      <h4 style="font-size:.7em; color:#60a5fa">min_samples</h4>
+      <p style="font-size:.6em; line-height:1.5">Regla común: <strong>min_samples ≥ dimensiones + 1</strong>. Para datos 2D suele usarse 4 o 5. Más alto = más estricto con el ruido.</p>
+      <h4 style="font-size:.7em; color:#60a5fa; margin-top:.5rem">eps</h4>
+      <p style="font-size:.6em; line-height:1.5">Se busca con el <strong>gráfico de k-distancias</strong>: ordena la distancia de cada punto a su k-ésimo vecino y busca el "codo".</p>
+    </div>
+    <div class="card">
+      <h4>⚠️ Cuidado</h4>
+      <ul>
+        <li>eps muy pequeño → casi todo es ruido</li>
+        <li>eps muy grande → todo se funde en un clúster</li>
+        <li>DBScan también necesita datos <strong>escalados</strong></li>
+      </ul>
+      <div class="warn" style="margin-top:.3rem">eps depende de la escala: por eso StandardScaler es obligatorio</div>
+    </div>
+  </div>
+</section>
+
+<!-- S10: RESUMEN -->
+<section>
+  <div class="eyebrow">Cierre Semana 9</div>
+  <h2>Resumen — K-means y DBScan</h2>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4>K-means a fondo</h4>
+      <p>k-means++ y n_init evitan malos inicios. Minimiza la inercia. Falla en formas no esféricas.</p>
+    </div>
+    <div class="card">
+      <h4>DBScan</h4>
+      <p>Clustering por densidad: core, border, noise. Encuentra formas arbitrarias y detecta outliers sin elegir K.</p>
+    </div>
+    <div class="card">
+      <h4>Elegir según datos</h4>
+      <p>K-means para grupos redondos; DBScan para formas raras y ruido. Ambos necesitan escalado.</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:.7rem; font-size:.62em">
+    La próxima semana: <strong>clustering práctico</strong> — aplicamos K-means y DBScan a un problema real de segmentación de extremo a extremo.
+  </blockquote>
+  <div class="inst">→ / ← para navegar · F para pantalla completa · Esc para vista general</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'slide',
+    width: 960, height: 620, margin: 0.04,
+    plugins: []
+  });
+</script>
+</body>
+</html>

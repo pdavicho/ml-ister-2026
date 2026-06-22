@@ -347,12 +347,27 @@
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/utils.js"></script>
 <script>
-  // Hacer las tarjetas de semanas bloqueadas (span) clickeables desde el inicio
-  document.querySelectorAll('.week-card.locked').forEach(function(card) {
+  // Estado de cada tarjeta derivado de auth.js (SEMANA_CONFIG).
+  // Al poner disponible:true en auth.js, la semana se muestra ✅ y abierta aquí.
+  document.querySelectorAll('.week-card').forEach(function(card) {
     var badge = card.querySelector('.week-num-badge');
     if (!badge) return;
     var semana = parseInt(badge.textContent.replace('Semana ', ''));
     if (!semana) return;
+
+    var config = (typeof SEMANA_CONFIG !== 'undefined') ? SEMANA_CONFIG[semana] : null;
+    var disponible = config ? config.disponible : false;
+
+    var status = card.querySelector('.week-status');
+    if (disponible) {
+      card.classList.remove('locked');
+      if (status) status.textContent = '✅';
+    } else {
+      card.classList.add('locked');
+      if (status) status.textContent = '🔒';
+    }
+
+    // Todas las tarjetas son clickeables y van a locked.html (que valida la clave)
     card.style.cursor = 'pointer';
     card.style.pointerEvents = 'auto';
     card.addEventListener('click', function() {

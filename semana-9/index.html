@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 9 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <span class="week-link locked"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 9</div>
+    <h1>K-means y DBScan — Centroides vs Densidad</h1>
+    <div class="topic-tags">
+      <span class="tag">K-means++</span>
+      <span class="tag">DBScan</span>
+      <span class="tag">eps · min_samples</span>
+      <span class="tag">Outliers</span>
+      <span class="tag">make_moons</span>
+      <span class="tag">k-distance</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 9</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 9</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: Tres Geometrías para Poner a Prueba el Clustering ──
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets      import make_moons, make_circles, make_blobs
+from sklearn.preprocessing import StandardScaler
+
+np.random.seed(42)
+datasets = {
+    'Blobs (esférico)':      make_blobs(n_samples=300, centers=3, cluster_std=1.0, random_state=42),
+    'Moons (alargado)':      make_moons(n_samples=300, noise=0.07, random_state=42),
+    'Circles (anidado)':     make_circles(n_samples=300, noise=0.06, factor=0.4, random_state=42),
+}
+
+# Escalamos cada dataset (obligatorio para distancias y densidades)
+datos_scaled = {}
+for nombre, (Xd, yd) in datasets.items():
+    datos_scaled[nombre] = StandardScaler().fit_transform(Xd)
+    print(f"{nombre}: {Xd.shape[0]} puntos")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: K-means en las Tres Geometrías ─────────────────
+from sklearn.cluster import KMeans
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
+for ax, (nombre, Xs) in zip(axes, datos_scaled.items()):
+    k = 3 if 'Blobs' in nombre else 2
+    km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+    etiquetas = km.fit_predict(Xs)
+    ax.scatter(Xs[:, 0], Xs[:, 1], c=etiquetas, cmap='viridis', s=25, edgecolor='k', linewidth=0.2)
+    ax.scatter(km.cluster_centers_[:, 0], km.cluster_centers_[:, 1],
+               c='red', marker='X', s=160)
+    ax.set_title(f'K-means (k={k})\n{nombre}', fontsize=10)
+    ax.set_xticks([]); ax.set_yticks([])
+
+plt.suptitle('K-means: perfecto en Blobs, FALLA en Moons y Circles', fontsize=11)
+plt.tight_layout()
+plt.show()
+
+# K-means corta las lunas y los anillos por la mitad: solo entiende grupos redondos</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: DBScan en las Mismas Geometrías ────────────────
+from sklearn.cluster import DBSCAN
+
+# eps ajustado para datos escalados; min_samples=5 (regla para 2D)
+eps_por_dataset = {'Blobs (esférico)': 0.4, 'Moons (alargado)': 0.25, 'Circles (anidado)': 0.25}
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
+for ax, (nombre, Xs) in zip(axes, datos_scaled.items()):
+    db = DBSCAN(eps=eps_por_dataset[nombre], min_samples=5)
+    etiquetas = db.fit_predict(Xs)
+    n_clusters = len(set(etiquetas)) - (1 if -1 in etiquetas else 0)
+    n_ruido    = list(etiquetas).count(-1)
+    ax.scatter(Xs[:, 0], Xs[:, 1], c=etiquetas, cmap='viridis', s=25, edgecolor='k', linewidth=0.2)
+    ax.set_title(f'DBScan — {nombre}\nclusters={n_clusters} · ruido={n_ruido}', fontsize=10)
+    ax.set_xticks([]); ax.set_yticks([])
+
+plt.suptitle('DBScan: sigue la FORMA de los datos (los puntos morados = ruido, -1)', fontsize=11)
+plt.tight_layout()
+plt.show()
+
+# DBScan separa correctamente las lunas y los anillos siguiendo la densidad</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: Elegir eps con el Gráfico de k-distancias ──────
+from sklearn.neighbors import NearestNeighbors
+
+Xs = datos_scaled['Moons (alargado)']
+min_samples = 5
+
+# Distancia de cada punto a su k-ésimo vecino más cercano
+nn = NearestNeighbors(n_neighbors=min_samples)
+nn.fit(Xs)
+distancias, _ = nn.kneighbors(Xs)
+k_dist = np.sort(distancias[:, -1])    # distancia al 5º vecino, ordenada
+
+plt.figure(figsize=(8, 4.5))
+plt.plot(k_dist, color='#3b82f6', lw=2)
+plt.xlabel('Puntos ordenados')
+plt.ylabel(f'Distancia al vecino {min_samples}')
+plt.title('Gráfico de k-distancias — el "codo" sugiere un buen eps')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+print("Busca el codo de la curva: esa altura es un buen valor de eps (~0.20-0.30 aquí)")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 5: DBScan como Detector de Outliers ───────────────
+# Generamos blobs limpios + puntos de ruido aleatorio inyectado
+X_blobs, _ = make_blobs(n_samples=280, centers=3, cluster_std=0.6, random_state=42)
+ruido      = np.random.uniform(low=X_blobs.min()-2, high=X_blobs.max()+2, size=(20, 2))
+X_total    = np.vstack([X_blobs, ruido])
+X_total    = StandardScaler().fit_transform(X_total)
+
+db = DBSCAN(eps=0.3, min_samples=5)
+etiquetas = db.fit_predict(X_total)
+es_outlier = etiquetas == -1
+
+plt.figure(figsize=(7.5, 5.5))
+plt.scatter(X_total[~es_outlier, 0], X_total[~es_outlier, 1],
+            c=etiquetas[~es_outlier], cmap='viridis', s=30, edgecolor='k', linewidth=0.2, label='Clústeres')
+plt.scatter(X_total[es_outlier, 0], X_total[es_outlier, 1],
+            c='red', marker='x', s=80, label='Outliers (-1)')
+plt.title('DBScan detecta outliers automáticamente')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+print(f"Puntos marcados como outliers: {es_outlier.sum()} de {len(X_total)}")
+print("→ Útil para detección de fraude, sensores defectuosos, anomalías.")</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana9_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 9 — K-means vs DBScan en Diamantes</h4>
+            <p>Segmenta diamantes por sus características (quilates, precio, dimensiones) con K-means y DBScan. Usa DBScan para detectar diamantes "outlier" (combinaciones raras de precio/tamaño) y compara ambos enfoques.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Algoritmos de clustering por densidad y particional: K-means y DBScan con ejemplos en Python.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Comparativa de algoritmos de clustering y detección de anomalías con métodos no supervisados.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — DBSCAN (User Guide)</h4>
+              <p>Documentación oficial de DBScan: parámetros eps y min_samples, tipos de punto y ejemplos.</p>
+              <a href="https://scikit-learn.org/stable/modules/clustering.html#dbscan" target="_blank" class="resource-link">→ sklearn.org — DBSCAN</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Comparing different clustering algorithms</h4>
+              <p>Galería visual que compara K-means, DBScan y otros sobre las mismas geometrías de datos.</p>
+              <a href="https://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_comparison.html" target="_blank" class="resource-link">→ sklearn.org — Comparación</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próxima clase</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>K-means vs DBScan en make_moons</h4>
+              <p>Genera <code>make_moons(n_samples=400, noise=0.08)</code>, escala y aplica K-means (k=2) y DBScan (encuentra un buen eps con el gráfico de k-distancias). Grafica ambos resultados lado a lado y explica en un párrafo por qué DBScan separa correctamente las lunas y K-means no.</p>
+              <div class="task-due">📅 Próxima clase · Formato: notebook .ipynb</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · EXPERIMENTACIÓN</span>
+            <div class="task-content">
+              <h4>El efecto de eps y min_samples</h4>
+              <p>Sobre un mismo dataset, prueba al menos 4 combinaciones de <code>eps</code> y <code>min_samples</code> en DBScan. Para cada una, reporta el número de clústeres y de outliers detectados. Explica qué pasa cuando eps es demasiado pequeño y cuando es demasiado grande.</p>
+              <div class="task-due">📅 Próxima clase · Tabla + visualizaciones</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · CONCEPTUAL</span>
+            <div class="task-content">
+              <h4>¿Cuándo elegir cada algoritmo?</h4>
+              <p>Escribe una guía de decisión propia (mínimo 5 criterios) para elegir entre K-means y DBScan. Propón 2 problemas reales donde DBScan sería claramente superior y justifica por qué (pista: forma de los datos, presencia de ruido, número desconocido de grupos).</p>
+              <div class="task-due">📅 Próxima clase · Documento o celda Markdown</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js"></script>
+<script>protectPage(9);</script>
+<script src="../assets/js/utils.js"></script>
+</body>
+</html>
