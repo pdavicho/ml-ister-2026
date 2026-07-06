@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 10 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .formula { background: rgba(30,41,59,.9); border: 1px solid #334155; border-radius: 8px; padding: .7rem 1rem; font-size: .75em; text-align: center; color: #e2e8f0; margin: .5rem 0; font-family: 'Cambria Math', Georgia, serif; }
+    .formula strong { color: #60a5fa; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 10 · TEMA 3 · CIERRE</div>
+  <h1 style="font-size:1.4em; line-height:1.2">Clustering Práctico<br><span style="color:#60a5fa">Del Algoritmo a la Decisión</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Proyecto completo</span>
+    <span class="tag">Silhouette</span>
+    <span class="tag">Davies-Bouldin</span>
+    <span class="tag">Calinski-Harabasz</span>
+    <span class="tag">Perfilado</span>
+  </div>
+  <p style="margin-top:1.2rem; font-size:.55em; color:#64748b">Machine Learning · ISTER 2026 · Ing. David Minango, PhD</p>
+</section>
+
+<!-- S2: REPASO Y OBJETIVO -->
+<section>
+  <div class="eyebrow">Repaso Semanas 8 y 9</div>
+  <h2>Cerramos el Tema 3</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>Ya sabemos (S8 + S9)</h4>
+      <ul>
+        <li>Clustering = agrupar sin etiquetas</li>
+        <li>K-means: centroides + inercia + codo</li>
+        <li>DBScan: densidad, eps, outliers (−1)</li>
+        <li>Escalar SIEMPRE antes de agrupar</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Hoy (S10) — lo que falta</h4>
+      <ul>
+        <li>El <strong>flujo completo</strong> de un proyecto real</li>
+        <li>Evaluar sin etiquetas: <strong>3 métricas</strong></li>
+        <li><strong>Perfilar</strong>: convertir clústeres en segmentos con nombre</li>
+        <li>De la segmentación a la <strong>decisión de negocio</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem">Un modelo de clustering solo sirve si alguien puede tomar una decisión con él</div>
+</section>
+
+<!-- S3: EL FLUJO -->
+<section>
+  <div class="eyebrow">La metodología</div>
+  <h2>El Flujo de un Proyecto de Clustering</h2>
+  <div style="margin-top:.5rem">
+    <div class="num-row"><span class="num-circle">1</span><span><strong>Pregunta:</strong> ¿qué queremos descubrir? (segmentos de clientes, zonas, anomalías…)</span></div>
+    <div class="num-row"><span class="num-circle">2</span><span><strong>Datos y features:</strong> elegir variables numéricas relevantes, limpiar nulos</span></div>
+    <div class="num-row"><span class="num-circle">3</span><span><strong>Escalar:</strong> StandardScaler — sin esto las distancias mienten</span></div>
+    <div class="num-row"><span class="num-circle">4</span><span><strong>Elegir algoritmo y K:</strong> codo + silhouette (K-means) o k-distancias (DBScan)</span></div>
+    <div class="num-row"><span class="num-circle">5</span><span><strong>Evaluar:</strong> métricas internas — ¿los grupos son compactos y separados?</span></div>
+    <div class="num-row"><span class="num-circle">6</span><span><strong>Perfilar:</strong> describir cada clúster con promedios y darle un nombre</span></div>
+    <div class="num-row"><span class="num-circle">7</span><span><strong>Decidir:</strong> traducir los segmentos a acciones concretas</span></div>
+  </div>
+  <div class="warn" style="margin-top:.4rem">Los pasos 1, 6 y 7 no los hace sklearn: los haces tú</div>
+</section>
+
+<!-- S4: NO HAY ACCURACY -->
+<section>
+  <div class="eyebrow">El problema de evaluar</div>
+  <h2>Sin Etiquetas No Hay Accuracy</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4 class="con">En clasificación (supervisado)</h4>
+      <p>Tenemos la respuesta correcta (y). Comparamos predicción vs realidad: accuracy, F1, matriz de confusión…</p>
+    </div>
+    <div class="card">
+      <h4 class="pro">En clustering (no supervisado)</h4>
+      <p>NO hay respuesta correcta. Solo podemos medir la <strong>geometría</strong> de los grupos: ¿son compactos por dentro y están separados entre sí?</p>
+    </div>
+  </div>
+  <div class="step" style="margin-top:.6rem"><strong>Métricas internas:</strong> usan solo los datos y las etiquetas del clustering. Hoy veremos tres: Silhouette, Davies-Bouldin y Calinski-Harabasz.</div>
+  <div class="step"><strong>Validación externa:</strong> si por suerte existe una etiqueta real (como 'species' en pingüinos), podemos cruzarla DESPUÉS para interpretar — pero nunca para entrenar.</div>
+</section>
+
+<!-- S5: SILHOUETTE -->
+<section>
+  <div class="eyebrow">Métrica 1 · repaso a fondo</div>
+  <h2>Silhouette: ¿Estoy en el Grupo Correcto?</h2>
+  <div class="formula">s = (b − a) / max(a, b)</div>
+  <div class="cols cols-2" style="margin-top:.5rem">
+    <div>
+      <div class="step"><strong>a</strong> = distancia media de un punto a los de <strong>su propio</strong> clúster (cohesión)</div>
+      <div class="step"><strong>b</strong> = distancia media al clúster vecino <strong>más cercano</strong> (separación)</div>
+      <div class="step">El score global es el <strong>promedio</strong> de s sobre todos los puntos</div>
+    </div>
+    <div class="card">
+      <h4>Cómo leerlo (entre −1 y +1)</h4>
+      <ul>
+        <li><span class="pro">≥ 0.5</span> — estructura clara y fuerte</li>
+        <li><span style="color:#fbbf24">0.25 – 0.5</span> — estructura razonable</li>
+        <li><span class="con">&lt; 0.25</span> — débil, puede ser artificial</li>
+        <li><span class="con">&lt; 0</span> — puntos en el clúster equivocado</li>
+      </ul>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.4rem">Mientras MÁS ALTO, mejor</div>
+</section>
+
+<!-- S6: DB Y CH -->
+<section>
+  <div class="eyebrow">Métricas 2 y 3 · nuevas</div>
+  <h2>Davies-Bouldin y Calinski-Harabasz</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>Davies-Bouldin (DB)</h4>
+      <p>Para cada par de clústeres compara: <strong>dispersión interna ÷ distancia entre centroides</strong>. Promedia el peor vecino de cada clúster.</p>
+      <p style="margin-top:.3rem">Clústeres compactos y lejanos → DB pequeño.</p>
+      <div class="result" style="margin-top:.4rem">Mientras MÁS BAJO, mejor (0 es ideal)</div>
+    </div>
+    <div class="card">
+      <h4>Calinski-Harabasz (CH)</h4>
+      <p>Razón entre la <strong>separación entre clústeres</strong> y la <strong>dispersión dentro</strong> de ellos (como un ANOVA de grupos).</p>
+      <p style="margin-top:.3rem">No tiene tope: sirve para <strong>comparar</strong> valores de K entre sí.</p>
+      <div class="result" style="margin-top:.4rem">Mientras MÁS ALTO, mejor</div>
+    </div>
+  </div>
+  <div class="step" style="margin-top:.5rem; font-size:.6em"><strong>En la práctica:</strong> se calculan las tres. Si las tres apuntan al mismo K, la decisión es sólida. Si se contradicen, gana la interpretabilidad del negocio.</div>
+</section>
+
+<!-- S7: TABLA MÉTRICAS -->
+<section>
+  <div class="eyebrow">Chuleta</div>
+  <h2>Las Tres Métricas de un Vistazo</h2>
+  <table style="font-size:.6em; margin-top:.7rem">
+    <thead>
+      <tr><th>Métrica</th><th>Qué mide</th><th>Rango</th><th>Mejor</th><th>En sklearn</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Silhouette</strong></td><td>Cohesión vs separación por punto</td><td>−1 a +1</td><td class="pro">Alto ↑</td><td>silhouette_score</td></tr>
+      <tr><td><strong>Davies-Bouldin</strong></td><td>Dispersión ÷ distancia entre centroides</td><td>0 a ∞</td><td class="pro">Bajo ↓</td><td>davies_bouldin_score</td></tr>
+      <tr><td><strong>Calinski-Harabasz</strong></td><td>Separación entre ÷ dispersión dentro</td><td>0 a ∞</td><td class="pro">Alto ↑</td><td>calinski_harabasz_score</td></tr>
+    </tbody>
+  </table>
+  <div class="warn" style="margin-top:.6rem">Ninguna funciona bien con clústeres de forma arbitraria (DBScan en lunas): asumen grupos más o menos convexos. Para DBScan, revisa también nº de clústeres y % de ruido.</div>
+</section>
+
+<!-- S8: PERFILADO -->
+<section>
+  <div class="eyebrow">El paso que nadie enseña</div>
+  <h2>Perfilado: de Clúster 0 a "Segmento Premium"</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div>
+      <div class="step"><strong>1.</strong> Agrupa por etiqueta: <em>promedio de cada feature por clúster</em> (groupby + mean)</div>
+      <div class="step"><strong>2.</strong> Compara contra el promedio global: ¿en qué destaca cada grupo?</div>
+      <div class="step"><strong>3.</strong> Bautiza cada clúster con un nombre que el negocio entienda</div>
+      <div class="step"><strong>4.</strong> Propón una acción distinta para cada segmento</div>
+    </div>
+    <div class="card">
+      <h4>Ejemplo (viviendas California)</h4>
+      <ul>
+        <li><strong>Clúster 0:</strong> ingreso alto, costa → "zona premium costera"</li>
+        <li><strong>Clúster 1:</strong> ingreso bajo, interior → "zona económica rural"</li>
+        <li><strong>Clúster 2:</strong> densidad alta, ciudad → "urbana media"</li>
+      </ul>
+      <p style="margin-top:.3rem">El número de clúster es arbitrario; el <strong>perfil</strong> es lo que comunica.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S9: ERRORES COMUNES -->
+<section>
+  <div class="eyebrow">Aprendido a golpes</div>
+  <h2>Errores Comunes en Proyectos Reales</h2>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4 class="con">Olvidar escalar</h4>
+      <p>Una variable con rango grande (precio en USD) domina todas las distancias y el clustering "agrupa por precio" sin querer.</p>
+    </div>
+    <div class="card">
+      <h4 class="con">Forzar el K deseado</h4>
+      <p>"Marketing quiere 5 segmentos" no es un criterio. Si las métricas dicen 3, presenta 3 y negocia.</p>
+    </div>
+    <div class="card">
+      <h4 class="con">Creer que el clúster es verdad</h4>
+      <p>El clustering propone hipótesis, no hechos. Cambia la muestra o las features y los grupos pueden cambiar.</p>
+    </div>
+  </div>
+  <div class="danger" style="margin-top:.6rem">Regla de oro: si no puedes explicar cada clúster en una frase, todavía no terminaste el proyecto.</div>
+</section>
+
+<!-- S10: APLICACIONES -->
+<section>
+  <div class="eyebrow">Dónde se usa esto</div>
+  <h2>Aplicaciones Reales del Clustering</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>🛍️ Segmentación de clientes</h4>
+      <p>Agrupar por comportamiento de compra → campañas y precios distintos por segmento. El uso más común en la industria.</p>
+    </div>
+    <div class="card">
+      <h4>🚨 Detección de anomalías</h4>
+      <p>DBScan marca transacciones, sensores o registros que no encajan en ningún grupo → fraude, fallas, errores de captura.</p>
+    </div>
+    <div class="card">
+      <h4>🗺️ Análisis geográfico</h4>
+      <p>Zonas de demanda, ubicación de sucursales, patrones inmobiliarios (lo que haremos hoy con California).</p>
+    </div>
+    <div class="card">
+      <h4>📄 Organización de contenido</h4>
+      <p>Agrupar documentos, noticias o tickets de soporte parecidos; comprimir imágenes reduciendo colores con K-means.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S11: RESUMEN -->
+<section>
+  <div class="eyebrow">Cierre Semana 10 · Fin del Tema 3</div>
+  <h2>Resumen — Clustering Práctico</h2>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4>El flujo</h4>
+      <p>Pregunta → features → escalar → algoritmo y K → evaluar → perfilar → decidir. sklearn hace el centro; tú los extremos.</p>
+    </div>
+    <div class="card">
+      <h4>Evaluación interna</h4>
+      <p>Silhouette (alto ↑), Davies-Bouldin (bajo ↓), Calinski-Harabasz (alto ↑). Tres jueces mejor que uno.</p>
+    </div>
+    <div class="card">
+      <h4>Perfilado</h4>
+      <p>Promedios por clúster + nombre + acción. Es lo que convierte un fit_predict en un resultado útil.</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:.7rem; font-size:.62em">
+    La próxima semana empieza el <strong>Tema 4: Redes Neuronales Artificiales</strong> — del aprendizaje con distancias al aprendizaje con neuronas.
+  </blockquote>
+  <div class="inst">→ / ← para navegar · F para pantalla completa · Esc para vista general</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'slide',
+    width: 960, height: 620, margin: 0.04,
+    plugins: []
+  });
+</script>
+</body>
+</html>

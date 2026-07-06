@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 10 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span></a>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 10</div>
+    <h1>Práctica 10 — Segmentación de Viajes de Taxi (NYC)</h1>
+    <div class="topic-tags">
+      <span class="tag">taxis</span>
+      <span class="tag">K-means</span>
+      <span class="tag">3 métricas</span>
+      <span class="tag">Perfilado</span>
+      <span class="tag">DBScan</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 10</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana10_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Preparar y escalar los viajes de taxi de Nueva York (dataset taxis de seaborn).</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Elegir el K óptimo y segmentar los viajes con K-means.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Evaluar el agrupamiento con las tres métricas internas: Silhouette, Davies-Bouldin y Calinski-Harabasz.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Perfilar cada clúster y bautizarlo como un segmento con nombre de negocio.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Detectar viajes anómalos con DBScan y explicar qué los hace raros.</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🚕</span>
+        <h2>El Dataset: Taxis de Nueva York</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>taxis</strong> de seaborn contiene más de 6.000 viajes reales de taxi en Nueva York (marzo 2019). Eres el analista de datos de la empresa de taxis: te piden descubrir <strong>qué tipos de viaje existen</strong> (para diseñar tarifas y promociones) y <strong>detectar viajes anómalos</strong> (posibles errores de taxímetro o fraudes). Nadie te dio etiquetas: es un problema 100% no supervisado.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">distance</div>
+            <div style="color:var(--text-muted)">Distancia del viaje en millas.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">fare · tip</div>
+            <div style="color:var(--text-muted)">Tarifa y propina en dólares.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">total</div>
+            <div style="color:var(--text-muted)">Costo total del viaje (tarifa + propina + peajes).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster       import KMeans, DBSCAN
+from sklearn.neighbors     import NearestNeighbors
+from sklearn.metrics       import silhouette_score, davies_bouldin_score, calinski_harabasz_score
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🚕</span><h2>Parte 1 — Preparar y Escalar</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar y limpiar los viajes</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>features = ['distance', 'fare', 'tip', 'total']
+
+df = sns.load_dataset('taxis')
+df = df.dropna(subset=features)                    # quitamos viajes con datos faltantes
+df = df[df['distance'] > 0]                        # quitamos viajes de distancia 0
+df = df.sample(1500, random_state=42).reset_index(drop=True)
+
+print(f"Viajes en la muestra: {df.shape[0]}")
+print(df[features].describe().round(2))</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: escalar las features</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# distance va de 0 a ~37 millas y total de ~$4 a ~$175:
+# escalas distintas → StandardScaler obligatorio.
+
+X = df[features].copy()
+
+scaler   = ___________          # StandardScaler
+X_scaled = ___________          # fit_transform sobre X
+
+print("Forma de X_scaled:", X_scaled.shape)
+print("Media (~0):", X_scaled.mean(axis=0).round(2))
+print("Desv. (~1):", X_scaled.std(axis=0).round(2))</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Antes de modelar:</strong></p>
+          <p>1. ¿Qué pasaría con las distancias si NO escalaras (compara los rangos de distance y total)?<br>
+             2. ¿Qué tipos de viaje esperas encontrar (pista: viajes cortos de ciudad vs viajes largos al aeropuerto)?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🎯</span><h2>Parte 2 — Elegir K y Segmentar</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: codo + silhouette para k de 2 a 8</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Para cada k: ajusta KMeans, guarda inercia y silhouette
+
+print(f"{'k':>3} {'inercia':>12} {'silhouette':>12}")
+for k in range(2, 9):
+    km  = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+    lab = ___________          # fit_predict sobre X_scaled
+    sil = ___________          # silhouette_score(X_scaled, lab)
+    print(f"{k:>3} {km.inertia_:>12.1f} {sil:>12.3f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: K-means final y visualización</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Elige tu mejor k y ajusta el modelo final.
+# Guarda las etiquetas en df['cluster_km'] y grafica distance vs total.
+
+mejor_k = ___________          # tu elección según la celda anterior
+km = KMeans(n_clusters=mejor_k, init='k-means++', n_init=10, random_state=42)
+df['cluster_km'] = ___________          # fit_predict
+
+plt.figure(figsize=(7.5, 5))
+plt.scatter(df['distance'], df['total'], c=df['cluster_km'],
+            cmap='viridis', s=20, edgecolor='k', linewidth=0.2)
+plt.xlabel('Distancia (millas)')
+plt.ylabel('Costo total (USD)')
+plt.title(f'K-means (k={mejor_k}) — Segmentos de viajes de taxi')
+plt.colorbar(label='Clúster')
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre el K:</strong></p>
+          <p>1. ¿Qué k elegiste? ¿El codo y el silhouette apuntaban al mismo valor?<br>
+             2. Mirando el scatter, ¿los grupos que ves tienen sentido para una empresa de taxis?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚖️</span><h2>Parte 3 — Evaluar con las Tres Métricas</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Tu código: Silhouette, Davies-Bouldin y Calinski-Harabasz</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Calcula las tres métricas para tu modelo final (df['cluster_km'])
+# Recuerda la dirección de cada una:
+#   silhouette         → más ALTO  = mejor
+#   davies_bouldin     → más BAJO  = mejor
+#   calinski_harabasz  → más ALTO  = mejor
+
+labels = df['cluster_km']
+sil = ___________          # silhouette_score(X_scaled, labels)
+db  = ___________          # davies_bouldin_score(X_scaled, labels)
+ch  = ___________          # calinski_harabasz_score(X_scaled, labels)
+
+print(f"Silhouette        : {sil:.3f}   (alto = mejor)")
+print(f"Davies-Bouldin    : {db:.3f}   (bajo = mejor)")
+print(f"Calinski-Harabasz : {ch:.1f}   (alto = mejor)")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre la calidad:</strong></p>
+          <p>1. Según la escala vista en clase, ¿tu silhouette indica estructura fuerte, razonable o débil?<br>
+             2. ¿Por qué en clustering necesitamos estas métricas en lugar de accuracy?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🏷️</span><h2>Parte 4 — Perfilar y Bautizar los Segmentos</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: perfil de cada clúster</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Calcula el promedio de las features por clúster (groupby + mean)
+# 2. Agrega cuántos viajes tiene cada clúster
+# 3. Compara contra el promedio global
+
+perfil = ___________          # df.groupby('cluster_km')[features].mean().round(2)
+perfil['n_viajes'] = df['cluster_km'].value_counts().sort_index()
+print(perfil)
+
+print("\nPromedio global:")
+print(df[features].mean().round(2))</code></pre>
+        </div>
+
+        <div class="step-header">Celda 4.2 — Tu respuesta: nombra cada segmento</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO (en comentarios)
+# Lee la tabla de perfiles y bautiza cada clúster con un nombre
+# que el gerente de la empresa de taxis entendería. Ejemplo:
+#
+# Clúster 0: "________________"  → porque ________________
+# Clúster 1: "________________"  → porque ________________
+# Clúster 2: "________________"  → porque ________________
+#
+# Pistas: ¿viaje corto de ciudad? ¿viaje largo (aeropuerto)?
+#         ¿cliente que da buenas propinas?</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre los segmentos:</strong></p>
+          <p>1. ¿Qué acción comercial propondrías para cada segmento (promoción, tarifa plana, fidelización)?<br>
+             2. ¿Cuál de tus segmentos es el más valioso para la empresa? ¿Por qué?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🚨</span><h2>Parte 5 — Viajes Anómalos con DBScan</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 5.1 — Dado: gráfico de k-distancias</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>min_samples = 5                     # regla: features + 1
+nn = NearestNeighbors(n_neighbors=min_samples).fit(X_scaled)
+dist, _ = nn.kneighbors(X_scaled)
+k_dist = np.sort(dist[:, -1])
+
+plt.figure(figsize=(8, 4.5))
+plt.plot(k_dist, color='#3b82f6', lw=2)
+plt.xlabel('Puntos ordenados')
+plt.ylabel(f'Distancia al vecino {min_samples}')
+plt.title('k-distancias — el codo sugiere el eps')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="step-header">Celda 5.2 — Tu código: DBScan y visualización de anomalías</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# 1. Aplica DBSCAN con el eps del codo (p.ej. 0.4) y min_samples=5
+# 2. Guarda etiquetas en df['cluster_db'] y cuenta outliers
+# 3. Grafica distance vs total: normales en color, outliers en X roja
+
+db = ___________               # DBSCAN(eps=..., min_samples=5)
+df['cluster_db'] = ___________ # fit_predict sobre X_scaled
+es_outlier = df['cluster_db'] == -1
+
+print(f"Viajes anómalos detectados: {es_outlier.sum()} de {len(df)}")
+
+plt.figure(figsize=(7.5, 5))
+# ___ scatter de los NO anómalos (df[~es_outlier]) coloreado por cluster_db ___
+# ___ scatter de los anómalos (df[es_outlier]) en rojo con marker='x' ___
+plt.xlabel('Distancia (millas)')
+plt.ylabel('Costo total (USD)')
+plt.title('DBScan — viajes anómalos marcados en rojo')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# Inspecciona los viajes anómalos: ¿tarifas enormes? ¿propinas rarísimas?
+print(df[es_outlier][features].sort_values('total', ascending=False).head(10))</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre las anomalías:</strong></p>
+          <p>1. ¿Qué tienen de raro los viajes marcados (mira distancia vs costo)?<br>
+             2. ¿Cuáles investigarías primero si fueras el auditor de la empresa: costo altísimo con distancia corta, o distancia enorme con costo normal? ¿Por qué?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN INTEGRADORA</span>
+            <div class="task-content">
+              <h4>Párrafo final — El proyecto completo</h4>
+              <p>Resume tu proyecto en un párrafo como si se lo contaras al gerente: cuántos tipos de viaje encontraste, cómo verificaste que los grupos son de calidad (menciona al menos una métrica y qué indica), y qué recomendarías hacer con los viajes anómalos detectados.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js?v=10"></script>
+<script>protectPage(10);</script>
+<script src="../assets/js/utils.js?v=10"></script>
+</body>
+</html>

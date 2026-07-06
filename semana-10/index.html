@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 10 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span></a>
+    <span class="week-link locked"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 10</div>
+    <h1>Clustering Práctico — Del Algoritmo a la Decisión</h1>
+    <div class="topic-tags">
+      <span class="tag">Proyecto completo</span>
+      <span class="tag">Silhouette</span>
+      <span class="tag">Davies-Bouldin</span>
+      <span class="tag">Calinski-Harabasz</span>
+      <span class="tag">Perfilado</span>
+      <span class="tag">California Housing</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 10</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 10</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: El Problema — Segmentar las Viviendas de California ──
+# Pregunta de negocio: ¿qué TIPOS de zonas residenciales existen en
+# California y dónde están? (para una inmobiliaria o un municipio)
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_california_housing
+
+housing = fetch_california_housing(as_frame=True)
+df = housing.frame.sample(2000, random_state=42).reset_index(drop=True)
+
+print(f"Zonas censales en la muestra: {df.shape[0]}")
+print(df[['MedInc', 'HouseAge', 'AveRooms', 'Latitude', 'Longitude']].describe().round(2))
+
+# MedInc   = ingreso mediano de la zona (en decenas de miles de USD)
+# HouseAge = antigüedad mediana de las casas (años)
+# AveRooms = promedio de habitaciones por vivienda
+# Latitude / Longitude = ubicación geográfica</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: Escalar y Elegir K (codo + silhouette) ─────────
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster       import KMeans
+from sklearn.metrics       import silhouette_score
+
+features = ['MedInc', 'HouseAge', 'AveRooms', 'Latitude', 'Longitude']
+X_scaled = StandardScaler().fit_transform(df[features])
+
+inercias, silhouettes, rango_k = [], [], range(2, 9)
+for k in rango_k:
+    km  = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+    lab = km.fit_predict(X_scaled)
+    inercias.append(km.inertia_)
+    silhouettes.append(silhouette_score(X_scaled, lab))
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
+axes[0].plot(list(rango_k), inercias, 'o-', color='#3b82f6')
+axes[0].set_xlabel('k'); axes[0].set_ylabel('Inercia'); axes[0].set_title('Método del codo')
+axes[1].plot(list(rango_k), silhouettes, 'o-', color='#22c55e')
+axes[1].set_xlabel('k'); axes[1].set_ylabel('Silhouette'); axes[1].set_title('Silhouette (más alto = mejor)')
+for ax in axes: ax.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# El codo y el pico de silhouette sugieren el K de trabajo</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: K-means Final + el "Mapa" de California ────────
+K = 4    # elegido con el codo y silhouette de la Parte 2
+km = KMeans(n_clusters=K, init='k-means++', n_init=10, random_state=42)
+df['cluster'] = km.fit_predict(X_scaled)
+
+# Al graficar Longitude vs Latitude, los puntos DIBUJAN California
+plt.figure(figsize=(7.5, 7))
+sc = plt.scatter(df['Longitude'], df['Latitude'], c=df['cluster'],
+                 cmap='viridis', s=22, edgecolor='k', linewidth=0.2)
+plt.xlabel('Longitud'); plt.ylabel('Latitud')
+plt.title(f'Segmentos de zonas residenciales (K-means, k={K})')
+plt.colorbar(sc, label='Clúster')
+plt.tight_layout()
+plt.show()
+
+# Perfilado: el promedio de cada feature por clúster
+perfil = df.groupby('cluster')[features].mean().round(2)
+perfil['n_zonas'] = df['cluster'].value_counts().sort_index()
+print(perfil)
+# Lee cada fila y bautiza el segmento:
+# ¿ingreso alto o bajo? ¿casas nuevas o viejas? ¿norte o sur? ¿costa o interior?</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: Evaluar con las Tres Métricas Internas ─────────
+from sklearn.metrics import davies_bouldin_score, calinski_harabasz_score
+
+# Fórmula silhouette para UN punto (repaso, ejecutable):
+a = 1.2                        # dist. media a los de MI clúster (cohesión)
+b = 3.4                        # dist. media al clúster vecino más cercano
+s = (b - a) / max(a, b)        # s = 0.647 → bien agrupado
+print(f"silhouette del punto = {s:.3f}  (entre -1 y 1, más alto = mejor)")
+
+# Las tres métricas para cada K — ¿coinciden en el mejor?
+print(f"\n{'k':>3} {'silhouette':>11} {'davies-bouldin':>15} {'calinski-h':>12}")
+for k in range(2, 7):
+    lab = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42).fit_predict(X_scaled)
+    sil = silhouette_score(X_scaled, lab)          # más alto  = mejor
+    db  = davies_bouldin_score(X_scaled, lab)      # más BAJO  = mejor
+    ch  = calinski_harabasz_score(X_scaled, lab)   # más alto  = mejor
+    print(f"{k:>3} {sil:>11.3f} {db:>15.3f} {ch:>12.1f}")
+
+# Si las tres apuntan al mismo k, la decisión es sólida.
+# Si se contradicen, gana el k más interpretable para el negocio.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 5: DBScan — ¿Hay Zonas Atípicas? ──────────────────
+from sklearn.cluster   import DBSCAN
+from sklearn.neighbors import NearestNeighbors
+
+# eps con el gráfico de k-distancias (repaso S9)
+min_samples = 6                      # regla: features + 1
+nn = NearestNeighbors(n_neighbors=min_samples).fit(X_scaled)
+dist, _ = nn.kneighbors(X_scaled)
+k_dist = np.sort(dist[:, -1])
+
+plt.figure(figsize=(8, 4))
+plt.plot(k_dist, color='#3b82f6', lw=2)
+plt.xlabel('Puntos ordenados'); plt.ylabel(f'Distancia al vecino {min_samples}')
+plt.title('k-distancias: el codo sugiere eps'); plt.grid(alpha=0.3)
+plt.tight_layout(); plt.show()
+
+db = DBSCAN(eps=0.8, min_samples=min_samples)     # eps leído del codo
+df['cluster_db'] = db.fit_predict(X_scaled)
+es_outlier = df['cluster_db'] == -1
+
+n_clusters = df['cluster_db'].nunique() - (1 if es_outlier.any() else 0)
+print(f"DBScan encontró {n_clusters} clústeres y {es_outlier.sum()} zonas atípicas")
+
+plt.figure(figsize=(7.5, 7))
+plt.scatter(df.loc[~es_outlier, 'Longitude'], df.loc[~es_outlier, 'Latitude'],
+            c=df.loc[~es_outlier, 'cluster_db'], cmap='viridis', s=22, edgecolor='k', linewidth=0.2)
+plt.scatter(df.loc[es_outlier, 'Longitude'], df.loc[es_outlier, 'Latitude'],
+            c='red', marker='x', s=60, label='Zona atípica (-1)')
+plt.xlabel('Longitud'); plt.ylabel('Latitud')
+plt.title('DBScan — zonas que no encajan en ningún patrón')
+plt.legend(); plt.tight_layout(); plt.show()
+
+# Inspecciona qué hace raras a esas zonas (p.ej. AveRooms altísimo)
+print(df[es_outlier][features].describe().round(1))</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 6: Del Clúster a la Decisión ──────────────────────
+# El entregable de un proyecto de clustering NO es el scatter:
+# es una tabla de segmentos con nombre y una acción por segmento.
+
+conclusion = pd.DataFrame({
+    'segmento': ['Ej: Costa premium', 'Ej: Interior económico', '...', '...'],
+    'perfil':   ['Ingreso alto, costa sur', 'Ingreso bajo, casas antiguas', '...', '...'],
+    'accion':   ['Proyectos de lujo', 'Vivienda social / renovación', '...', '...'],
+})
+print(conclusion.to_string(index=False))
+
+# En clase: completar esta tabla juntos leyendo el perfilado de la Parte 3.
+# Regla de oro: si no puedes explicar un clúster en una frase,
+# el proyecto todavía no está terminado.</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana10_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 10 — Segmentación de Viajes de Taxi (NYC)</h4>
+            <p>Aplica el flujo completo a un problema nuevo: segmenta viajes de taxi de Nueva York con K-means, evalúa con las tres métricas internas, perfila y bautiza los segmentos, y usa DBScan para detectar viajes anómalos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Aplicaciones de clustering en análisis exploratorio y segmentación: del modelo a la interpretación de resultados.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Evaluación de modelos no supervisados y criterios de calidad de agrupamientos.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Clustering performance evaluation</h4>
+              <p>Documentación oficial de las métricas de evaluación: Silhouette, Davies-Bouldin y Calinski-Harabasz.</p>
+              <a href="https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation" target="_blank" class="resource-link">→ sklearn.org — Evaluación</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Selecting the number of clusters with silhouette analysis</h4>
+              <p>Ejemplo oficial de análisis silhouette para elegir K, con los diagramas de silueta por clúster.</p>
+              <a href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html" target="_blank" class="resource-link">→ sklearn.org — Silhouette analysis</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próxima clase</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Mini-proyecto: segmentar cuentas de restaurante</h4>
+              <p>Con <code>sns.load_dataset('tips')</code> aplica el flujo completo: escala <code>total_bill</code>, <code>tip</code> y <code>size</code>, elige K con codo + silhouette, ajusta K-means, perfila cada clúster con <code>groupby().mean()</code> y bautiza cada segmento con un nombre de negocio.</p>
+              <div class="task-due">📅 Próxima clase · Formato: notebook .ipynb</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · EXPERIMENTACIÓN</span>
+            <div class="task-content">
+              <h4>Tres jueces para K</h4>
+              <p>Sobre el dataset de T1, calcula Silhouette, Davies-Bouldin y Calinski-Harabasz para k de 2 a 6 y preséntalas en una tabla. ¿Las tres métricas coinciden en el mejor k? Si no coinciden, explica cuál priorizarías y por qué.</p>
+              <div class="task-due">📅 Próxima clase · Tabla + análisis</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · CONCEPTUAL</span>
+            <div class="task-content">
+              <h4>Informe ejecutivo de 1 página</h4>
+              <p>Imagina que presentas tu segmentación de T1 al dueño del restaurante (que no sabe ML). En máximo 1 página: qué grupos encontraste, qué caracteriza a cada uno y qué acción concreta recomiendas por segmento. Sin jerga técnica: prohibido decir "centroide" o "silhouette".</p>
+              <div class="task-due">📅 Próxima clase · Documento o celda Markdown</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js?v=10"></script>
+<script>protectPage(10);</script>
+<script src="../assets/js/utils.js?v=10"></script>
+</body>
+</html>
