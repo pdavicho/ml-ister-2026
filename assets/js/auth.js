@@ -20,7 +20,7 @@ var SEMANA_CONFIG = {
   8:  { titulo: 'Aprendizaje No Supervisado',        clave: CLAVE, disponible: true  },
   9:  { titulo: 'K-means y DBScan',                  clave: CLAVE, disponible: true  },
   10: { titulo: 'Clustering Práctico',               clave: CLAVE, disponible: true  },
-  11: { titulo: 'Redes Neuronales',                  clave: CLAVE, disponible: false },
+  11: { titulo: 'Redes Neuronales',                  clave: CLAVE, disponible: true  },
   12: { titulo: 'Deep Learning',                     clave: CLAVE, disponible: false },
   13: { titulo: 'Red Neuronal Simple',               clave: CLAVE, disponible: false },
   14: { titulo: 'Evaluación y Optimización',         clave: CLAVE, disponible: false },

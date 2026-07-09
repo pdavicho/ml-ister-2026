@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 11 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .formula { background: rgba(30,41,59,.9); border: 1px solid #334155; border-radius: 8px; padding: .7rem 1rem; font-size: .75em; text-align: center; color: #e2e8f0; margin: .5rem 0; font-family: 'Cambria Math', Georgia, serif; }
+    .formula strong { color: #60a5fa; }
+
+    /* ── Widgets interactivos ── */
+    .btn-toggle { background: rgba(51,65,85,.7); border: 1px solid #475569; color: #cbd5e1; padding: .4em .9em; border-radius: 6px; font-size: .58em; font-weight: 600; cursor: pointer; margin: .2em .2em .2em 0; font-family: inherit; }
+    .btn-toggle:hover { border-color: #3b82f6; }
+    .btn-toggle.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+    .btn-toggle.on { background: #22c55e; border-color: #22c55e; color: #fff; }
+    input[type=range] { width: 100%; accent-color: #3b82f6; height: 1.1em; }
+    .lab { background: rgba(15,23,42,.6); border: 1px solid #334155; border-radius: 10px; padding: .8rem 1rem; }
+    .lab-out { font-size: .8em; margin-top: .4rem; }
+    .lab canvas { background: #0f172a; border-radius: 8px; display: block; margin: 0 auto; }
+    .try { font-size: .58em; color: #93c5fd; margin-top: .5rem; font-style: italic; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 11 · TEMA 4 · NUEVO PARADIGMA</div>
+  <h1 style="font-size:1.35em; line-height:1.2">Redes Neuronales Artificiales<br><span style="color:#60a5fa">Fundamentos: la Neurona Artificial</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Neurona artificial</span>
+    <span class="tag">Pesos y sesgo</span>
+    <span class="tag">Funciones de activación</span>
+    <span class="tag">Perceptrón</span>
+    <span class="tag">XOR</span>
+  </div>
+  <p style="margin-top:1.2rem; font-size:.55em; color:#64748b">Machine Learning · ISTER 2026 · Ing. David Minango, PhD</p>
+</section>
+
+<!-- S2: REPASO Y OBJETIVO -->
+<section>
+  <div class="eyebrow">Cierre Tema 3 → Inicio Tema 4</div>
+  <h2>De Agrupar por Distancia a Aprender con Neuronas</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>Hasta la semana 10 (Temas 1–3)</h4>
+      <ul>
+        <li>Árboles y ensambles: reglas de decisión</li>
+        <li>SVM / K-NN: márgenes y distancias</li>
+        <li>K-means / DBScan: agrupar sin etiquetas</li>
+      </ul>
+      <p style="margin-top:.3rem">Todo comparaba distancias o dividía el espacio con reglas explícitas.</p>
+    </div>
+    <div class="card">
+      <h4>Desde hoy (Tema 4)</h4>
+      <ul>
+        <li>Un <strong>nuevo paradigma</strong>: unidades simples (neuronas) que combinan entradas con pesos</li>
+        <li>Inspiración (lejana) en el cerebro</li>
+        <li>La base de <strong>todo</strong> el Deep Learning que viene</li>
+      </ul>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem">Todo lo que sigue en el curso (Deep Learning, Visión por Computador) se construye sobre esta única idea: la neurona artificial</div>
+</section>
+
+<!-- S3: NEURONA BIOLOGICA -->
+<section>
+  <div class="eyebrow">La inspiración</div>
+  <h2>De la Neurona Biológica a la Neurona Artificial</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>🧠 Neurona biológica</h4>
+      <p>Las <strong>dendritas</strong> reciben señales de otras neuronas. El cuerpo celular las combina. Si la señal combinada supera un <strong>umbral</strong>, la neurona "dispara" un impulso por el axón.</p>
+    </div>
+    <div class="card">
+      <h4>🤖 Neurona artificial</h4>
+      <p>Cada <strong>entrada (x)</strong> llega con un <strong>peso (w)</strong>. Se suman (más un <strong>sesgo b</strong>). Una <strong>función de activación</strong> decide si "dispara" (produce una salida).</p>
+    </div>
+  </div>
+  <div class="step" style="margin-top:.6rem">La neurona artificial es una simplificación matemática MUY básica de la biológica — la comparación ayuda a la intuición, no es una réplica del cerebro.</div>
+</section>
+
+<!-- S4: INTERACTIVA — LA NEURONA -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>La Neurona Artificial — Prueba los Parámetros</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <div class="step"><strong>Entradas:</strong><br>
+        <button class="btn-toggle" id="n4-x1" onclick="n4toggle('x1')">x1 = 0</button>
+        <button class="btn-toggle" id="n4-x2" onclick="n4toggle('x2')">x2 = 0</button>
+      </div>
+      <div class="step"><strong>w1</strong> = <span id="n4-w1val">1.0</span>
+        <input type="range" id="n4-w1" min="-2" max="2" step="0.1" value="1" oninput="n4update()"></div>
+      <div class="step"><strong>w2</strong> = <span id="n4-w2val">1.0</span>
+        <input type="range" id="n4-w2" min="-2" max="2" step="0.1" value="1" oninput="n4update()"></div>
+      <div class="step"><strong>b</strong> (sesgo) = <span id="n4-bval">-1.5</span>
+        <input type="range" id="n4-b" min="-3" max="3" step="0.1" value="-1.5" oninput="n4update()"></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h4>La neurona calcula</h4>
+      <div class="formula" style="font-size:.8em; padding:.4rem .6rem">z = w1x1 + w2x2 + b</div>
+      <div class="lab-out">z = <strong id="n4-z">-1.50</strong></div>
+      <div id="n4-bulb" style="width:64px;height:64px;border-radius:50%;margin:.5rem auto;background:#334155;border:3px solid #475569;display:flex;align-items:center;justify-content:center;font-size:1.5em;transition:.2s">💡</div>
+      <div id="n4-out" class="lab-out" style="font-weight:700; color:#f87171">salida y = 0 (no se activa)</div>
+    </div>
+  </div>
+  <div class="try">Prueba: ¿qué w1, w2, b hacen que la neurona SOLO se active cuando x1=1 Y x2=1? (pista: es la compuerta AND)</div>
+</section>
+
+<!-- S5: INTERACTIVA — ACTIVACIONES -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>Funciones de Activación — Compara las Cuatro</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <div>
+        <button class="btn-toggle active" id="n5-btn-escalon" onclick="n5setFn('escalon')">Escalón</button>
+        <button class="btn-toggle" id="n5-btn-sigmoide" onclick="n5setFn('sigmoide')">Sigmoide</button>
+        <button class="btn-toggle" id="n5-btn-tanh" onclick="n5setFn('tanh')">Tanh</button>
+        <button class="btn-toggle" id="n5-btn-relu" onclick="n5setFn('relu')">ReLU</button>
+      </div>
+      <div class="step" style="margin-top:.6rem"><strong>z</strong> = <span id="n5-zval">0.0</span>
+        <input type="range" id="n5-z" min="-5" max="5" step="0.1" value="0" oninput="n5draw()"></div>
+      <div class="step">f(z) = <strong id="n5-fz" style="color:#4ade80">0.500</strong></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="n5-canvas" width="380" height="180"></canvas>
+    </div>
+  </div>
+  <div class="try">Mueve z y cambia de función: fíjate cómo la Sigmoide y la Tanh se "aplanan" (saturan) en los extremos, y ReLU nunca se aplana para z&gt;0.</div>
+</section>
+
+<!-- S6: CHULETA ACTIVACIONES -->
+<section>
+  <div class="eyebrow">Chuleta</div>
+  <h2>Cuándo Usar Cada Función de Activación</h2>
+  <table style="font-size:.6em; margin-top:.7rem">
+    <thead>
+      <tr><th>Función</th><th>Rango</th><th>Ventaja</th><th>Problema</th><th>Uso típico</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Escalón</strong></td><td>{0,1}</td><td>simple, intuitiva</td><td>no diferenciable</td><td>solo para enseñar el concepto</td></tr>
+      <tr><td><strong>Sigmoide</strong></td><td>(0,1)</td><td>se lee como probabilidad</td><td>se satura con z grande</td><td>capa de salida binaria</td></tr>
+      <tr><td><strong>Tanh</strong></td><td>(−1,1)</td><td>centrada en cero</td><td>también se satura</td><td>capas ocultas (clásico)</td></tr>
+      <tr><td><strong>ReLU</strong></td><td>[0,∞)</td><td>rápida, no se satura si z&gt;0</td><td>"neuronas muertas" si z&lt;0</td><td>capas ocultas (estándar hoy)</td></tr>
+    </tbody>
+  </table>
+  <div class="warn" style="margin-top:.6rem">La escalón fue la primera (Rosenblatt, 1958) pero casi no se usa para entrenar: no tiene una derivada útil. Por qué eso importa lo veremos en la Semana 13 (backpropagation).</div>
+</section>
+
+<!-- S7: EL PERCEPTRON COMO CLASIFICADOR LINEAL -->
+<section>
+  <div class="eyebrow">La geometría detrás</div>
+  <h2>El Perceptrón Dibuja una Línea</h2>
+  <div class="formula">w1x1 + w2x2 + b = 0</div>
+  <div class="cols cols-2" style="margin-top:.5rem">
+    <div>
+      <div class="step">Esta ecuación es una <strong>línea</strong> en el plano (x1, x2)</div>
+      <div class="step">A un lado, z ≥ 0 → la neurona se activa (y=1)</div>
+      <div class="step">Al otro lado, z &lt; 0 → no se activa (y=0)</div>
+      <div class="step"><strong>w1, w2</strong> inclinan la línea; <strong>b</strong> la desplaza</div>
+    </div>
+    <div class="card">
+      <h4>Esto ya lo vimos</h4>
+      <p>Es exactamente la misma idea del <strong>hiperplano separador</strong> de SVM (semana 5): un perceptrón simple es, geométricamente, un clasificador lineal.</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.4rem">Un perceptrón simple SOLO resuelve problemas separables con una línea recta (linealmente separables)</div>
+</section>
+
+<!-- S8: INTERACTIVA — AND / OR -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>Compuertas AND / OR — La Frontera de Decisión</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <button class="btn-toggle active" id="n7-btn-and" onclick="n7setGate('and')">AND (w=1,1 · b=−1.5)</button>
+      <button class="btn-toggle" id="n7-btn-or" onclick="n7setGate('or')">OR (w=1,1 · b=−0.5)</button>
+      <div id="n7-table" style="margin-top:.6rem"></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="n7-canvas" width="300" height="300"></canvas>
+    </div>
+  </div>
+  <div class="try">Verde = la neurona se activa (y=1). La línea azul es la frontera w1x1+w2x2+b=0. Cambia de compuerta y observa cómo se mueve.</div>
+</section>
+
+<!-- S9: INTERACTIVA — XOR -->
+<section>
+  <div class="eyebrow">Widget interactivo · el límite del perceptrón simple</div>
+  <h2>XOR — Intenta Separar los Puntos con UNA Línea</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <div class="step"><strong>pendiente (m)</strong> = <span id="n9-mval">0.0</span>
+        <input type="range" id="n9-m" min="-3" max="3" step="0.1" value="0" oninput="n9draw()"></div>
+      <div class="step"><strong>intercepto (c)</strong> = <span id="n9-cval">0.50</span>
+        <input type="range" id="n9-c" min="-1" max="2" step="0.05" value="0.5" oninput="n9draw()"></div>
+      <div class="result" id="n9-score" style="margin-top:.6rem">0 / 4 correctos</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="n9-canvas" width="300" height="300"></canvas>
+    </div>
+  </div>
+  <div class="danger" style="margin-top:.4rem">Mueve ambos controles todo lo que quieras: es matemáticamente imposible llegar a 4/4. XOR no es linealmente separable.</div>
+</section>
+
+<!-- S10: LA SOLUCION - CAPAS OCULTAS -->
+<section>
+  <div class="eyebrow">Cuando una línea no alcanza</div>
+  <h2>La Solución: Apilar Neuronas en Capas</h2>
+  <div class="cols cols-2" style="margin-top:.5rem">
+    <div>
+      <div class="step">Una neurona = una línea. Varias neuronas en una <strong>capa oculta</strong> = varias líneas combinadas → fronteras curvas</div>
+      <div class="step">Cada neurona de la capa oculta aprende su propio "pedacito" del problema; la capa de salida combina esos pedacitos</div>
+      <div class="step">Con esto, <strong>MLPClassifier</strong> de sklearn (1 capa oculta) SÍ resuelve XOR — lo vimos en el código de la clase</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="display:flex; justify-content:space-around; align-items:center; padding:1rem 0">
+        <div>
+          <div style="width:22px;height:22px;border-radius:50%;background:#3b82f6;margin:6px auto"></div>
+          <div style="width:22px;height:22px;border-radius:50%;background:#3b82f6;margin:6px auto"></div>
+          <div style="font-size:.5em; color:#93c5fd">entrada</div>
+        </div>
+        <div style="font-size:1.3em; color:#475569">→</div>
+        <div>
+          <div style="width:22px;height:22px;border-radius:50%;background:#7c3aed;margin:6px auto"></div>
+          <div style="width:22px;height:22px;border-radius:50%;background:#7c3aed;margin:6px auto"></div>
+          <div style="width:22px;height:22px;border-radius:50%;background:#7c3aed;margin:6px auto"></div>
+          <div style="font-size:.5em; color:#c4b5fd">capa oculta</div>
+        </div>
+        <div style="font-size:1.3em; color:#475569">→</div>
+        <div>
+          <div style="width:22px;height:22px;border-radius:50%;background:#22c55e;margin:6px auto"></div>
+          <div style="font-size:.5em; color:#86efac">salida</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.5rem">El "costo": ya no hay una fórmula a mano tan simple — se necesita un algoritmo de entrenamiento (backpropagation) que veremos en la Semana 13.</div>
+</section>
+
+<!-- S11: APLICACIONES -->
+<section>
+  <div class="eyebrow">Dónde se usa esto</div>
+  <h2>Aplicaciones Reales de las Redes Neuronales</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>🖼️ Reconocimiento de imágenes</h4>
+      <p>Clasificar fotos, detectar objetos y rostros. La antesala a Visión por Computador (Semana 16).</p>
+    </div>
+    <div class="card">
+      <h4>💬 Procesamiento de lenguaje</h4>
+      <p>Traductores automáticos, chatbots, corrección de texto — todos parten de la misma neurona base.</p>
+    </div>
+    <div class="card">
+      <h4>🎯 Sistemas de recomendación</h4>
+      <p>Qué producto, video o canción mostrarte a continuación, aprendido de patrones de uso.</p>
+    </div>
+    <div class="card">
+      <h4>🚨 Detección de fraude</h4>
+      <p>Igual que hará la Práctica 11: distinguir un billete genuino de uno falsificado con una sola neurona.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S12: RESUMEN -->
+<section>
+  <div class="eyebrow">Cierre Semana 11</div>
+  <h2>Resumen — Fundamentos de Redes Neuronales</h2>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4>La neurona</h4>
+      <p>Suma ponderada (w·x + b) + función de activación. Geométricamente traza una línea (o hiperplano).</p>
+    </div>
+    <div class="card">
+      <h4>Activaciones</h4>
+      <p>Escalón (concepto), sigmoide/tanh (clásicas), ReLU (estándar hoy). Cada una con su rango y su uso.</p>
+    </div>
+    <div class="card">
+      <h4>El límite y la salida</h4>
+      <p>Un perceptrón simple no resuelve XOR. Apilar neuronas en capas ocultas sí.</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:.7rem; font-size:.62em">
+    La próxima semana: <strong>Deep Learning</strong> — cómo se entrenan estas redes con muchas capas (descenso de gradiente y backpropagation).
+  </blockquote>
+  <div class="inst">→ / ← para navegar · F para pantalla completa · Esc para vista general</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'slide',
+    width: 960, height: 620, margin: 0.04,
+    plugins: []
+  });
+
+  /* ── S4: la neurona artificial ── */
+  function n4toggle(which) {
+    var el = document.getElementById('n4-' + which);
+    var val = el.textContent.trim().endsWith('0') ? 1 : 0;
+    el.textContent = which + ' = ' + val;
+    el.classList.toggle('on', val === 1);
+    n4update();
+  }
+  function n4update() {
+    var x1 = document.getElementById('n4-x1').textContent.trim().endsWith('1') ? 1 : 0;
+    var x2 = document.getElementById('n4-x2').textContent.trim().endsWith('1') ? 1 : 0;
+    var w1 = parseFloat(document.getElementById('n4-w1').value);
+    var w2 = parseFloat(document.getElementById('n4-w2').value);
+    var b  = parseFloat(document.getElementById('n4-b').value);
+    document.getElementById('n4-w1val').textContent = w1.toFixed(1);
+    document.getElementById('n4-w2val').textContent = w2.toFixed(1);
+    document.getElementById('n4-bval').textContent  = b.toFixed(1);
+    var z = w1 * x1 + w2 * x2 + b;
+    document.getElementById('n4-z').textContent = z.toFixed(2);
+    var y = z >= 0 ? 1 : 0;
+    var bulb = document.getElementById('n4-bulb');
+    var out  = document.getElementById('n4-out');
+    if (y === 1) {
+      bulb.style.background = '#fbbf24'; bulb.style.borderColor = '#f59e0b'; bulb.style.boxShadow = '0 0 18px #fbbf24';
+      out.textContent = 'salida y = 1 (¡se activa!)'; out.style.color = '#4ade80';
+    } else {
+      bulb.style.background = '#334155'; bulb.style.borderColor = '#475569'; bulb.style.boxShadow = 'none';
+      out.textContent = 'salida y = 0 (no se activa)'; out.style.color = '#f87171';
+    }
+  }
+
+  /* ── S5: funciones de activación ── */
+  var n5fn = 'escalon';
+  function n5f(name, z) {
+    if (name === 'escalon')  return z >= 0 ? 1 : 0;
+    if (name === 'sigmoide') return 1 / (1 + Math.exp(-z));
+    if (name === 'tanh')     return Math.tanh(z);
+    if (name === 'relu')     return Math.max(0, z);
+  }
+  function n5range(name) {
+    if (name === 'relu') return [0, 5];
+    if (name === 'tanh') return [-1, 1];
+    return [0, 1];
+  }
+  function n5setFn(name) {
+    n5fn = name;
+    ['escalon', 'sigmoide', 'tanh', 'relu'].forEach(function (k) {
+      document.getElementById('n5-btn-' + k).classList.toggle('active', k === name);
+    });
+    n5draw();
+  }
+  function n5draw() {
+    var canvas = document.getElementById('n5-canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var range = n5range(n5fn);
+    var pad = 22;
+    function toX(z) { return pad + (z + 5) / 10 * (canvas.width - 2 * pad); }
+    function toY(v) { return canvas.height - pad - (v - range[0]) / (range[1] - range[0]) * (canvas.height - 2 * pad); }
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(toX(-5), toY(0)); ctx.lineTo(toX(5), toY(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(toX(0), pad); ctx.lineTo(toX(0), canvas.height - pad); ctx.stroke();
+    ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 2.5; ctx.beginPath();
+    for (var z = -5; z <= 5.001; z += 0.08) {
+      var v = n5f(n5fn, z);
+      var x = toX(z), y = toY(v);
+      if (z === -5) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    var zc = parseFloat(document.getElementById('n5-z').value);
+    document.getElementById('n5-zval').textContent = zc.toFixed(1);
+    var fz = n5f(n5fn, zc);
+    document.getElementById('n5-fz').textContent = fz.toFixed(3);
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath(); ctx.arc(toX(zc), toY(fz), 5, 0, 2 * Math.PI); ctx.fill();
+  }
+
+  /* ── S8: AND / OR ── */
+  var n7gate = 'and';
+  var n7cfg = { and: { w1: 1, w2: 1, b: -1.5 }, or: { w1: 1, w2: 1, b: -0.5 } };
+  function n7setGate(g) {
+    n7gate = g;
+    document.getElementById('n7-btn-and').classList.toggle('active', g === 'and');
+    document.getElementById('n7-btn-or').classList.toggle('active', g === 'or');
+    n7draw();
+  }
+  function n7out(x1, x2) {
+    var c = n7cfg[n7gate];
+    return (c.w1 * x1 + c.w2 * x2 + c.b) >= 0 ? 1 : 0;
+  }
+  function n7draw() {
+    var canvas = document.getElementById('n7-canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var pad = 36;
+    function toX(x) { return pad + (x + 0.5) / 2 * (canvas.width - 2 * pad); }
+    function toY(y) { return canvas.height - pad - (y + 0.5) / 2 * (canvas.height - 2 * pad); }
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+    ctx.strokeRect(pad, pad, canvas.width - 2 * pad, canvas.height - 2 * pad);
+    var c = n7cfg[n7gate];
+    ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 2.5; ctx.beginPath();
+    [-0.5, 1.5].forEach(function (x1, i) {
+      var x2 = -(c.w1 * x1 + c.b) / c.w2;
+      var px = toX(x1), py = toY(x2);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+    var pts = [[0, 0], [0, 1], [1, 0], [1, 1]];
+    var tbl = '<table style="font-size:.6em;width:100%"><tr><th>x1</th><th>x2</th><th>salida</th></tr>';
+    pts.forEach(function (p) {
+      var y = n7out(p[0], p[1]);
+      ctx.fillStyle = y === 1 ? '#4ade80' : '#f87171';
+      ctx.beginPath(); ctx.arc(toX(p[0]), toY(p[1]), 9, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 2; ctx.stroke();
+      tbl += '<tr><td>' + p[0] + '</td><td>' + p[1] + '</td><td style="color:' + (y === 1 ? '#4ade80' : '#f87171') + '">' + y + '</td></tr>';
+    });
+    tbl += '</table>';
+    document.getElementById('n7-table').innerHTML = tbl;
+  }
+
+  /* ── S9: XOR ── */
+  function n9draw() {
+    var m = parseFloat(document.getElementById('n9-m').value);
+    var c = parseFloat(document.getElementById('n9-c').value);
+    document.getElementById('n9-mval').textContent = m.toFixed(1);
+    document.getElementById('n9-cval').textContent = c.toFixed(2);
+    var canvas = document.getElementById('n9-canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var pad = 36;
+    function toX(x) { return pad + (x + 0.5) / 2 * (canvas.width - 2 * pad); }
+    function toY(y) { return canvas.height - pad - (y + 0.5) / 2 * (canvas.height - 2 * pad); }
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+    ctx.strokeRect(pad, pad, canvas.width - 2 * pad, canvas.height - 2 * pad);
+    ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 2.5; ctx.beginPath();
+    [-0.5, 1.5].forEach(function (x1, i) {
+      var x2 = m * x1 + c;
+      var px = toX(x1), py = toY(x2);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+    var pts = [[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 0]];
+    var correctos = 0;
+    pts.forEach(function (p) {
+      var x1 = p[0], x2 = p[1], esperado = p[2];
+      var lineY = m * x1 + c;
+      var pred = x2 > lineY ? 1 : 0;
+      if (pred === esperado) correctos++;
+      ctx.fillStyle = esperado === 1 ? '#4ade80' : '#f87171';
+      ctx.beginPath(); ctx.arc(toX(x1), toY(x2), 9, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = pred === esperado ? '#0f172a' : '#fbbf24';
+      ctx.lineWidth = pred === esperado ? 2 : 4; ctx.stroke();
+    });
+    var scoreEl = document.getElementById('n9-score');
+    scoreEl.textContent = correctos + ' / 4 correctos';
+    scoreEl.style.color = correctos >= 3 ? '#fbbf24' : '#f87171';
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    n4update(); n5draw(); n7draw(); n9draw();
+  });
+</script>
+</body>
+</html>

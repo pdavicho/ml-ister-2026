@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 11 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <a href="../semana-10/index.html" class="week-link"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span></a>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 11</div>
+    <h1>Redes Neuronales Artificiales — Fundamentos de la Neurona</h1>
+    <div class="topic-tags">
+      <span class="tag">Perceptrón</span>
+      <span class="tag">Funciones de activación</span>
+      <span class="tag">Frontera de decisión</span>
+      <span class="tag">XOR</span>
+      <span class="tag">MLP</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 11</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 11</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: La Neurona Artificial con NumPy ────────────────
+# Una neurona: entradas (x), pesos (w), sesgo (b) y una suma ponderada.
+import numpy as np
+
+x = np.array([1, 0])       # entradas (x1, x2)
+w = np.array([1, 1])       # pesos (w1, w2)
+b = -1.5                   # sesgo (bias)
+
+z = np.dot(w, x) + b       # suma ponderada: z = w1*x1 + w2*x2 + b
+print(f"z = w·x + b = {z}")
+
+def escalon(z):
+    return 1 if z >= 0 else 0
+
+y = escalon(z)
+print(f"activación escalón: y = {y}")
+# Cambia x, w o b y vuelve a ejecutar: así "programa" una neurona a mano</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: Funciones de Activación ────────────────────────
+import matplotlib.pyplot as plt
+
+def escalon_v(z):  return np.where(z >= 0, 1, 0)
+def sigmoide(z):   return 1 / (1 + np.exp(-z))
+def tanh_f(z):      return np.tanh(z)
+def relu(z):        return np.maximum(0, z)
+
+z = np.linspace(-5, 5, 200)
+funciones = [('Escalón', escalon_v), ('Sigmoide', sigmoide), ('Tanh', tanh_f), ('ReLU', relu)]
+
+fig, axes = plt.subplots(1, 4, figsize=(16, 3.2))
+for ax, (nombre, f) in zip(axes, funciones):
+    ax.plot(z, f(z), color='#3b82f6', lw=2)
+    ax.set_title(nombre); ax.grid(alpha=.3)
+    ax.axhline(0, color='gray', lw=.5); ax.axvline(0, color='gray', lw=.5)
+plt.tight_layout()
+plt.show()
+
+# Escalón: {0,1}. Sigmoide: (0,1). Tanh: (-1,1). ReLU: [0,∞)
+# Todas "deciden" qué tan fuerte dispara la neurona, cada una a su manera.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: Un Perceptrón Resuelve AND y OR ────────────────
+def perceptron(x1, x2, w1, w2, b):
+    z = w1 * x1 + w2 * x2 + b
+    return 1 if z >= 0 else 0
+
+print("Compuerta AND (w1=1, w2=1, b=-1.5)")
+for x1 in [0, 1]:
+    for x2 in [0, 1]:
+        print(f"  AND({x1},{x2}) = {perceptron(x1, x2, 1, 1, -1.5)}")
+
+print("\nCompuerta OR (w1=1, w2=1, b=-0.5)")
+for x1 in [0, 1]:
+    for x2 in [0, 1]:
+        print(f"  OR({x1},{x2}) = {perceptron(x1, x2, 1, 1, -0.5)}")
+
+# Los mismos pesos (w1=1, w2=1) con un sesgo distinto cambian la compuerta.
+# El sesgo mueve la línea; los pesos la inclinan.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: Graficar la Frontera de Decisión ───────────────
+def frontera(w1, w2, b, ax, titulo):
+    puntos = [(0, 0), (0, 1), (1, 0), (1, 1)]
+    for x1, x2 in puntos:
+        y = perceptron(x1, x2, w1, w2, b)
+        ax.scatter(x1, x2, s=200, c='#22c55e' if y == 1 else '#ef4444', edgecolor='k', zorder=3)
+        ax.annotate(f'({x1},{x2})', (x1, x2), textcoords="offset points", xytext=(10, 10))
+    xs = np.linspace(-0.5, 1.5, 10)
+    ys = -(w1 * xs + b) / w2          # despejando x2 de w1*x1 + w2*x2 + b = 0
+    ax.plot(xs, ys, 'b--', lw=2)
+    ax.set_xlim(-.5, 1.5); ax.set_ylim(-.5, 1.5); ax.set_title(titulo); ax.grid(alpha=.3)
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+frontera(1, 1, -1.5, axes[0], 'AND — una línea SÍ separa')
+frontera(1, 1, -0.5, axes[1], 'OR — una línea SÍ separa')
+plt.tight_layout()
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 5: El Problema XOR — el Perceptrón Falla ──────────
+print("Compuerta XOR (intento con w1=1, w2=1, b=-0.5)")
+for x1 in [0, 1]:
+    for x2 in [0, 1]:
+        esperado = x1 ^ x2
+        obtenido = perceptron(x1, x2, 1, 1, -0.5)
+        marca = "✅" if esperado == obtenido else "❌"
+        print(f"  XOR({x1},{x2}) esperado={esperado} obtenido={obtenido} {marca}")
+
+# Prueba a mano otros valores de w1, w2, b: ningún trío logra
+# que las 4 combinaciones den el resultado correcto.
+# XOR NO es separable con una sola línea recta.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 6: La Solución — una Red con Capa Oculta ──────────
+from sklearn.neural_network import MLPClassifier
+
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([0, 1, 1, 0])   # XOR
+
+mlp = MLPClassifier(hidden_layer_sizes=(4,), activation='tanh',
+                     max_iter=5000, random_state=42)
+mlp.fit(X, y)
+
+print("Predicciones de la red (1 capa oculta con 4 neuronas):")
+for xi, yi in zip(X, y):
+    pred = mlp.predict([xi])[0]
+    print(f"  XOR{tuple(xi)} esperado={yi} predicho={pred}")
+
+print(f"\nAccuracy: {mlp.score(X, y):.2f}")
+# Con una capa OCULTA, la red combina varias líneas y SÍ resuelve XOR.
+# El "cómo" se entrena esa capa (backpropagation) llega en la Semana 13.</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana11_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 11 — Detección de Billetes Falsos con una Neurona</h4>
+            <p>Entrena un Perceptrón para distinguir billetes genuinos de falsificados, visualiza su frontera de decisión y calcula a mano (con NumPy) la predicción de la neurona para un billete real usando los pesos que aprendió el modelo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Introducción a la neurona artificial, funciones de activación y el perceptrón como primer modelo de red neuronal.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Fundamentos matemáticos de las redes neuronales y su relación con los modelos supervisados vistos en temas anteriores.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Neural network models (supervised)</h4>
+              <p>Documentación oficial de MLPClassifier: arquitectura, funciones de activación y parámetros de entrenamiento.</p>
+              <a href="https://scikit-learn.org/stable/modules/neural_networks_supervised.html" target="_blank" class="resource-link">→ sklearn.org — Redes neuronales</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — Perceptron</h4>
+              <p>Documentación oficial del Perceptrón simple: el modelo lineal que usaremos en la práctica de esta semana.</p>
+              <a href="https://scikit-learn.org/stable/modules/linear_model.html#perceptron" target="_blank" class="resource-link">→ sklearn.org — Perceptron</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próxima clase</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Una neurona a mano para la compuerta NAND</h4>
+              <p>Sin usar sklearn: con NumPy puro, encuentra por prueba y error los valores de <code>w1</code>, <code>w2</code> y <code>b</code> que hacen que tu función <code>perceptron()</code> resuelva la compuerta NAND (el opuesto de AND). Verifica las 4 combinaciones de entrada.</p>
+              <div class="task-due">📅 Próxima clase · Formato: notebook .ipynb</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · EXPERIMENTACIÓN</span>
+            <div class="task-content">
+              <h4>Comparar activaciones en un MLP</h4>
+              <p>Sobre el dataset de la Práctica 11 (o <code>load_breast_cancer</code>), entrena tres <code>MLPClassifier</code> idénticos cambiando solo <code>activation</code> ('relu', 'tanh', 'logistic'). Presenta una tabla con el accuracy de cada uno y explica cuál te dio mejor resultado.</p>
+              <div class="task-due">📅 Próxima clase · Tabla + análisis</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · CONCEPTUAL</span>
+            <div class="task-content">
+              <h4>Explica XOR a alguien que no sabe ML</h4>
+              <p>En máximo media página, sin fórmulas: ¿qué es una neurona artificial?, ¿por qué un perceptrón simple no puede resolver XOR?, y ¿cómo lo resuelve una red con capas ocultas? Prohibido usar las palabras "perceptrón" o "hiperplano" sin explicarlas primero.</p>
+              <div class="task-due">📅 Próxima clase · Documento o celda Markdown</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js?v=11"></script>
+<script>protectPage(11);</script>
+<script src="../assets/js/utils.js?v=11"></script>
+</body>
+</html>

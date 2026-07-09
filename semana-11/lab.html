@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 11 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <a href="../semana-10/index.html" class="week-link"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span></a>
+    <span class="week-link locked"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 11</div>
+    <h1>Práctica 11 — Detección de Billetes Falsos con una Neurona</h1>
+    <div class="topic-tags">
+      <span class="tag">Perceptrón</span>
+      <span class="tag">billetes falsos</span>
+      <span class="tag">frontera lineal</span>
+      <span class="tag">forward pass a mano</span>
+      <span class="tag">MLP</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 11</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana11_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Cargar y escalar el dataset de autenticación de billetes (UCI, vía <code>fetch_openml</code>).</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Entrenar un Perceptrón simple para distinguir billetes genuinos de falsificados.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Visualizar la frontera de decisión en 2D usando dos de las cuatro características.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Calcular a mano, con NumPy, la salida de la neurona para un billete real usando los pesos aprendidos.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Comparar el Perceptrón simple contra un MLP con una capa oculta.</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">💵</span>
+        <h2>El Dataset: Autenticación de Billetes</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>Banknote Authentication</strong> (UCI) contiene 1.372 billetes reales, cada uno descrito por 4 características extraídas de una transformación wavelet de su imagen (fotografiada con una cámara industrial). Eres el analista antifraude de un banco: te dan estas 4 mediciones de cada billete y debes construir una neurona que decida si es <strong>genuino</strong> o <strong>falsificado</strong>. Es exactamente el mismo problema que resolvió el Perceptrón original de Rosenblatt en 1958: clasificación binaria con una sola neurona.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">varianza</div>
+            <div style="color:var(--text-muted)">Varianza de la imagen transformada (wavelet).</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">asimetría</div>
+            <div style="color:var(--text-muted)">Skewness (sesgo) de la distribución de píxeles.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">curtosis</div>
+            <div style="color:var(--text-muted)">Qué tan "puntiaguda" es la distribución.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">entropía</div>
+            <div style="color:var(--text-muted)">Cantidad de información/desorden en la imagen.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_openml
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import Perceptron
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">💵</span><h2>Parte 1 — Cargar y Escalar</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar los billetes</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>datos = fetch_openml('banknote-authentication', version=1, as_frame=True, parser='auto')
+df = datos.data.rename(columns={'V1': 'varianza', 'V2': 'asimetria', 'V3': 'curtosis', 'V4': 'entropia'})
+df['clase'] = (datos.target.astype(int) == 1).astype(int)   # 1 = genuino, 0 = falsificado
+
+print(f"Billetes en el dataset: {df.shape[0]}")
+print(df['clase'].value_counts().rename({1: 'genuino', 0: 'falsificado'}))
+print(df.describe().round(2))</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: separar y escalar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+features = ['varianza', 'asimetria', 'curtosis', 'entropia']
+X = df[features]
+y = df['clase']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
+                                                      stratify=y, random_state=42)
+
+scaler    = ___________          # StandardScaler
+X_train_s = ___________          # fit_transform sobre X_train
+X_test_s  = ___________          # transform sobre X_test (¡NUNCA fit en test!)
+
+print("Train:", X_train_s.shape, " Test:", X_test_s.shape)</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Antes de modelar:</strong></p>
+          <p>1. ¿Por qué usamos <code>fit_transform</code> en train pero solo <code>transform</code> en test?<br>
+             2. ¿Qué pasaría si escaláramos ANTES de dividir en train/test?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🧠</span><h2>Parte 2 — Entrenar el Perceptrón</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: entrenar y evaluar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+perceptron = ___________        # Perceptron(max_iter=1000, random_state=42)
+___________                     # fit sobre X_train_s, y_train
+
+y_pred = ___________             # predict sobre X_test_s
+acc    = ___________             # accuracy_score(y_test, y_pred)
+
+print(f"Accuracy del Perceptrón: {acc:.3f}")
+print("Pesos aprendidos (w):", perceptron.coef_)
+print("Sesgo aprendido (b):", perceptron.intercept_)</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre el modelo:</strong></p>
+          <p>1. ¿Cuántos pesos tiene el modelo? ¿Por qué ese número (piensa en cuántas features usamos)?<br>
+             2. ¿El accuracy te sorprende? Un billete falso puede costarle dinero real a un banco: ¿un Perceptrón simple te parece suficiente para producción?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📈</span><h2>Parte 3 — Visualizar la Frontera</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Dado: reentrenar en 2D para poder graficar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># Con 4 features no se puede dibujar (necesitaríamos 4 ejes).
+# Reentrenamos un perceptrón nuevo usando solo 2: varianza y asimetría.
+features_2d = ['varianza', 'asimetria']
+X2 = df[features_2d]
+X2_train, X2_test, y2_train, y2_test = train_test_split(X2, y, test_size=0.3,
+                                                          stratify=y, random_state=42)
+
+scaler_2d  = StandardScaler()
+X2_train_s = scaler_2d.fit_transform(X2_train)
+X2_test_s  = scaler_2d.transform(X2_test)
+
+perc_2d = Perceptron(max_iter=1000, random_state=42)
+perc_2d.fit(X2_train_s, y2_train)
+print(f"Accuracy (solo 2 features): {perc_2d.score(X2_test_s, y2_test):.3f}")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.2 — Tu código: graficar puntos + frontera</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# w1*x1 + w2*x2 + b = 0  →  x2 = -(w1*x1 + b) / w2
+w1, w2 = perc_2d.coef_[0]
+b = perc_2d.intercept_[0]
+
+xs = np.linspace(X2_train_s[:, 0].min(), X2_train_s[:, 0].max(), 50)
+ys = ___________          # despeja x2 de la fórmula de arriba
+
+plt.figure(figsize=(7, 6))
+plt.scatter(X2_train_s[:, 0], X2_train_s[:, 1], c=y2_train, cmap='RdYlGn', s=25, edgecolor='k', alpha=0.7)
+plt.plot(xs, ys, 'b--', lw=2, label='frontera del perceptrón')
+plt.xlabel('varianza (escalada)'); plt.ylabel('asimetría (escalada)')
+plt.title('Frontera de decisión del Perceptrón')
+plt.legend(); plt.tight_layout(); plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre la frontera:</strong></p>
+          <p>1. ¿La línea separa bien los billetes genuinos (verde) de los falsificados (rojo)?<br>
+             2. ¿Ves puntos del lado equivocado de la línea? ¿Qué significa eso para ese billete en particular?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✍️</span><h2>Parte 4 — El Cálculo a Mano</h2><span class="card-meta">~15 min · Ejercicio matemático</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Dado: tomamos UN billete real del test set</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>idx = 0
+billete = X_test_s[idx]
+clase_real = y_test.values[idx]
+
+print("Valores escalados del billete:", billete.round(3))
+print("Pesos del perceptrón (w):", perceptron.coef_[0].round(3))
+print("Sesgo (b):", round(perceptron.intercept_[0], 3))
+print("Clase real:", "genuino" if clase_real == 1 else "falsificado")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 4.2 — Tu código: calcula z y la predicción SIN usar .predict()</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# Calcula z = w·x + b con np.dot, y aplica la función escalón a mano.
+# El objetivo es reproducir con tus propias manos lo que hace .predict() por dentro.
+
+w = perceptron.coef_[0]
+b = perceptron.intercept_[0]
+
+z = ___________            # np.dot(w, billete) + b
+prediccion = ___________   # 1 if z >= 0 else 0
+
+print(f"z = {z:.3f}")
+print(f"predicción manual = {prediccion}")
+
+# Verifica contra el modelo real:
+pred_sklearn = perceptron.predict([billete])[0]
+print(f"predicción de sklearn = {pred_sklearn}")
+print("✅ ¡Coinciden!" if prediccion == pred_sklearn else "❌ Revisa tu cálculo")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Repite y reflexiona:</strong></p>
+          <p>1. Cambia <code>idx</code> por otros 2 valores (por ejemplo 5 y 20) y repite el cálculo. ¿Siempre coincide tu resultado manual con el de sklearn?<br>
+             2. Con 4 pesos y 1 sesgo, ¿cuántas multiplicaciones y sumas hace la neurona en cada predicción? Escribe la cuenta.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔬</span><h2>Parte 5 — Perceptrón vs MLP</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 5.1 — Tu código: entrenar un MLP con una capa oculta</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+mlp = ___________          # MLPClassifier(hidden_layer_sizes=(8,), max_iter=2000, random_state=42)
+___________                # fit sobre X_train_s, y_train
+
+acc_mlp = ___________       # accuracy_score(y_test, mlp.predict(X_test_s))
+
+print(f"Accuracy Perceptrón simple  : {acc:.3f}")
+print(f"Accuracy MLP (1 capa oculta): {acc_mlp:.3f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre la comparación:</strong></p>
+          <p>1. ¿El MLP mejora, empeora o queda prácticamente igual que el Perceptrón simple?<br>
+             2. Si el dataset ya es casi separable con una línea (como viste en la Parte 3), ¿esperabas una gran diferencia? ¿Por qué sí o por qué no?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN INTEGRADORA</span>
+            <div class="task-content">
+              <h4>Párrafo final — El proyecto completo</h4>
+              <p>Resume tu proyecto en un párrafo como si se lo contaras al gerente de riesgos del banco: qué tan confiable es tu neurona para detectar billetes falsos, cómo verificaste el cálculo de la neurona a mano, y si recomendarías usar un Perceptrón simple o un MLP en producción.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js?v=11"></script>
+<script>protectPage(11);</script>
+<script src="../assets/js/utils.js?v=11"></script>
+</body>
+</html>
