@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 12 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <a href="../semana-10/index.html" class="week-link"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span></a>
+    <a href="../semana-11/index.html" class="week-link"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span></a>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 12</div>
+    <h1>Práctica 12 — Descenso de Gradiente para Predecir Progresión de Diabetes</h1>
+    <div class="topic-tags">
+      <span class="tag">Descenso de gradiente</span>
+      <span class="tag">Regresión lineal</span>
+      <span class="tag">curva de pérdida</span>
+      <span class="tag">MLPRegressor</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 12</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana12_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Cargar el dataset de progresión de diabetes (sklearn) y explorar sus variables.</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Implementar descenso de gradiente a mano, con NumPy puro, para una regresión lineal de una sola variable.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Graficar cómo baja la pérdida a lo largo de las iteraciones y visualizar la línea ajustada.</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Comparar tus resultados manuales contra <code>LinearRegression</code> de sklearn.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Entrenar un <code>MLPRegressor</code> con todas las variables y observar su curva de pérdida real (<code>loss_curve_</code>).</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">💉</span>
+        <h2>El Dataset: Progresión de Diabetes</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          El dataset <strong>Diabetes</strong> (incluido en sklearn) contiene datos de 442 pacientes: 10 variables fisiológicas (edad, sexo, índice de masa corporal, presión arterial y 6 mediciones de sangre) y un valor objetivo que mide qué tan avanzada está la enfermedad un año después. Eres el científico de datos de una clínica: tu tarea es construir un modelo que, a partir de estas variables, prediga ese avance — y para eso necesitas ENTRENARLO, es decir, encontrar los pesos que minimizan el error. Hoy lo harás primero con tus propias manos (descenso de gradiente) y luego con una red neuronal.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">bmi</div>
+            <div style="color:var(--text-muted)">Índice de masa corporal (usada en la Parte 1-3, regresión simple).</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">bp</div>
+            <div style="color:var(--text-muted)">Presión arterial media.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">s1–s6</div>
+            <div style="color:var(--text-muted)">Seis mediciones de sangre (colesterol, glucosa, etc).</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">target</div>
+            <div style="color:var(--text-muted)">Progresión de la enfermedad al año (lo que queremos predecir).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_diabetes
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+from sklearn.neural_network import MLPRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+print("✅ Librerías cargadas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">💉</span><h2>Parte 1 — Cargar y Preparar</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: cargar el dataset</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>datos = load_diabetes(as_frame=True)
+df = datos.frame
+
+print(f"Pacientes en el dataset: {df.shape[0]}")
+print(f"Variables: {list(datos.feature_names)}")
+print(df[['bmi', 'bp', 'target']].describe().round(3))</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Tu código: preparar una sola variable (bmi) y escalar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+x = df[['bmi']]
+y = df['target'].values
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+
+scaler   = ___________          # StandardScaler
+x_train_s = ___________         # fit_transform sobre x_train, luego .ravel()
+x_test_s  = ___________         # transform sobre x_test, luego .ravel()
+
+print("Train:", x_train_s.shape, " Test:", x_test_s.shape)</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Antes de modelar:</strong></p>
+          <p>1. ¿Por qué escalamos <code>bmi</code> si es la única variable que vamos a usar?<br>
+             2. ¿Qué forma tiene la relación entre <code>bmi</code> y <code>target</code>? Grafícalos con <code>plt.scatter</code> antes de continuar.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⬇️</span><h2>Parte 2 — Descenso de Gradiente a Mano</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Dado: funciones de predicción y pérdida</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># Modelo: y_pred = w * x + b   (una línea recta, igual que en la clase)
+def predecir(x, w, b):
+    return w * x + b
+
+def perdida_mse(y_real, y_pred):
+    return np.mean((y_real - y_pred) ** 2)
+
+print("✅ Funciones listas. w y b empiezan en 0.")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 2.2 — Tu código: el bucle de entrenamiento</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+w, b = 0.0, 0.0
+lr = 0.1
+n_epocas = 200
+n = len(x_train_s)
+historial_loss = []
+
+for epoca in range(n_epocas):
+    y_pred = predecir(x_train_s, w, b)
+    error = y_pred - y_train
+
+    # Gradientes de la pérdida MSE respecto a w y b (derivadas)
+    dw = ___________          # (2/n) * np.sum(error * x_train_s)
+    db = ___________          # (2/n) * np.sum(error)
+
+    w = w - lr * dw
+    b = b - lr * db
+
+    historial_loss.append(perdida_mse(y_train, predecir(x_train_s, w, b)))
+
+print(f"w final = {w:.3f}   b final = {b:.3f}")
+print(f"Pérdida inicial: {historial_loss[0]:.2f}")
+print(f"Pérdida final  : {historial_loss[-1]:.2f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre el entrenamiento:</strong></p>
+          <p>1. ¿La pérdida bajó de forma continua o dio saltos? Prueba <code>lr = 1.5</code>: ¿qué pasa?<br>
+             2. ¿Qué representa el signo de <code>w</code> final? (¿bmi alto se asocia con más o menos progresión de la enfermedad?)</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📈</span><h2>Parte 3 — Graficar Pérdida y Ajuste</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Tu código: dos gráficas lado a lado</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+
+# Izquierda: curva de pérdida por época
+axes[0].plot(___________, color='#3b82f6')       # historial_loss
+axes[0].set_xlabel('época'); axes[0].set_ylabel('pérdida (MSE)')
+axes[0].set_title('Descenso de gradiente: pérdida por época')
+axes[0].grid(alpha=.3)
+
+# Derecha: puntos reales + línea ajustada
+xs = np.linspace(x_train_s.min(), x_train_s.max(), 50)
+ys = ___________          # predecir(xs, w, b)
+axes[1].scatter(x_train_s, y_train, alpha=0.5, color='#94a3b8', label='datos reales')
+axes[1].plot(xs, ys, color='#ef4444', lw=2, label='línea aprendida')
+axes[1].set_xlabel('bmi (escalado)'); axes[1].set_ylabel('progresión (target)')
+axes[1].set_title('Recta encontrada con descenso de gradiente')
+axes[1].legend()
+
+plt.tight_layout(); plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre las gráficas:</strong></p>
+          <p>1. ¿La curva de pérdida se aplana antes de las 200 épocas? ¿Habría bastado con menos?<br>
+             2. ¿La línea aprendida te parece un buen resumen de la relación entre bmi y progresión de la enfermedad?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔬</span><h2>Parte 4 — Verificar contra sklearn</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: entrenar LinearRegression y comparar</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+modelo_sklearn = ___________          # LinearRegression()
+___________                           # fit sobre x_train_s.reshape(-1,1), y_train
+
+print(f"w manual   : {w:.4f}   |  w sklearn: {modelo_sklearn.coef_[0]:.4f}")
+print(f"b manual   : {b:.4f}   |  b sklearn: {modelo_sklearn.intercept_:.4f}")
+
+r2_manual   = r2_score(y_test, predecir(x_test_s, w, b))
+r2_sklearn  = ___________             # modelo_sklearn.score sobre x_test_s.reshape(-1,1), y_test
+
+print(f"\nR² manual : {r2_manual:.4f}")
+print(f"R² sklearn: {r2_sklearn:.4f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre la comparación:</strong></p>
+          <p>1. ¿Tus valores de <code>w</code> y <code>b</code> quedaron cerca de los de sklearn? Si no, ¿qué podrías cambiar (más épocas, otro lr)?<br>
+             2. <code>LinearRegression</code> de sklearn NO usa descenso de gradiente iterativo — resuelve la ecuación exacta de una vez. Aun así, ¿por qué el resultado final es prácticamente el mismo?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🧠</span><h2>Parte 5 — MLPRegressor con Todas las Variables</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 5.1 — Dado: preparar las 10 variables</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>X_full = df[datos.feature_names]
+X_train_f, X_test_f, y_train_f, y_test_f = train_test_split(X_full, y, test_size=0.3, random_state=42)
+
+scaler_f    = StandardScaler()
+X_train_fs  = scaler_f.fit_transform(X_train_f)
+X_test_fs   = scaler_f.transform(X_test_f)
+
+print("Listo: 10 variables escaladas.")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 5.2 — Tu código: entrenar el MLPRegressor</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+mlp = ___________          # MLPRegressor(hidden_layer_sizes=(16,8), max_iter=2000, random_state=42)
+___________                # fit sobre X_train_fs, y_train_f
+
+r2_mlp = ___________         # mlp.score sobre X_test_fs, y_test_f
+
+print(f"R² regresión lineal (1 variable) : {r2_sklearn:.4f}")
+print(f"R² MLPRegressor (10 variables)   : {r2_mlp:.4f}")
+
+plt.figure(figsize=(7, 4))
+plt.plot(mlp.loss_curve_, color='#22c55e')
+plt.xlabel('época'); plt.ylabel('pérdida')
+plt.title('Curva de pérdida real del MLPRegressor (loss_curve_)')
+plt.grid(alpha=.3); plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre la comparación final:</strong></p>
+          <p>1. ¿El MLP con 10 variables mejora el R² frente a tu regresión lineal con solo <code>bmi</code>?<br>
+             2. Compara la forma de la curva de <code>mlp.loss_curve_</code> con la curva que graficaste a mano en la Parte 3. ¿Se parecen?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN INTEGRADORA</span>
+            <div class="task-content">
+              <h4>Párrafo final — El proyecto completo</h4>
+              <p>Resume en un párrafo, como si se lo explicaras a un compañero que faltó a clase: qué significa "entrenar" un modelo, cómo lo viviste al programar el descenso de gradiente a mano, y qué ganaste (o no) al usar una red neuronal con las 10 variables en vez de una sola.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js?v=12"></script>
+<script>protectPage(12);</script>
+<script src="../assets/js/utils.js?v=12"></script>
+</body>
+</html>

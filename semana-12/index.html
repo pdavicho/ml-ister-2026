@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 12 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <a href="../semana-10/index.html" class="week-link"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span></a>
+    <a href="../semana-11/index.html" class="week-link"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span></a>
+    <a href="index.html" class="week-link active"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span></a>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span><span class="week-icon">🔒</span></span>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 12</div>
+    <h1>Deep Learning — Descenso de Gradiente y Backpropagation</h1>
+    <div class="topic-tags">
+      <span class="tag">Función de pérdida</span>
+      <span class="tag">Descenso de gradiente</span>
+      <span class="tag">Tasa de aprendizaje</span>
+      <span class="tag">Backpropagation</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 12</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 12</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: Descenso de Gradiente a Mano (NumPy puro) ──────
+# Queremos encontrar el w que minimiza L(w) = (w - 3)^2
+# El mínimo real es w=3 (lo sabemos porque la función es simple),
+# pero el algoritmo lo "descubre" solo, paso a paso.
+import numpy as np
+
+def perdida(w):
+    return (w - 3) ** 2
+
+def gradiente(w):
+    return 2 * (w - 3)          # derivada de (w-3)^2
+
+w = -1.5                        # punto de partida (al azar)
+lr = 0.3                        # tasa de aprendizaje
+
+print(f"{'paso':>4} | {'w':>8} | {'L(w)':>8}")
+for paso in range(10):
+    print(f"{paso:>4} | {w:8.4f} | {perdida(w):8.4f}")
+    w = w - lr * gradiente(w)   # la regla de oro del descenso de gradiente
+
+print(f"\nValor final de w: {w:.4f}  (el mínimo real es w=3)")</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: Visualizar la "Montaña" y el Camino ────────────
+import matplotlib.pyplot as plt
+
+def gradient_descent(w0, lr, pasos):
+    w = w0
+    historial = [w]
+    for _ in range(pasos):
+        w = w - lr * gradiente(w)
+        historial.append(w)
+    return historial
+
+camino = gradient_descent(w0=-1.5, lr=0.3, pasos=12)
+
+ws = np.linspace(-3, 9, 200)
+plt.figure(figsize=(7, 5))
+plt.plot(ws, perdida(ws), color='#334155', lw=2, label='L(w) = (w-3)²')
+plt.plot(camino, [perdida(w) for w in camino], 'o-', color='#3b82f6', label='camino del descenso')
+plt.scatter([3], [0], color='#22c55e', s=100, zorder=5, label='mínimo (w=3)')
+plt.xlabel('w'); plt.ylabel('pérdida L(w)'); plt.legend(); plt.grid(alpha=.3)
+plt.title('Descenso de gradiente: cada paso baja un poco la pérdida')
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: El Efecto de la Tasa de Aprendizaje ────────────
+tasas = {'muy baja (0.02)': 0.02, 'buena (0.3)': 0.3, 'muy alta (1.05)': 1.05}
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+for ax, (nombre, lr_i) in zip(axes, tasas.items()):
+    camino_i = gradient_descent(w0=-1.5, lr=lr_i, pasos=12)
+    ax.plot(ws, perdida(ws), color='#334155', lw=1.5)
+    ax.plot(camino_i, [perdida(w) for w in camino_i], 'o-', color='#f59e0b', markersize=4)
+    ax.set_title(nombre); ax.set_ylim(0, 40); ax.grid(alpha=.3)
+
+plt.tight_layout()
+plt.show()
+
+# Con lr muy alta el "camino" rebota cada vez más lejos del mínimo: diverge.
+# Con lr muy baja, en 12 pasos apenas se movió.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: Backpropagation a Mano — una Mini-Red para XOR ──
+# Red: 2 entradas -> 2 neuronas ocultas -> 1 salida, todas con sigmoide.
+# Esta vez SÍ vamos a entrenar los pesos nosotros mismos, sin sklearn.
+np.random.seed(42)
+
+def sigmoide(z):       return 1 / (1 + np.exp(-z))
+def sigmoide_deriv(a):  return a * (1 - a)      # derivada en función de la SALIDA de la sigmoide
+
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([[0], [1], [1], [0]])              # XOR
+
+# Pesos iniciales al azar (pequeños)
+W1 = np.random.randn(2, 2) * 0.5   # entradas -> capa oculta (2x2)
+b1 = np.zeros((1, 2))
+W2 = np.random.randn(2, 1) * 0.5   # capa oculta -> salida (2x1)
+b2 = np.zeros((1, 1))
+
+lr = 0.5
+historial_loss = []
+
+for epoca in range(5000):
+    # ---- FORWARD ----
+    z1 = X @ W1 + b1
+    a1 = sigmoide(z1)              # activación de la capa oculta
+    z2 = a1 @ W2 + b2
+    a2 = sigmoide(z2)              # predicción final
+
+    error = a2 - y
+    loss = np.mean(error ** 2)
+    historial_loss.append(loss)
+
+    # ---- BACKWARD (regla de la cadena, capa por capa) ----
+    d2 = error * sigmoide_deriv(a2)            # cuánto "culpa" tiene la salida
+    dW2 = a1.T @ d2
+    db2 = d2.sum(axis=0, keepdims=True)
+
+    d1 = (d2 @ W2.T) * sigmoide_deriv(a1)      # el error se reparte hacia la capa oculta
+    dW1 = X.T @ d1
+    db1 = d1.sum(axis=0, keepdims=True)
+
+    # ---- ACTUALIZAR PESOS (descenso de gradiente) ----
+    W2 -= lr * dW2; b2 -= lr * db2
+    W1 -= lr * dW1; b1 -= lr * db1
+
+print("Predicciones finales (XOR):")
+for xi, yi in zip(X, y):
+    pred = sigmoide(sigmoide(xi @ W1 + b1) @ W2 + b2)[0][0]
+    print(f"  XOR{tuple(xi)} esperado={yi[0]}  predicho={pred:.3f}")
+
+print(f"\nPérdida inicial: {historial_loss[0]:.4f}")
+print(f"Pérdida final  : {historial_loss[-1]:.4f}")
+
+plt.figure(figsize=(7, 4))
+plt.plot(historial_loss, color='#3b82f6')
+plt.xlabel('época'); plt.ylabel('pérdida (MSE)')
+plt.title('Backpropagation a mano: la red aprende XOR')
+plt.grid(alpha=.3); plt.show()
+
+# La semana pasada dijimos que un perceptrón simple NO puede resolver XOR.
+# Hoy, con backpropagation, entrenamos NOSOTROS los pesos de una red con
+# capa oculta — y sí lo resuelve.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 5: Lo Mismo, pero con sklearn (por dentro hace lo mismo) ──
+from sklearn.neural_network import MLPClassifier
+
+mlp = MLPClassifier(hidden_layer_sizes=(2,), activation='logistic',
+                     solver='sgd', learning_rate_init=0.5,
+                     max_iter=5000, random_state=42)
+mlp.fit(X, y.ravel())
+
+print("Predicciones de MLPClassifier:")
+for xi, yi in zip(X, y.ravel()):
+    print(f"  XOR{tuple(xi)} esperado={yi}  predicho={mlp.predict([xi])[0]}")
+
+plt.figure(figsize=(7, 4))
+plt.plot(mlp.loss_curve_, color='#22c55e')
+plt.xlabel('época'); plt.ylabel('pérdida')
+plt.title('mlp.loss_curve_ — el mismo descenso de gradiente, calculado por sklearn')
+plt.grid(alpha=.3); plt.show()
+
+# Todo lo que programaste a mano en la Parte 4 (forward, backward, actualizar
+# pesos) es exactamente lo que hace sklearn "por dentro" cuando llamas .fit()</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana12_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 12 — Descenso de Gradiente para Predecir Progresión de Diabetes</h4>
+            <p>Implementa descenso de gradiente a mano para una regresión lineal simple, grafica cómo baja la pérdida, y compara contra un MLPRegressor de sklearn observando su curva de entrenamiento real.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Capítulo de entrenamiento de redes neuronales: función de pérdida, descenso de gradiente y backpropagation explicados paso a paso.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Fundamentos matemáticos del entrenamiento de modelos: optimización, gradientes y funciones de costo.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>scikit-learn — MLPClassifier / MLPRegressor</h4>
+              <p>Documentación oficial: parámetro <code>solver</code>, <code>learning_rate_init</code> y el atributo <code>loss_curve_</code> usados en el código de hoy.</p>
+              <a href="https://scikit-learn.org/stable/modules/neural_networks_supervised.html" target="_blank" class="resource-link">→ sklearn.org — Redes neuronales</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>3Blue1Brown — But what is a neural network? / Backpropagation</h4>
+              <p>Serie de videos (en inglés, con subtítulos) con las mejores animaciones disponibles para entender gradiente y backpropagation de forma visual.</p>
+              <a href="https://www.3blue1brown.com/topics/neural-networks" target="_blank" class="resource-link">→ 3blue1brown.com — Neural networks</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próxima clase</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Descenso de gradiente para otra función</h4>
+              <p>Repite la Parte 1 y 2 del código de clase, pero minimizando <code>L(w) = (w + 4)² + 2</code>. ¿Cuál es el mínimo real? ¿En cuántos pasos lo encuentra el algoritmo con <code>lr=0.3</code>?</p>
+              <div class="task-due">📅 Próxima clase · Formato: notebook .ipynb</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · EXPERIMENTACIÓN</span>
+            <div class="task-content">
+              <h4>Explora tasas de aprendizaje "límite"</h4>
+              <p>Usando la Parte 3 del código de clase, prueba <code>lr = 0.99</code> y <code>lr = 1.01</code>. Describe con tus palabras qué diferencia observas entre ambos, aunque son casi el mismo número.</p>
+              <div class="task-due">📅 Próxima clase · Gráfica + explicación</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · CONCEPTUAL</span>
+            <div class="task-content">
+              <h4>Explica backpropagation con la analogía de la montaña</h4>
+              <p>En máximo media página: ¿qué es la función de pérdida?, ¿qué hace el descenso de gradiente?, y ¿qué agrega backpropagation cuando hay varias capas? Usa la analogía de la montaña con niebla vista en clase.</p>
+              <div class="task-due">📅 Próxima clase · Documento o celda Markdown</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js?v=12"></script>
+<script>protectPage(12);</script>
+<script src="../assets/js/utils.js?v=12"></script>
+</body>
+</html>

@@ -21,7 +21,7 @@ var SEMANA_CONFIG = {
   9:  { titulo: 'K-means y DBScan',                  clave: CLAVE, disponible: true  },
   10: { titulo: 'Clustering Práctico',               clave: CLAVE, disponible: true  },
   11: { titulo: 'Redes Neuronales',                  clave: CLAVE, disponible: true  },
-  12: { titulo: 'Deep Learning',                     clave: CLAVE, disponible: false },
+  12: { titulo: 'Deep Learning',                     clave: CLAVE, disponible: true  },
   13: { titulo: 'Red Neuronal Simple',               clave: CLAVE, disponible: false },
   14: { titulo: 'Evaluación y Optimización',         clave: CLAVE, disponible: false },
   15: { titulo: 'Sistemas Expertos',                 clave: CLAVE, disponible: false },

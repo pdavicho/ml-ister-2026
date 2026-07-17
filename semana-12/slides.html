@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 12 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .formula { background: rgba(30,41,59,.9); border: 1px solid #334155; border-radius: 8px; padding: .7rem 1rem; font-size: .75em; text-align: center; color: #e2e8f0; margin: .5rem 0; font-family: 'Cambria Math', Georgia, serif; }
+    .formula strong { color: #60a5fa; }
+
+    /* ── Widgets interactivos ── */
+    .btn-toggle { background: rgba(51,65,85,.7); border: 1px solid #475569; color: #cbd5e1; padding: .4em .9em; border-radius: 6px; font-size: .58em; font-weight: 600; cursor: pointer; margin: .2em .2em .2em 0; font-family: inherit; }
+    .btn-toggle:hover { border-color: #3b82f6; }
+    .btn-toggle.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+    .btn-toggle.on { background: #22c55e; border-color: #22c55e; color: #fff; }
+    .btn-toggle:disabled { opacity: .4; cursor: not-allowed; }
+    input[type=range] { width: 100%; accent-color: #3b82f6; height: 1.1em; }
+    .lab { background: rgba(15,23,42,.6); border: 1px solid #334155; border-radius: 10px; padding: .8rem 1rem; }
+    .lab-out { font-size: .8em; margin-top: .4rem; }
+    .lab canvas { background: #0f172a; border-radius: 8px; display: block; margin: 0 auto; }
+    .try { font-size: .58em; color: #93c5fd; margin-top: .5rem; font-style: italic; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 12 · TEMA 4 · CÓMO ENTRENAN LAS REDES</div>
+  <h1 style="font-size:1.35em; line-height:1.2">Deep Learning<br><span style="color:#60a5fa">Descenso de Gradiente y Backpropagation</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Función de pérdida</span>
+    <span class="tag">Descenso de gradiente</span>
+    <span class="tag">Tasa de aprendizaje</span>
+    <span class="tag">Backpropagation</span>
+    <span class="tag">Épocas</span>
+  </div>
+  <p style="margin-top:1.2rem; font-size:.55em; color:#64748b">Machine Learning · ISTER 2026 · Ing. David Minango, PhD</p>
+</section>
+
+<!-- S2: REPASO Y OBJETIVO -->
+<section>
+  <div class="eyebrow">De la neurona al entrenamiento</div>
+  <h2>La Semana Pasada Armamos la Neurona… ¿Quién le Enseña los Pesos?</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>Semana 11 (recordatorio)</h4>
+      <ul>
+        <li>Una neurona = w·x + b + activación</li>
+        <li>Un perceptrón resuelve AND/OR con pesos que <strong>elegimos a mano</strong></li>
+        <li>Un MLP resuelve XOR, pero sklearn "entrenó" esos pesos — no vimos cómo</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Hoy (Semana 12)</h4>
+      <p>Abrimos la caja negra: cómo un modelo <strong>encuentra sus propios pesos</strong>, usando dos ideas:</p>
+      <ul>
+        <li><strong>Descenso de gradiente</strong>: cómo mejorar poco a poco</li>
+        <li><strong>Backpropagation</strong>: cómo repartir la "culpa" del error entre todos los pesos</li>
+      </ul>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem">Esta es la idea que hace posible entrenar CUALQUIER red — desde 2 neuronas hasta los modelos más grandes que existen</div>
+</section>
+
+<!-- S3: LA ANALOGIA -->
+<section>
+  <div class="eyebrow">La idea central</div>
+  <h2>Bajar una Montaña... con los Ojos Vendados</h2>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div>
+      <div class="step">Estás en una montaña cubierta de <strong>niebla espesa</strong>. Quieres llegar al punto más bajo (el valle)</div>
+      <div class="step">No puedes ver el valle, pero sí puedes <strong>sentir hacia dónde baja el suelo</strong> bajo tus pies</div>
+      <div class="step">Entonces das <strong>un paso pequeño</strong> en esa dirección. Repites, una y otra vez</div>
+    </div>
+    <div class="card">
+      <h4>Traducido a Machine Learning</h4>
+      <p>La "montaña" es el <strong>error</strong> de tu modelo (qué tan mal predice).</p>
+      <p>El "punto más bajo" son los pesos que producen el <strong>menor error posible</strong>.</p>
+      <p>"Sentir la pendiente" = calcular el <strong>gradiente</strong>. "Dar un paso" = <strong>actualizar los pesos</strong>.</p>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.5rem">Este método se llama <strong>Descenso de Gradiente</strong> — el algoritmo que entrena casi todo el Deep Learning moderno</div>
+</section>
+
+<!-- S4: FUNCION DE PERDIDA -->
+<section>
+  <div class="eyebrow">Antes de bajar, hay que medir el error</div>
+  <h2>La Función de Pérdida (Loss) — ¿Qué Tan Mal Vamos?</h2>
+  <div class="formula">L = (y real − y predicho)²</div>
+  <div class="cols cols-2" style="margin-top:.5rem">
+    <div>
+      <div class="step">Si predices <strong>exactamente bien</strong>, L = 0 (perfecto)</div>
+      <div class="step">Si te equivocas mucho, <strong>L es un número grande</strong></div>
+      <div class="step">Elevar al cuadrado castiga más los errores grandes, y siempre da un número positivo</div>
+    </div>
+    <div class="card">
+      <h4>Ejemplo simple</h4>
+      <p>y real = 10, y predicho = 7 → error = 3 → <strong>L = 9</strong></p>
+      <p>Si mejoras y predices 9 → error = 1 → <strong>L = 1</strong></p>
+      <p style="margin-top:.3rem">Bajar la pérdida = mejorar el modelo.</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.4rem">Entrenar un modelo = encontrar los pesos que hacen la pérdida (L) lo más pequeña posible</div>
+</section>
+
+<!-- S5: WIDGET - DESCENSO DE GRADIENTE 1D -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>Descenso de Gradiente — Dale Pasos a la Montaña</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <div class="step"><strong>Tasa de aprendizaje (lr)</strong> = <span id="gd-lrval">0.30</span>
+        <input type="range" id="gd-lr" min="0.02" max="1.1" step="0.02" value="0.3" oninput="gdLrLabel()"></div>
+      <button class="btn-toggle active" onclick="gdStep()">⬇ Dar un paso</button>
+      <button class="btn-toggle" onclick="gdReset()">↺ Reiniciar</button>
+      <div class="step" style="margin-top:.5rem">Paso número: <strong id="gd-iter">0</strong></div>
+      <div class="step">w actual = <strong id="gd-w">-1.50</strong></div>
+      <div class="step">pérdida L(w) = <strong id="gd-loss">20.25</strong></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="gd-canvas" width="380" height="220"></canvas>
+    </div>
+  </div>
+  <div class="try">El mínimo (el "valle") está en w = 3. Da varios pasos con lr = 0.3 y observa cómo w se acerca. Sube el lr al máximo: ¿qué pasa?</div>
+</section>
+
+<!-- S6: LA TASA DE APRENDIZAJE -->
+<section>
+  <div class="eyebrow">El tamaño del paso importa</div>
+  <h2>La Tasa de Aprendizaje (Learning Rate)</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>🐢 Muy baja</h4>
+      <p>Pasos diminutos. Llegas al valle, pero tardas MUCHÍSIMO tiempo (muchas épocas).</p>
+    </div>
+    <div class="card">
+      <h4>🚀 Muy alta</h4>
+      <p>Pasos gigantes. Te pasas de largo el valle, rebotas al otro lado... y puedes terminar más lejos que al inicio.</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem">El objetivo es encontrar una tasa de aprendizaje "justa": ni tan lenta que no termines nunca, ni tan grande que nunca converjas</div>
+</section>
+
+<!-- S7: WIDGET - COMPARAR LEARNING RATES -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>Compara Tres Tasas de Aprendizaje</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <button class="btn-toggle" onclick="lrRun('baja')">🐢 Muy baja (0.02)</button>
+      <button class="btn-toggle" onclick="lrRun('buena')">✅ Buena (0.3)</button>
+      <button class="btn-toggle" onclick="lrRun('alta')">🚀 Muy alta (1.05)</button>
+      <div id="lr-msg" class="step" style="margin-top:.6rem">Elige una tasa de aprendizaje para animar el descenso →</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="lr-canvas" width="380" height="220"></canvas>
+    </div>
+  </div>
+  <div class="try">Fíjate en el camino que dibuja cada bola: pasos cortos y muchos (lenta), pasos medianos que aterrizan en el valle (buena), o pasos que rebotan cada vez más lejos (alta = diverge).</div>
+</section>
+
+<!-- S8: BACKPROPAGATION - LA IDEA -->
+<section>
+  <div class="eyebrow">Con una red de varias capas, ¿a quién le toca el error?</div>
+  <h2>Backpropagation — Repartir la "Culpa" del Error</h2>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div>
+      <div class="step">Con <strong>una sola neurona</strong>, ajustar sus pesos es fácil: hay un solo culpable</div>
+      <div class="step">Con <strong>varias capas</strong>, la salida depende de neuronas ocultas, que a su vez dependen de las entradas — ¿quién causó el error?</div>
+      <div class="step"><strong>Backpropagation</strong> = calcular, capa por capa, de atrás hacia adelante, cuánto contribuyó cada peso al error</div>
+    </div>
+    <div class="card">
+      <h4>La idea, sin fórmulas</h4>
+      <p>1️⃣ <strong>Forward</strong>: la información viaja de entrada → salida, y calculas el error final.</p>
+      <p>2️⃣ <strong>Backward</strong>: ese error "viaja de regreso", capa por capa, repartiendo un poquito de responsabilidad a cada peso.</p>
+      <p>3️⃣ Cada peso se ajusta (con descenso de gradiente) según cuánta culpa le tocó.</p>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.5rem">Backpropagation no es un algoritmo distinto al descenso de gradiente — es la forma inteligente de calcular el gradiente de CADA peso en una red con muchas capas</div>
+</section>
+
+<!-- S9: WIDGET - BACKPROP ANIMADO -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>Backpropagation Paso a Paso</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <button class="btn-toggle" id="bp-btn-fwd" onclick="bpForward()">① Adelante (Forward)</button>
+      <button class="btn-toggle" id="bp-btn-bwd" onclick="bpBackward()" disabled>② Atrás (Backward)</button>
+      <button class="btn-toggle" onclick="bpReset()">↺ Reiniciar</button>
+      <div class="step" id="bp-msg" style="margin-top:.6rem">Presiona "① Adelante" para calcular una predicción</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="bp-canvas" width="380" height="220"></canvas>
+    </div>
+  </div>
+  <div class="try">Azul = la señal viaja hacia adelante (predicción). Naranja = el error viaja hacia atrás (ajuste de cada peso). Esto se repite miles de veces durante el entrenamiento.</div>
+</section>
+
+<!-- S10: EPOCAS -->
+<section>
+  <div class="eyebrow">Un solo paso no alcanza</div>
+  <h2>Épocas e Iteraciones — Repetir Hasta Converger</h2>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div>
+      <div class="step"><strong>Una época</strong> = una pasada completa por TODOS los datos de entrenamiento (forward + backward en cada ejemplo)</div>
+      <div class="step">Con cada época, los pesos mejoran un poco → la pérdida <strong>baja</strong></div>
+      <div class="step">Se repite durante muchas épocas (decenas, cientos, miles) hasta que la pérdida ya casi no cambia</div>
+    </div>
+    <div class="card">
+      <h4>Como estudiar para un examen</h4>
+      <p>Una sola repasada (época) no te lo aprendes todo. Repites el tema varias veces, y cada repaso el "error" (lo que no sabes) se reduce un poco más.</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.5rem">Entrenar = repetir forward + backward + actualizar pesos, época tras época, viendo cómo baja la curva de pérdida</div>
+</section>
+
+<!-- S11: WIDGET - CURVA DE PERDIDA -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>La Curva de Pérdida — Entrena Época por Época</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <button class="btn-toggle active" onclick="epTrain()">▶ Entrenar 1 época</button>
+      <button class="btn-toggle" onclick="epReset()">↺ Reiniciar</button>
+      <div class="step" style="margin-top:.6rem">Época: <strong id="ep-num">0</strong></div>
+      <div class="step">Pérdida actual: <strong id="ep-loss">2.50</strong></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="ep-canvas" width="380" height="220"></canvas>
+    </div>
+  </div>
+  <div class="try">Haz clic varias veces en "Entrenar 1 época" seguidas. Así se ve una curva de pérdida real: baja rápido al inicio y luego se aplana.</div>
+</section>
+
+<!-- S12: APLICACIONES -->
+<section>
+  <div class="eyebrow">Por qué importa tanto este algoritmo</div>
+  <h2>El Motor Detrás de Todo el Deep Learning</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>🖼️ Redes con millones de pesos</h4>
+      <p>Los modelos que reconocen imágenes o generan texto tienen millones (o miles de millones) de pesos — todos entrenados con la MISMA idea: gradiente + backprop.</p>
+    </div>
+    <div class="card">
+      <h4>⚡ GPUs</h4>
+      <p>Calcular tantos gradientes a la vez es un trabajo enorme. Por eso el Deep Learning usa tarjetas gráficas (GPUs), hechas para hacer miles de cálculos en paralelo.</p>
+    </div>
+    <div class="card">
+      <h4>🧠 Frameworks</h4>
+      <p>TensorFlow y Keras (que veremos la próxima semana) calculan el backpropagation automáticamente — tú solo defines la arquitectura de la red.</p>
+    </div>
+    <div class="card">
+      <h4>📉 Monitorear el entrenamiento</h4>
+      <p>La curva de pérdida (como la del widget anterior) es la primera señal para saber si un modelo está aprendiendo bien.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S13: RESUMEN -->
+<section>
+  <div class="eyebrow">Cierre Semana 12</div>
+  <h2>Resumen — Cómo Aprenden las Redes Neuronales</h2>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4>Función de pérdida</h4>
+      <p>Mide qué tan mal predice el modelo. Entrenar = hacerla lo más pequeña posible.</p>
+    </div>
+    <div class="card">
+      <h4>Descenso de gradiente</h4>
+      <p>Dar pasos pequeños en la dirección que más reduce el error. La tasa de aprendizaje controla el tamaño del paso.</p>
+    </div>
+    <div class="card">
+      <h4>Backpropagation</h4>
+      <p>Reparte el error hacia atrás, capa por capa, para saber cuánto ajustar cada peso. Se repite época tras época.</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:.7rem; font-size:.62em">
+    La próxima semana: <strong>Red Neuronal Simple</strong> — implementamos y entrenamos una red desde cero con Keras/TensorFlow.
+  </blockquote>
+  <div class="inst">→ / ← para navegar · F para pantalla completa · Esc para vista general</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'slide',
+    width: 960, height: 620, margin: 0.04,
+    plugins: []
+  });
+
+  /* ── Función de pérdida compartida: L(w) = (w-3)^2, mínimo en w=3 ── */
+  function lossFn(w) { return (w - 3) * (w - 3); }
+  function gradFn(w) { return 2 * (w - 3); }
+
+  function drawParabola(ctx, canvas, points, currentW) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var pad = 30;
+    var wMin = -2, wMax = 8, lMax = 26;
+    function toX(w) { return pad + (w - wMin) / (wMax - wMin) * (canvas.width - 2 * pad); }
+    function toY(l) { return canvas.height - pad - (l / lMax) * (canvas.height - 2 * pad); }
+    /* ejes */
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad, canvas.height - pad); ctx.lineTo(canvas.width - pad, canvas.height - pad); ctx.stroke();
+    /* curva */
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 2.5; ctx.beginPath();
+    for (var w = wMin; w <= wMax + 0.01; w += 0.1) {
+      var x = toX(w), y = toY(Math.min(lossFn(w), lMax));
+      if (w === wMin) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    /* mínimo marcado */
+    ctx.fillStyle = '#334155';
+    ctx.beginPath(); ctx.arc(toX(3), toY(0), 4, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#64748b'; ctx.font = '11px sans-serif';
+    ctx.fillText('valle (w=3)', toX(3) - 22, toY(0) + 16);
+    /* trayectoria */
+    if (points && points.length) {
+      ctx.strokeStyle = 'rgba(96,165,250,.6)'; ctx.lineWidth = 1.5; ctx.beginPath();
+      points.forEach(function (p, i) {
+        var px = toX(p), py = toY(Math.min(lossFn(p), lMax));
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+      points.forEach(function (p, i) {
+        var px = toX(p), py = toY(Math.min(lossFn(p), lMax));
+        ctx.fillStyle = 'rgba(96,165,250,.35)';
+        ctx.beginPath(); ctx.arc(px, py, 3, 0, 2 * Math.PI); ctx.fill();
+      });
+    }
+    /* bola actual */
+    if (currentW !== undefined) {
+      var cx = toX(currentW), cy = toY(Math.min(lossFn(currentW), lMax));
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath(); ctx.arc(cx, cy, 7, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 2; ctx.stroke();
+    }
+  }
+
+  /* ── S5: descenso de gradiente 1D ── */
+  var gdW = -1.5, gdIter = 0, gdTrail = [];
+  function gdLrLabel() {
+    document.getElementById('gd-lrval').textContent = parseFloat(document.getElementById('gd-lr').value).toFixed(2);
+  }
+  function gdStep() {
+    var lr = parseFloat(document.getElementById('gd-lr').value);
+    gdTrail.push(gdW);
+    gdW = gdW - lr * gradFn(gdW);
+    if (gdW > 30) gdW = 30; if (gdW < -30) gdW = -30;
+    gdIter++;
+    gdRender();
+  }
+  function gdReset() {
+    gdW = -1.5; gdIter = 0; gdTrail = [];
+    gdRender();
+  }
+  function gdRender() {
+    document.getElementById('gd-iter').textContent = gdIter;
+    document.getElementById('gd-w').textContent = gdW.toFixed(2);
+    document.getElementById('gd-loss').textContent = Math.min(lossFn(gdW), 999).toFixed(2);
+    var canvas = document.getElementById('gd-canvas');
+    drawParabola(canvas.getContext('2d'), canvas, gdTrail, gdW);
+  }
+
+  /* ── S7: comparar tasas de aprendizaje ── */
+  var lrTimer = null;
+  var lrPresets = {
+    baja:  { lr: 0.02, steps: 40, speed: 60,  msgOk: '🐢 Con lr muy baja: pasos diminutos. Tras 40 pasos apenas se acerca al valle — así de lento sería entrenar.' },
+    buena: { lr: 0.30, steps: 12, speed: 250, msgOk: '✅ Con una buena lr: en pocos pasos llega muy cerca del valle. Así se ve un entrenamiento saludable.' },
+    alta:  { lr: 1.05, steps: 10, speed: 300, msgOk: '🚀 Con lr muy alta: cada paso se pasa de largo y rebota cada vez más lejos — ¡diverge! El modelo nunca aprendería.' }
+  };
+  function lrRun(kind) {
+    if (lrTimer) clearInterval(lrTimer);
+    var cfg = lrPresets[kind];
+    var w = -1.5, trail = [];
+    var canvas = document.getElementById('lr-canvas');
+    var msg = document.getElementById('lr-msg');
+    msg.textContent = 'Animando...';
+    var i = 0;
+    lrTimer = setInterval(function () {
+      trail.push(w);
+      w = w - cfg.lr * gradFn(w);
+      if (w > 25) w = 25; if (w < -25) w = -25;
+      drawParabola(canvas.getContext('2d'), canvas, trail, w);
+      i++;
+      if (i >= cfg.steps) {
+        clearInterval(lrTimer);
+        msg.textContent = cfg.msgOk;
+      }
+    }, cfg.speed);
+  }
+
+  /* ── S9: backpropagation animado ── */
+  var bpNodes = {
+    x1: { x: 40,  y: 60 },  x2: { x: 40,  y: 160 },
+    h1: { x: 190, y: 45 },  h2: { x: 190, y: 175 },
+    y:  { x: 330, y: 110 }
+  };
+  var bpEdgesIn  = [['x1','h1'], ['x1','h2'], ['x2','h1'], ['x2','h2']];
+  var bpEdgesOut = [['h1','y'], ['h2','y']];
+  var bpStage = 0; /* 0 idle, 1 input lit, 2 hidden lit, 3 output lit+error, 4 bwd out, 5 bwd in, 6 done */
+  var bpTimer = null;
+
+  function bpDrawEdge(ctx, a, b, color, width) {
+    ctx.strokeStyle = color; ctx.lineWidth = width;
+    ctx.beginPath(); ctx.moveTo(bpNodes[a].x, bpNodes[a].y); ctx.lineTo(bpNodes[b].x, bpNodes[b].y); ctx.stroke();
+  }
+  function bpDrawNode(ctx, key, label, color) {
+    var n = bpNodes[key];
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(n.x, n.y, 15, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#e2e8f0'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(label, n.x, n.y + 4);
+  }
+  function bpRender() {
+    var canvas = document.getElementById('bp-canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var dim = '#334155', blue = '#3b82f6', orange = '#f59e0b';
+
+    var inColor  = bpStage >= 1 && bpStage <= 5 ? blue : dim;
+    var hidColor = bpStage >= 2 && bpStage <= 5 ? blue : dim;
+    var outColor = bpStage >= 3 ? blue : dim;
+    if (bpStage >= 4) { outColor = orange; }
+    if (bpStage >= 5) { hidColor = orange; }
+    if (bpStage >= 6) { inColor = orange; }
+
+    bpEdgesIn.forEach(function (e) { bpDrawEdge(ctx, e[0], e[1], hidColor, hidColor === dim ? 1.5 : 2.5); });
+    bpEdgesOut.forEach(function (e) { bpDrawEdge(ctx, e[0], e[1], outColor, outColor === dim ? 1.5 : 2.5); });
+
+    bpDrawNode(ctx, 'x1', 'x1', inColor === dim ? '#475569' : inColor);
+    bpDrawNode(ctx, 'x2', 'x2', inColor === dim ? '#475569' : inColor);
+    bpDrawNode(ctx, 'h1', 'h1', hidColor === dim ? '#475569' : hidColor);
+    bpDrawNode(ctx, 'h2', 'h2', hidColor === dim ? '#475569' : hidColor);
+    bpDrawNode(ctx, 'y',  'ŷ',  outColor === dim ? '#475569' : outColor);
+
+    ctx.fillStyle = '#93c5fd'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('entradas', 40, 205);
+    ctx.fillText('capa oculta', 190, 205);
+    ctx.fillText('salida', 330, 205);
+  }
+  function bpMsg(text) { document.getElementById('bp-msg').textContent = text; }
+  function bpForward() {
+    if (bpTimer) clearInterval(bpTimer);
+    document.getElementById('bp-btn-fwd').disabled = true;
+    bpStage = 0;
+    var seq = [
+      [1, 'Entran x1 y x2 a la red...'],
+      [2, 'Cada entrada llega a la capa oculta con su peso (w·x + b) →'],
+      [3, 'La capa oculta produce la predicción final ŷ. Se compara con y real → ¡hay un error!']
+    ];
+    var i = 0;
+    bpTimer = setInterval(function () {
+      bpStage = seq[i][0]; bpRender(); bpMsg(seq[i][1]);
+      i++;
+      if (i >= seq.length) {
+        clearInterval(bpTimer);
+        document.getElementById('bp-btn-bwd').disabled = false;
+      }
+    }, 700);
+  }
+  function bpBackward() {
+    if (bpTimer) clearInterval(bpTimer);
+    document.getElementById('bp-btn-bwd').disabled = true;
+    var seq = [
+      [4, '← El error empieza a viajar hacia atrás desde la salida...'],
+      [5, '← Cada peso de la capa oculta recibe su parte de "culpa" y se ajusta un poquito (Δw)'],
+      [6, '✅ Los pesos de entrada también se ajustan. Una época terminada — listo para repetir.']
+    ];
+    var i = 0;
+    bpTimer = setInterval(function () {
+      bpStage = seq[i][0]; bpRender(); bpMsg(seq[i][1]);
+      i++;
+      if (i >= seq.length) { clearInterval(bpTimer); }
+    }, 700);
+  }
+  function bpReset() {
+    if (bpTimer) clearInterval(bpTimer);
+    bpStage = 0;
+    document.getElementById('bp-btn-fwd').disabled = false;
+    document.getElementById('bp-btn-bwd').disabled = true;
+    bpMsg('Presiona "① Adelante" para calcular una predicción');
+    bpRender();
+  }
+
+  /* ── S11: curva de pérdida por épocas ── */
+  var epEpoch = 0, epHistory = [2.5];
+  function epTrain() {
+    epEpoch++;
+    var prev = epHistory[epHistory.length - 1];
+    var noise = (Math.random() - 0.5) * 0.03;
+    var next = 0.08 + (prev - 0.08) * 0.80 + noise;
+    if (next < 0.05) next = 0.05 + Math.random() * 0.01;
+    epHistory.push(next);
+    epRender();
+  }
+  function epReset() {
+    epEpoch = 0; epHistory = [2.5];
+    epRender();
+  }
+  function epRender() {
+    document.getElementById('ep-num').textContent = epEpoch;
+    document.getElementById('ep-loss').textContent = epHistory[epHistory.length - 1].toFixed(3);
+    var canvas = document.getElementById('ep-canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var pad = 30;
+    var maxEpochs = Math.max(20, epHistory.length);
+    function toX(i) { return pad + i / maxEpochs * (canvas.width - 2 * pad); }
+    function toY(l) { return canvas.height - pad - (l / 2.6) * (canvas.height - 2 * pad); }
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad, canvas.height - pad); ctx.lineTo(canvas.width - pad, canvas.height - pad); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, canvas.height - pad); ctx.stroke();
+    ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif';
+    ctx.fillText('pérdida', 4, pad);
+    ctx.fillText('épocas →', canvas.width - 55, canvas.height - 8);
+    ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 2.5; ctx.beginPath();
+    epHistory.forEach(function (l, i) {
+      var x = toX(i), y = toY(l);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    epHistory.forEach(function (l, i) {
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.arc(toX(i), toY(l), 2.5, 0, 2 * Math.PI); ctx.fill();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    gdRender(); bpRender(); epRender();
+  });
+</script>
+</body>
+</html>
