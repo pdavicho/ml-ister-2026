@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica 16 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <a href="../semana-10/index.html" class="week-link"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span></a>
+    <a href="../semana-11/index.html" class="week-link"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span></a>
+    <a href="../semana-12/index.html" class="week-link"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span></a>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <a href="index.html" class="week-link active"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span></a>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 16</div>
+    <h1>Práctica 16 — Detección y Análisis de Rostros en Vivo</h1>
+    <div class="topic-tags">
+      <span class="tag">OpenCV</span>
+      <span class="tag">Cámara en Colab</span>
+      <span class="tag">Haar Cascade</span>
+      <span class="tag">InsightFace</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab">📋 Clase</a>
+    <a href="lab.html"   class="page-tab active">🧪 Práctica 16</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-body" style="padding:1.25rem 1.5rem">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana16_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Completa las celdas marcadas con 🔧 TU CÓDIGO</h4>
+            <p>Guarda una copia en Drive antes de empezar. Necesitarás dar permiso de cámara a tu navegador.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2>Objetivos</h2>
+        <span class="card-meta">~60 minutos</span>
+      </div>
+      <div class="card-body">
+        <div class="lab-objective"><span class="obj-num">1</span><span>Habilitar tu propia cámara dentro de Google Colab y capturar una foto en vivo.</span></div>
+        <div class="lab-objective"><span class="obj-num">2</span><span>Aplicar preprocesamiento (conversión de color, escala de grises) antes de detectar cualquier rostro.</span></div>
+        <div class="lab-objective"><span class="obj-num">3</span><span>Detectar rostros con un clasificador clásico de OpenCV (Haar Cascade).</span></div>
+        <div class="lab-objective"><span class="obj-num">4</span><span>Estimar edad y sexo de cada rostro detectado usando InsightFace, un modelo ya entrenado.</span></div>
+        <div class="lab-objective"><span class="obj-num">5</span><span>Comparar los resultados de ambos detectores y reflexionar sobre los límites de esta tecnología.</span></div>
+        <div class="info-callout" style="margin-top:1rem">
+          <span>📌</span>
+          <span>Celdas con <code># 🔧 TU CÓDIGO</code> debes completarlas. Las demás solo ejecútalas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📷</span>
+        <h2>El Reto de Hoy: tu Propia Cámara, no un Dataset Descargado</h2>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; line-height:1.7; margin-bottom:1rem">
+          A diferencia de las prácticas anteriores (que usaban un dataset ya armado), hoy TÚ eres el dataset: vas a capturar una foto con tu propia cámara y aplicarle todo el flujo de Visión por Computadora visto en clase. Google Colab corre en un servidor en la nube — no tiene una cámara conectada — así que usamos un pequeño truco en JavaScript que le pide prestada la cámara a TU navegador, toma la foto, y se la entrega a Python como un archivo normal.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.82rem">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">Haar Cascade (OpenCV)</div>
+            <div style="color:var(--text-muted)">Un detector de rostros clásico, rápido y liviano — no necesita instalar nada adicional. Solo detecta: encuentra DÓNDE está la cara.</div>
+          </div>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem">
+            <div style="font-weight:700; color:var(--blue); margin-bottom:0.3rem">InsightFace (buffalo_l)</div>
+            <div style="color:var(--text-muted)">Un modelo más moderno y pesado, ya entrenado con millones de rostros. Además de detectar, estima edad y sexo aproximados.</div>
+          </div>
+        </div>
+        <div class="care" style="margin-top:1rem; background:#fff7ed; border-left:4px solid #d97706; border-radius:8px; padding:0.75rem 1rem; font-size:0.85rem">
+          ⚠️ <strong>Importante:</strong> la edad y el sexo que reporta InsightFace son ESTIMACIONES basadas en apariencia, no un dato verificado ni un documento de identidad. Úsalo con espíritu crítico, no como una verdad absoluta.
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">⚙️</span><h2>Parte 0 — Setup</h2><span class="card-meta">Solo ejecutar</span></div>
+      <div class="card-body">
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>!pip install insightface onnxruntime -q
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from IPython.display import display, Javascript
+from google.colab.output import eval_js
+from base64 import b64decode
+
+print("✅ Librerías listas")</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">📸</span><h2>Parte 1 — Habilitar la Cámara y Capturar una Foto</h2><span class="card-meta">~10 min · Dado</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 1.1 — Dado: función para capturar una foto con tu cámara</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>def tomar_foto(nombre_archivo='mi_foto.jpg', calidad=0.8):
+    js = Javascript('''
+    async function tomarFoto(calidad) {
+      const div = document.createElement('div');
+      const boton = document.createElement('button');
+      boton.textContent = '📸 Capturar foto';
+      div.appendChild(boton);
+
+      const video = document.createElement('video');
+      video.style.display = 'block';
+      const stream = await navigator.mediaDevices.getUserMedia({video: true});
+
+      document.body.appendChild(div);
+      div.appendChild(video);
+      video.srcObject = stream;
+      await video.play();
+
+      await new Promise((resolve) => boton.onclick = resolve);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      stream.getVideoTracks()[0].stop();
+      div.remove();
+      return canvas.toDataURL('image/jpeg', calidad);
+    }
+    ''')
+    display(js)
+    datos = eval_js('tomarFoto({})'.format(calidad))
+    binario = b64decode(datos.split(',')[1])
+    with open(nombre_archivo, 'wb') as f:
+        f.write(binario)
+    return nombre_archivo
+
+print("✅ Función tomar_foto() lista")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 1.2 — Dado: capturar (o subir) tu foto</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># Da clic en "Permitir" cuando el navegador pida acceso a la cámara,
+# y luego en el botón "📸 Capturar foto" que aparece en la salida de esta celda.
+archivo = tomar_foto()
+
+# Alternativa si tu navegador no da acceso a la cámara:
+# from google.colab import files
+# subido = files.upload()
+# archivo = list(subido.keys())[0]
+
+imagen = cv2.imread(archivo)
+print("Foto capturada, forma:", imagen.shape)</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Antes de continuar:</strong></p>
+          <p>1. ¿Por qué Colab no puede simplemente usar <code>cv2.VideoCapture(0)</code> como en un script normal de Python?<br>
+             2. ¿Qué tipo de dato es <code>datos</code> justo antes de <code>b64decode</code>? (pista: no es la imagen todavía, es texto)</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🔧</span><h2>Parte 2 — Preprocesamiento</h2><span class="card-meta">~10 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 2.1 — Tu código: convertir colores y pasar a escala de grises</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+imagen_rgb  = ___________          # cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB) — para MOSTRAR bien los colores
+imagen_gris = ___________          # cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY) — Haar Cascade necesita escala de grises
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+axes[0].imshow(imagen_rgb);  axes[0].set_title('Original (RGB)');      axes[0].axis('off')
+axes[1].imshow(imagen_gris, cmap='gray'); axes[1].set_title('Escala de grises'); axes[1].axis('off')
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre el preprocesamiento:</strong></p>
+          <p>1. ¿Por qué convertimos a RGB solo para MOSTRAR la imagen, pero usamos la versión en escala de grises para detectar?<br>
+             2. ¿Qué forma (<code>.shape</code>) tiene <code>imagen_gris</code> comparada con <code>imagen_rgb</code>? ¿Por qué son distintas?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🟩</span><h2>Parte 3 — Detección con Haar Cascade</h2><span class="card-meta">~15 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 3.1 — Dado: cargar el clasificador ya entrenado</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code>face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+print("✅ Clasificador Haar Cascade cargado")</code></pre>
+        </div>
+
+        <div class="step-header">Celda 3.2 — Tu código: detectar y dibujar los rostros</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+caras = face_cascade.detectMultiScale(___________, scaleFactor=1.1, minNeighbors=5)   # imagen_gris
+
+resultado = imagen_rgb.copy()
+for (x, y, w, h) in caras:
+    cv2.rectangle(___________, (x, y), (___________, ___________), (0, 255, 0), 3)   # resultado, (x + w, y + h)
+
+plt.imshow(resultado)
+plt.axis('off')
+plt.title(f"{len(caras)} rostro(s) detectado(s) con Haar Cascade")
+plt.show()</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Sobre la detección:</strong></p>
+          <p>1. Prueba bajar <code>minNeighbors</code> a 2. ¿Aparecen más o menos rectángulos? ¿Alguno es un falso positivo (marca algo que no es una cara)?<br>
+             2. Si en tu foto hay más de una persona, ¿el bucle <code>for</code> dibuja un rectángulo por cada una? ¿Cómo lo sabes?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">🧑‍💻</span><h2>Parte 4 — Edad y Sexo con InsightFace</h2><span class="card-meta">~20 min · Código a completar</span></div>
+      <div class="card-body">
+
+        <div class="step-header">Celda 4.1 — Tu código: cargar el modelo ya entrenado</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+from insightface.app import FaceAnalysis
+
+analizador = ___________          # FaceAnalysis(name='buffalo_l', providers=['CPUExecutionProvider'])
+___________                       # analizador.prepare(ctx_id=0, det_size=(640, 640))
+
+print("✅ InsightFace listo")</code></pre>
+        </div>
+
+        <div class="care" style="background:#fff7ed; border-left:4px solid #d97706; border-radius:8px; padding:0.6rem 1rem; font-size:0.85rem; margin:0.75rem 0">
+          ⚠️ La primera vez que corres esta celda, InsightFace descarga el modelo <code>buffalo_l</code> (varios cientos de MB) — puede tardar uno o dos minutos.
+        </div>
+
+        <div class="step-header">Celda 4.2 — Tu código: analizar la foto y dibujar el resultado</div>
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># 🔧 TU CÓDIGO
+# OJO: aquí se usa la imagen BGR original de cv2.imread, NO la versión RGB
+detecciones = analizador.get(___________)          # imagen
+
+resultado2 = imagen_rgb.copy()
+for cara in detecciones:
+    x1, y1, x2, y2 = cara.bbox.astype(int)
+    edad = int(___________)                        # cara.age
+    sexo = 'Hombre' if ___________ == 1 else 'Mujer'   # cara.gender
+
+    cv2.rectangle(resultado2, (x1, y1), (x2, y2), (0, 200, 0), 2)
+    cv2.putText(resultado2, f"{sexo}, ~{edad}", (x1, max(y1 - 10, 20)),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 200, 0), 2)
+
+plt.imshow(resultado2)
+plt.axis('off')
+plt.title(f"{len(detecciones)} rostro(s) analizado(s) con InsightFace")
+plt.show()
+
+for i, cara in enumerate(detecciones):
+    sexo = 'Hombre' if cara.gender == 1 else 'Mujer'
+    print(f"Cara {i+1}: sexo estimado = {sexo}, edad estimada = {int(cara.age)} años, "
+          f"confianza de detección = {cara.det_score:.2f}")</code></pre>
+        </div>
+
+        <div class="question-box">
+          <p><strong>❓ Comparación final:</strong></p>
+          <p>1. ¿<code>len(caras)</code> (Haar Cascade, Parte 3) y <code>len(detecciones)</code> (InsightFace, Parte 4) coinciden en tu foto? Si no, ¿cuál te parece más confiable y por qué?<br>
+             2. La edad estimada, ¿qué tan cerca está de tu edad real? ¿Qué factores (luz, ángulo, gesto) crees que pudieron influir?<br>
+             3. <code>cara.det_score</code> mide la confianza de que ESO sea una cara — no tiene relación con qué tan segura está la edad o el sexo estimados. ¿Por qué son cosas distintas?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header"><span class="card-icon">✅</span><h2>Entrega</h2></div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">NOTEBOOK</span>
+            <div class="task-content">
+              <h4>Notebook con todas las celdas ejecutadas</h4>
+              <p>Todas las celdas <code># 🔧 TU CÓDIGO</code> completadas, incluyendo tu foto capturada y el resultado de ambos detectores. Preguntas ❓ respondidas en celdas Markdown. Exportar como <strong>.ipynb</strong>.</p>
+              <div class="task-due">📅 Entrega al docente antes de la próxima clase</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">CONCLUSIÓN INTEGRADORA</span>
+            <div class="task-content">
+              <h4>Párrafo final — Reflexión ética</h4>
+              <p>Resume en un párrafo: ¿qué diferencia encontraste entre un detector clásico (Haar Cascade) y un modelo moderno (InsightFace)? Y, considerando que estos modelos aprenden de datos que no siempre representan a todo el mundo por igual, ¿qué cuidados tomarías antes de usar una tecnología así en un sistema real (control de acceso, estadísticas de clientes, etc.)?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+<script src="../assets/js/auth.js?v=13"></script>
+<script>protectPage(16);</script>
+<script src="../assets/js/utils.js?v=13"></script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 16 — Slides</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    :root { --r-background-color: #0f172a; --r-main-font-size: 26px; }
+    .reveal { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .reveal h1, .reveal h2 { color: #60a5fa; }
+    .reveal h3, .reveal h4 { color: #93c5fd; }
+    .reveal blockquote { background: rgba(59,130,246,.12); border-left: 4px solid #3b82f6; font-style: normal; padding: .8rem 1rem; margin: .75rem 0; }
+    .reveal table { width: 100%; }
+    .reveal table th { background: #1e293b; }
+    .reveal table td, .reveal table th { border-color: #334155; font-size: .68em; padding: .4em .6em; }
+    .cols   { display: grid; gap: .6rem; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card   { background: rgba(30,41,59,.85); border: 1px solid #334155; border-radius: 8px; padding: .7rem .9rem; }
+    .card h4 { color: #60a5fa; font-size: .72em; margin-bottom: .3rem; }
+    .card p, .card li { font-size: .62em; line-height: 1.5; }
+    .result { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 6px; padding: .5rem .9rem; color: #86efac; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .warn   { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: .5rem .9rem; color: #fbbf24; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); border-radius: 6px; padding: .5rem .9rem; color: #fca5a5; font-size: .68em; text-align: center; margin-top: .5rem; }
+    .step   { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); border-radius: 6px; padding: .45rem .75rem; margin: .25rem 0; font-size: .63em; }
+    .step strong { color: #60a5fa; }
+    .pro { color: #4ade80; }
+    .con { color: #f87171; }
+    .eyebrow { font-size: .48em; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .4rem; }
+    .tag { display: inline-block; font-size: .48em; padding: .2em .7em; background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); border-radius: 20px; color: #93c5fd; margin: .15em; }
+    .num-row { display: flex; align-items: flex-start; gap: .5rem; padding: .3rem 0; font-size: .63em; }
+    .num-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%; background: #3b82f6; color: white; font-weight: 700; font-size: .7em; flex-shrink: 0; }
+    .inst { font-size: .42em; color: #475569; margin-top: 1.5rem; }
+    .formula { background: rgba(30,41,59,.9); border: 1px solid #334155; border-radius: 8px; padding: .7rem 1rem; font-size: .75em; text-align: center; color: #e2e8f0; margin: .5rem 0; font-family: 'Cambria Math', Georgia, serif; }
+    .formula strong { color: #60a5fa; }
+
+    /* ── Widgets interactivos ── */
+    .btn-toggle { background: rgba(51,65,85,.7); border: 1px solid #475569; color: #cbd5e1; padding: .4em .9em; border-radius: 6px; font-size: .58em; font-weight: 600; cursor: pointer; margin: .2em .2em .2em 0; font-family: inherit; }
+    .btn-toggle:hover { border-color: #3b82f6; }
+    .btn-toggle.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+    .btn-toggle.on { background: #22c55e; border-color: #22c55e; color: #fff; }
+    .btn-toggle:disabled { opacity: .4; cursor: not-allowed; }
+    .lab { background: rgba(15,23,42,.6); border: 1px solid #334155; border-radius: 10px; padding: .8rem 1rem; }
+    .lab-out { font-size: .8em; margin-top: .4rem; }
+    .lab canvas { background: #0f172a; border-radius: 8px; display: block; margin: 0 auto; cursor: pointer; }
+    .try { font-size: .58em; color: #93c5fd; margin-top: .5rem; font-style: italic; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- S1: PORTADA -->
+<section data-background-color="#0f172a">
+  <div class="eyebrow">SEMANA 16 · TEMA 6 · VISIÓN POR COMPUTADORA</div>
+  <h1 style="font-size:1.3em; line-height:1.2">Visión por Computadora<br><span style="color:#60a5fa">Cómo las Máquinas Interpretan Imágenes</span></h1>
+  <div style="margin-top:.9rem">
+    <span class="tag">Píxeles y canales</span>
+    <span class="tag">OpenCV</span>
+    <span class="tag">Preprocesamiento</span>
+    <span class="tag">Convolución</span>
+    <span class="tag">CNN</span>
+  </div>
+  <p style="margin-top:1.2rem; font-size:.55em; color:#64748b">Machine Learning · ISTER 2026 · Ing. David Minango, PhD</p>
+</section>
+
+<!-- S2: OBJETIVO -->
+<section>
+  <div class="eyebrow">De tablas de filas y columnas a imágenes</div>
+  <h2>Todo lo que Hicimos Hasta Hoy… Aplicado a Fotos</h2>
+  <div class="cols cols-2" style="margin-top:.8rem">
+    <div class="card">
+      <h4>Lo que ya sabes hacer</h4>
+      <ul>
+        <li>Entrenar modelos con datos en <strong>filas y columnas</strong> (Iris, diabetes, etc.)</li>
+        <li>Construir y entrenar redes neuronales (Semanas 11-12)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Hoy (Semana 16)</h4>
+      <p>Una imagen también se puede convertir en datos — solo que sus "columnas" son <strong>píxeles</strong>. Vamos a ver:</p>
+      <ul>
+        <li>Cómo "ve" una computadora una imagen</li>
+        <li>Cómo preprocesarla con OpenCV</li>
+        <li>Cómo clasificarla con una red convolucional (CNN)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem">Visión por Computadora es la puerta a aplicaciones reales: reconocimiento facial, diagnóstico médico por imagen, autos autónomos</div>
+</section>
+
+<!-- S3: UNA IMAGEN ES UNA MATRIZ -->
+<section>
+  <div class="eyebrow">Fundamentos de Visión por Computadora</div>
+  <h2>Para la Computadora, una Imagen es una Tabla de Números</h2>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div>
+      <div class="step">Cada <strong>píxel</strong> es un número (o tres) entre 0 y 255</div>
+      <div class="step">0 = negro total, 255 = blanco total (en escala de grises)</div>
+      <div class="step">Una imagen de 100×100 en color es, en el fondo, una tabla de <strong>10 000 filas × 3 columnas (R, G, B)</strong></div>
+    </div>
+    <div class="card">
+      <h4>El mismo truco de siempre</h4>
+      <p>Nada cambia respecto a lo que ya sabes de Machine Learning: siempre necesitamos <strong>números organizados</strong> para que un modelo aprenda. Lo único distinto es qué representan esos números.</p>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.5rem">Cuando dibujamos un cuadro rojo alrededor de una cara detectada, lo único que hicimos fue identificar QUÉ región de esa tabla de números corresponde a un rostro</div>
+</section>
+
+<!-- S4: WIDGET - EXPLORADOR DE PIXELES -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>Haz Clic en un Píxel y Descubre su Número</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <div class="step">Cada celda de la cuadrícula es un <strong>píxel en escala de grises</strong> — su color depende de su valor (0 a 255).</div>
+      <button class="btn-toggle" onclick="pixToggleAll()">👁 Mostrar/ocultar todos los valores</button>
+      <div class="step" style="margin-top:.6rem" id="pix-info">Haz clic en una celda de la cuadrícula →</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="pix-canvas" width="300" height="300"></canvas>
+    </div>
+  </div>
+  <div class="try">Fíjate en las celdas más claras vs. las más oscuras: los números más altos (cerca de 255) son casi blancos, y los más bajos (cerca de 0) son casi negros.</div>
+</section>
+
+<!-- S5: CANALES DE COLOR -->
+<section>
+  <div class="eyebrow">Fundamentos de Visión por Computadora</div>
+  <h2>Color = 3 Matrices Apiladas (R, G, B)</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>Escala de grises</h4>
+      <p><strong>1 matriz</strong>, un solo número por píxel: qué tan claro u oscuro es.</p>
+    </div>
+    <div class="card">
+      <h4>Color (RGB)</h4>
+      <p><strong>3 matrices</strong> apiladas — una para rojo, una para verde, una para azul. Un píxel a color = un trío de números <code>(R, G, B)</code>.</p>
+    </div>
+  </div>
+  <div class="formula">un píxel a color = <strong>(230, 60, 15)</strong> → mucho rojo, poco verde, poco azul → tono rojizo</div>
+  <div class="danger" style="margin-top:.4rem">OpenCV guarda ese trío en orden <strong>B-G-R</strong>, no R-G-B — por eso hay que convertir con <code>cv2.cvtColor(..., COLOR_BGR2RGB)</code> antes de mostrar una imagen, si no se ve con colores incorrectos</div>
+</section>
+
+<!-- S6: PREPROCESAMIENTO -->
+<section>
+  <div class="eyebrow">Preprocesamiento de Imágenes</div>
+  <h2>Antes de Modelar, hay que Preparar la Imagen</h2>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div class="card">
+      <h4>📏 Resize</h4>
+      <p>Todas las imágenes de un mismo modelo deben entrar con el <strong>mismo tamaño</strong> — se achican o agrandan a una medida fija.</p>
+    </div>
+    <div class="card">
+      <h4>⚫ Escala de grises</h4>
+      <p>Si el color no aporta información relevante, se descarta: de 3 matrices se pasa a 1 sola — menos datos que procesar.</p>
+    </div>
+    <div class="card">
+      <h4>🌫️ Blur (desenfoque)</h4>
+      <p>Suaviza el "ruido" de la imagen (granulado, detalles diminutos) para que el modelo se fije en las formas grandes.</p>
+    </div>
+    <div class="card">
+      <h4>✏️ Detección de bordes</h4>
+      <p>Resalta los contornos de los objetos — útil cuando lo que importa es la FORMA, no el color ni la textura.</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.5rem">Preprocesar = limpiar y estandarizar la imagen, igual que escalábamos columnas numéricas antes de entrenar un modelo tradicional</div>
+</section>
+
+<!-- S7: DETECCION DE BORDES -->
+<section>
+  <div class="eyebrow">Preprocesamiento de Imágenes</div>
+  <h2>Detección de Bordes: ¿Dónde Cambia Bruscamente el Color?</h2>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div>
+      <div class="step">Un <strong>borde</strong> es una zona donde los píxeles vecinos cambian mucho de valor (de muy oscuro a muy claro, o viceversa)</div>
+      <div class="step">Donde el color es uniforme (un cielo despejado, una pared lisa), no hay borde — el algoritmo lo ignora</div>
+      <div class="step"><code>cv2.Canny(imagen, umbral1, umbral2)</code> devuelve una imagen en blanco y negro: blanco = borde, negro = todo lo demás</div>
+    </div>
+    <div class="card">
+      <h4>Como resaltar un dibujo a lápiz</h4>
+      <p>Si trazas solo los contornos de una foto y borras el relleno, sigues reconociendo la forma. Eso es exactamente lo que hace la detección de bordes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S8: LA CONVOLUCION -->
+<section>
+  <div class="eyebrow">Modelos de Clasificación de Imágenes</div>
+  <h2>La Convolución: un Filtro que se Desliza</h2>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div>
+      <div class="step">Una red densa "normal" (como la de la Semana 11) necesita <strong>aplanar</strong> la imagen en una sola fila de números — y al hacerlo, pierde la información de qué píxel estaba al lado de cuál</div>
+      <div class="step">Una <strong>red convolucional (CNN)</strong> resuelve esto: en vez de aplanar de entrada, pasa un pequeño <strong>filtro</strong> sobre la imagen, respetando siempre la posición</div>
+    </div>
+    <div class="card">
+      <h4>Como una plantilla de galletas</h4>
+      <p>Deslizas la plantilla sobre la masa y en cada posición "corta" una figura. El filtro convolucional hace lo mismo: en cada posición, resume un pedacito pequeño de la imagen en UN número.</p>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:.5rem">Los pesos del filtro son los que la red APRENDE — un filtro puede terminar detectando bordes, otro texturas, etc.</div>
+</section>
+
+<!-- S9: WIDGET - CONVOLUCION PASO A PASO -->
+<section>
+  <div class="eyebrow">Widget interactivo</div>
+  <h2>Desliza el Filtro y Construye el Mapa de Características</h2>
+  <div class="cols cols-2 lab" style="margin-top:.5rem">
+    <div>
+      <div class="step">Imagen 6×6 con un borde vertical (claro | oscuro). Filtro 3×3 detector de bordes.</div>
+      <button class="btn-toggle active" onclick="convStepBtn()">➡ Deslizar filtro un paso</button>
+      <button class="btn-toggle" onclick="convReset()">↺ Reiniciar</button>
+      <div class="step" style="margin-top:.6rem" id="conv-msg">Paso 0 de 16 — presiona "Deslizar filtro"</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <canvas id="conv-canvas" width="380" height="220"></canvas>
+    </div>
+  </div>
+  <div class="try">El recuadro rojo es el filtro 3×3 recorriendo la imagen de izquierda a derecha, de arriba a abajo. Cada posición produce UN número que llena la casilla correspondiente del mapa de la derecha.</div>
+</section>
+
+<!-- S10: POOLING -->
+<section>
+  <div class="eyebrow">Modelos de Clasificación de Imágenes</div>
+  <h2>El Pooling: Quedarse con lo Más Fuerte</h2>
+  <div class="cols cols-2" style="margin-top:.6rem">
+    <div>
+      <div class="step">Después de la convolución, el mapa de características sigue siendo grande y con mucho detalle</div>
+      <div class="step"><strong>Max Pooling</strong> agrupa en bloques pequeños (ej. 2×2) y se queda SOLO con el valor más alto de cada bloque</div>
+      <div class="step">Resultado: una imagen más pequeña (menos cálculo) que conserva lo más importante de cada zona</div>
+    </div>
+    <div class="card">
+      <h4>Como resumir un párrafo</h4>
+      <p>Igual que resumir un texto largo a su idea principal: se pierde detalle fino, pero se conserva lo esencial.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S11: ARQUITECTURA CNN -->
+<section>
+  <div class="eyebrow">Modelos de Clasificación de Imágenes</div>
+  <h2>Una CNN Completa: Conv + Pool, Repetido, y Luego Dense</h2>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4>1. Conv2D</h4>
+      <p>Varios filtros deslizándose, cada uno aprendiendo a detectar un patrón distinto (bordes, curvas, texturas).</p>
+    </div>
+    <div class="card">
+      <h4>2. MaxPooling2D</h4>
+      <p>Reduce el tamaño, conservando lo más fuerte de cada zona. Se suele repetir Conv+Pool varias veces.</p>
+    </div>
+    <div class="card">
+      <h4>3. Flatten + Dense</h4>
+      <p>Recién AQUÍ se aplana — pero ya con los patrones importantes extraídos. Las capas Dense finales deciden la clase.</p>
+    </div>
+  </div>
+  <div class="result" style="margin-top:.6rem">Cuantas más capas Conv+Pool se apilan, más complejos son los patrones que la red puede reconocer</div>
+</section>
+
+<!-- S12: APLICACIONES REALES -->
+<section>
+  <div class="eyebrow">Aplicaciones en Tareas Reales</div>
+  <h2>Dónde se Usa Visión por Computadora Hoy</h2>
+  <div class="cols cols-2" style="margin-top:.7rem">
+    <div class="card">
+      <h4>🧑‍⚕️ Imágenes médicas</h4>
+      <p>Detectar tumores o anomalías en radiografías, tomografías y resonancias, apoyando (no reemplazando) el diagnóstico médico.</p>
+    </div>
+    <div class="card">
+      <h4>🚗 Conducción autónoma</h4>
+      <p>Detectar peatones, señales de tránsito y otros vehículos en tiempo real a partir de cámaras.</p>
+    </div>
+    <div class="card">
+      <h4>🙂 Reconocimiento facial</h4>
+      <p>Detectar rostros y estimar atributos (edad, sexo, identidad) — lo que vas a practicar tú mismo hoy.</p>
+    </div>
+    <div class="card">
+      <h4>🧭 Uso responsable</h4>
+      <p>Estas tecnologías tocan personas reales: siempre hay que preguntarse por el consentimiento, el sesgo de los datos de entrenamiento y quién puede salir perjudicado si el modelo se equivoca.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S13: RESUMEN -->
+<section>
+  <div class="eyebrow">Cierre Semana 16</div>
+  <h2>Resumen — De los Píxeles a la Clasificación</h2>
+  <div class="cols cols-3" style="margin-top:.7rem">
+    <div class="card">
+      <h4>Fundamentos</h4>
+      <p>Una imagen es una matriz de números — en color, 3 matrices apiladas (R, G, B).</p>
+    </div>
+    <div class="card">
+      <h4>Preprocesamiento</h4>
+      <p>Resize, escala de grises, blur y detección de bordes preparan la imagen antes de modelar.</p>
+    </div>
+    <div class="card">
+      <h4>CNN</h4>
+      <p>Convolución (filtros locales) + Pooling (resumir) + Dense (decidir) — la arquitectura estándar para clasificar imágenes.</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:.7rem; font-size:.62em">
+    Ahora a la <strong>Práctica 16</strong>: habilita tu cámara en Colab, detecta tu propio rostro con OpenCV, y estima edad y sexo con InsightFace.
+  </blockquote>
+  <div class="inst">→ / ← para navegar · F para pantalla completa · Esc para vista general</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'slide',
+    width: 960, height: 620, margin: 0.04,
+    plugins: []
+  });
+
+  /* ── S4: explorador de píxeles ── */
+  var pixGrid = [
+    [12, 40, 90, 150, 200, 230],
+    [20, 45, 95, 155, 205, 235],
+    [18, 60, 110, 170, 210, 240],
+    [25, 55, 100, 160, 215, 245],
+    [15, 48, 92, 152, 202, 232],
+    [30, 65, 115, 175, 220, 250]
+  ];
+  var pixShowAll = false;
+  var pixHighlight = null; /* [r,c] */
+
+  function pixDraw() {
+    var canvas = document.getElementById('pix-canvas');
+    var ctx = canvas.getContext('2d');
+    var n = 6, cell = canvas.width / n;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var r = 0; r < n; r++) {
+      for (var c = 0; c < n; c++) {
+        var v = pixGrid[r][c];
+        ctx.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')';
+        ctx.fillRect(c * cell, r * cell, cell, cell);
+        ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+        ctx.strokeRect(c * cell, r * cell, cell, cell);
+
+        var isHi = pixHighlight && pixHighlight[0] === r && pixHighlight[1] === c;
+        if (isHi) {
+          ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 3;
+          ctx.strokeRect(c * cell + 1.5, r * cell + 1.5, cell - 3, cell - 3);
+        }
+        if (pixShowAll || isHi) {
+          ctx.fillStyle = v > 130 ? '#0f172a' : '#e2e8f0';
+          ctx.font = '13px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText(v, c * cell + cell / 2, r * cell + cell / 2 + 4);
+        }
+      }
+    }
+  }
+  function pixToggleAll() {
+    pixShowAll = !pixShowAll;
+    pixDraw();
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var canvas = document.getElementById('pix-canvas');
+    canvas.addEventListener('click', function (e) {
+      var rect = canvas.getBoundingClientRect();
+      var x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      var y = (e.clientY - rect.top) * (canvas.height / rect.height);
+      var n = 6, cell = canvas.width / n;
+      var c = Math.min(n - 1, Math.floor(x / cell));
+      var r = Math.min(n - 1, Math.floor(y / cell));
+      pixHighlight = [r, c];
+      document.getElementById('pix-info').innerHTML =
+        'Fila ' + r + ', columna ' + c + ' → valor del píxel: <strong>' + pixGrid[r][c] + '</strong>';
+      pixDraw();
+    });
+    pixDraw();
+  });
+
+  /* ── S9: convolución paso a paso ── */
+  var convImg = [
+    [20, 20, 20, 220, 220, 220],
+    [22, 18, 24, 225, 218, 222],
+    [19, 21, 20, 222, 220, 219],
+    [21, 20, 23, 219, 223, 221],
+    [18, 22, 19, 221, 219, 224],
+    [20, 19, 21, 223, 221, 220]
+  ];
+  var convKernel = [[1, 0, -1], [1, 0, -1], [1, 0, -1]];
+  var convPositions = [];
+  for (var pr = 0; pr <= 3; pr++) { for (var pc = 0; pc <= 3; pc++) { convPositions.push([pr, pc]); } }
+  var convStep = 0;
+  var convOutputs = new Array(16).fill(null);
+
+  function convApplyAt(step) {
+    var pos = convPositions[step];
+    var sum = 0;
+    for (var i = 0; i < 3; i++) {
+      for (var j = 0; j < 3; j++) {
+        sum += convImg[pos[0] + i][pos[1] + j] * convKernel[i][j];
+      }
+    }
+    return sum;
+  }
+
+  function convDraw(lastPos) {
+    var canvas = document.getElementById('conv-canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    /* imagen 6x6 a la izquierda */
+    var cell = 22, ox = 15, oy = 15;
+    for (var r = 0; r < 6; r++) {
+      for (var c = 0; c < 6; c++) {
+        var v = convImg[r][c];
+        ctx.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')';
+        ctx.fillRect(ox + c * cell, oy + r * cell, cell, cell);
+        ctx.strokeStyle = '#334155'; ctx.strokeRect(ox + c * cell, oy + r * cell, cell, cell);
+      }
+    }
+    /* ventana roja en la posicion actual */
+    if (lastPos) {
+      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3;
+      ctx.strokeRect(ox + lastPos[1] * cell, oy + lastPos[0] * cell, cell * 3, cell * 3);
+    }
+    ctx.fillStyle = '#93c5fd'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('imagen (borde vertical)', ox + 3 * cell, oy + 6 * cell + 16);
+
+    /* flecha */
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(190, 110); ctx.lineTo(230, 110); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(230, 110); ctx.lineTo(223, 105); ctx.lineTo(223, 115); ctx.closePath();
+    ctx.fillStyle = '#e2e8f0'; ctx.fill();
+
+    /* mapa de salida 4x4 */
+    var maxAbs = 700; /* normalizar color */
+    var ocell = 30, oox = 250, ooy = 40;
+    for (var i = 0; i < 16; i++) {
+      var pr2 = convPositions[i][0], pc2 = convPositions[i][1];
+      var val = convOutputs[i];
+      if (val === null) {
+        ctx.fillStyle = '#1e293b';
+      } else {
+        var norm = Math.max(-1, Math.min(1, val / maxAbs));
+        var g = Math.round(128 + norm * 127);
+        ctx.fillStyle = 'rgb(' + g + ',' + g + ',' + g + ')';
+      }
+      ctx.fillRect(oox + pc2 * ocell, ooy + pr2 * ocell, ocell, ocell);
+      ctx.strokeStyle = '#475569'; ctx.strokeRect(oox + pc2 * ocell, ooy + pr2 * ocell, ocell, ocell);
+      if (val !== null) {
+        ctx.fillStyle = Math.abs(val) > 350 ? '#0f172a' : '#e2e8f0';
+        ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(val, oox + pc2 * ocell + ocell / 2, ooy + pr2 * ocell + ocell / 2 + 3);
+      }
+    }
+    ctx.fillStyle = '#93c5fd'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('mapa de características', oox + 2 * ocell, ooy + 4 * ocell + 16);
+  }
+
+  function convStepBtn() {
+    if (convStep >= 16) return;
+    var pos = convPositions[convStep];
+    convOutputs[convStep] = convApplyAt(convStep);
+    convStep++;
+    convDraw(pos);
+    var msg = document.getElementById('conv-msg');
+    if (convStep >= 16) {
+      msg.textContent = '✅ Completado — el filtro recorrió toda la imagen. Fíjate cómo el mapa quedó oscuro en las columnas del borde (donde el color cambia bruscamente).';
+    } else {
+      msg.textContent = 'Paso ' + convStep + ' de 16 — sigue deslizando el filtro';
+    }
+  }
+  function convReset() {
+    convStep = 0;
+    convOutputs = new Array(16).fill(null);
+    document.getElementById('conv-msg').textContent = 'Paso 0 de 16 — presiona "Deslizar filtro"';
+    convDraw(null);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    convDraw(null);
+  });
+</script>
+</body>
+</html>

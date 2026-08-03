@@ -25,7 +25,7 @@ var SEMANA_CONFIG = {
   13: { titulo: 'Red Neuronal Simple',               clave: CLAVE, disponible: false },
   14: { titulo: 'Evaluación y Optimización',         clave: CLAVE, disponible: false },
   15: { titulo: 'Sistemas Expertos',                 clave: CLAVE, disponible: false },
-  16: { titulo: 'Visión por Computadora',            clave: CLAVE, disponible: false },
+  16: { titulo: 'Visión por Computadora',            clave: CLAVE, disponible: true  },
 };
 
 /* ── Helpers ──────────────────────────────────────────── */

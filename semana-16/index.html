@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semana 16 — Machine Learning ISTER 2026</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ISTER · 2026</div>
+    <div class="sidebar-title">Machine Learning</div>
+    <div class="sidebar-sub">Sistemas y Gestión de Data · 5to Nivel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Semanas del curso</div>
+    <a href="../semana-1/index.html" class="week-link"><span class="week-num">1</span><span class="week-link-text">Intro ML y Árboles</span></a>
+    <a href="../semana-2/index.html" class="week-link"><span class="week-num">2</span><span class="week-link-text">Matemáticas CART</span></a>
+    <a href="../semana-3/index.html" class="week-link"><span class="week-num">3</span><span class="week-link-text">Técnicas de Ensamblado</span></a>
+    <a href="../semana-4/index.html" class="week-link"><span class="week-num">4</span><span class="week-link-text">Evaluación y Validación</span></a>
+    <a href="../semana-5/index.html" class="week-link"><span class="week-num">5</span><span class="week-link-text">Fundamentos SVM</span></a>
+    <a href="../semana-6/index.html" class="week-link"><span class="week-num">6</span><span class="week-link-text">Fundamentos K-NN</span></a>
+    <a href="../semana-7/index.html" class="week-link"><span class="week-num">7</span><span class="week-link-text">Implementación SVM/K-NN</span></a>
+    <a href="../semana-8/index.html" class="week-link"><span class="week-num">8</span><span class="week-link-text">Aprendizaje No Supervisado</span></a>
+    <a href="../semana-9/index.html" class="week-link"><span class="week-num">9</span><span class="week-link-text">K-means y DBScan</span></a>
+    <a href="../semana-10/index.html" class="week-link"><span class="week-num">10</span><span class="week-link-text">Clustering Práctico</span></a>
+    <a href="../semana-11/index.html" class="week-link"><span class="week-num">11</span><span class="week-link-text">Redes Neuronales</span></a>
+    <a href="../semana-12/index.html" class="week-link"><span class="week-num">12</span><span class="week-link-text">Deep Learning</span></a>
+    <span class="week-link locked"><span class="week-num">13</span><span class="week-link-text">Red Neuronal Simple</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">14</span><span class="week-link-text">Evaluación y Optimización</span><span class="week-icon">🔒</span></span>
+    <span class="week-link locked"><span class="week-num">15</span><span class="week-link-text">Sistemas Expertos</span><span class="week-icon">🔒</span></span>
+    <a href="index.html" class="week-link active"><span class="week-num">16</span><span class="week-link-text">Visión por Computadora</span></a>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <header class="page-header">
+    <div class="eyebrow">Semana 16</div>
+    <h1>Visión por Computadora — Cómo las Máquinas Interpretan Imágenes</h1>
+    <div class="topic-tags">
+      <span class="tag">Píxeles y Canales</span>
+      <span class="tag">OpenCV</span>
+      <span class="tag">Preprocesamiento</span>
+      <span class="tag">CNN</span>
+      <span class="tag">Detección de Rostros</span>
+    </div>
+  </header>
+
+  <nav class="page-tabs">
+    <a href="index.html" class="page-tab active">📋 Clase</a>
+    <a href="lab.html"   class="page-tab">🧪 Práctica 16</a>
+  </nav>
+
+  <div class="content-body">
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📋</span>
+        <h2>Clase Semana 16</h2>
+      </div>
+      <div class="card-body">
+        <div class="slides-wrapper">
+          <div class="slides-bar">
+            <a href="slides.html" target="_blank" class="btn-fullscreen">⛶ Pantalla completa</a>
+          </div>
+          <iframe src="slides.html" class="slides-iframe" allowfullscreen></iframe>
+        </div>
+
+        <div class="code-section-title">📌 Código de la clase — copia y pega en Colab</div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1: Cómo Ve una Computadora una Imagen ──────────────
+# Toda imagen es, para la computadora, una matriz de números.
+!wget -q https://raw.githubusercontent.com/opencv/opencv/master/samples/data/lena.jpg -O foto.jpg
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+imagen = cv2.imread('foto.jpg')
+print("Forma de la imagen (alto, ancho, canales):", imagen.shape)
+print("Tipo de dato:", imagen.dtype)
+print("Valor del píxel en (100, 100):", imagen[100, 100])   # [B, G, R]
+
+plt.imshow(imagen)
+plt.axis('off')
+plt.title("cv2.imread — formato BGR (colores raros a propósito)")
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 1b: La Trampa del Orden de Colores (BGR vs RGB) ────
+# OpenCV guarda los canales como Azul-Verde-Rojo, no Rojo-Verde-Azul.
+# Hay que reordenarlos ANTES de mostrar la imagen con matplotlib.
+imagen_rgb = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
+
+plt.imshow(imagen_rgb)
+plt.axis('off')
+plt.title("Después de cv2.cvtColor(..., COLOR_BGR2RGB)")
+plt.show()
+
+# Regla práctica de hoy: convertir a RGB solo para MOSTRAR con matplotlib.
+# Para procesar o detectar, muchas funciones de OpenCV siguen esperando BGR.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 2: Preprocesamiento de Imágenes ────────────────────
+gris    = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
+print("Forma en escala de grises:", gris.shape)   # ya no tiene el 3 de los canales
+
+pequena = cv2.resize(imagen_rgb, (128, 128))
+borrosa = cv2.GaussianBlur(imagen_rgb, (15, 15), 0)
+bordes  = cv2.Canny(gris, threshold1=100, threshold2=200)
+
+fig, axes = plt.subplots(1, 4, figsize=(16, 4))
+axes[0].imshow(gris, cmap='gray');    axes[0].set_title('Escala de grises'); axes[0].axis('off')
+axes[1].imshow(pequena);              axes[1].set_title('Resize 128×128');   axes[1].axis('off')
+axes[2].imshow(borrosa);              axes[2].set_title('Gaussian Blur');    axes[2].axis('off')
+axes[3].imshow(bordes, cmap='gray');  axes[3].set_title('Canny (bordes)');   axes[3].axis('off')
+plt.tight_layout()
+plt.show()
+
+# Cada una de estas transformaciones es un paso de PREPROCESAMIENTO:
+# preparar la imagen antes de dársela a un modelo (reducir tamaño,
+# simplificar colores, resaltar formas) para que el modelo entrene
+# más rápido y se fije en lo importante.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3: Clasificación de Imágenes con una CNN (Keras) ───
+# Dataset MNIST: dígitos manuscritos 28x28 en escala de grises.
+from tensorflow.keras import layers, models
+from tensorflow.keras.datasets import mnist
+
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+# Nos quedamos con una parte para que el entrenamiento sea rápido en clase
+x_train, y_train = x_train[:4000], y_train[:4000]
+x_test,  y_test  = x_test[:1000],  y_test[:1000]
+
+x_train = x_train.reshape(-1, 28, 28, 1) / 255.0
+x_test  = x_test.reshape(-1, 28, 28, 1) / 255.0
+
+plt.figure(figsize=(8, 2))
+for i in range(6):
+    plt.subplot(1, 6, i + 1)
+    plt.imshow(x_train[i].reshape(28, 28), cmap='gray')
+    plt.title(y_train[i]); plt.axis('off')
+plt.show()</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 3b: Construir y Entrenar la CNN ────────────────────
+modelo = models.Sequential([
+    layers.Conv2D(16, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(32, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+    layers.Flatten(),
+    layers.Dense(32, activation='relu'),
+    layers.Dense(10, activation='softmax')
+])
+modelo.summary()
+
+modelo.compile(optimizer='adam',
+               loss='sparse_categorical_crossentropy',
+               metrics=['accuracy'])
+
+historial = modelo.fit(x_train, y_train, epochs=5,
+                        validation_data=(x_test, y_test))
+
+plt.plot(historial.history['accuracy'], label='entrenamiento')
+plt.plot(historial.history['val_accuracy'], label='validación')
+plt.xlabel('época'); plt.ylabel('accuracy'); plt.legend()
+plt.title('CNN aprendiendo a reconocer dígitos')
+plt.grid(alpha=.3); plt.show()
+
+# Conv2D = filtros que se deslizan buscando patrones (bordes, curvas, trazos).
+# MaxPooling2D = se queda con lo más fuerte de cada zona y reduce el tamaño.
+# Flatten + Dense = igual que en la Semana 11/12, decide la clase final.</code></pre>
+        </div>
+
+        <div class="sourceCode" data-lang="python">
+          <button class="btn-copy">Copiar</button>
+          <pre><code># ── Parte 4: Aplicaciones Reales — Detección de Rostros ──────
+# Un clasificador clásico de OpenCV (Haar Cascade), ya entrenado,
+# que encuentra rostros sin que nosotros entrenemos nada.
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+caras = face_cascade.detectMultiScale(gris, scaleFactor=1.1, minNeighbors=5)
+
+resultado = imagen_rgb.copy()
+for (x, y, w, h) in caras:
+    cv2.rectangle(resultado, (x, y), (x + w, y + h), (0, 255, 0), 3)
+
+plt.imshow(resultado)
+plt.axis('off')
+plt.title(f"{len(caras)} rostro(s) detectado(s)")
+plt.show()
+
+# Esto es SOLO detección: encontrar dónde está la cara.
+# En la Práctica 16 vamos un paso más allá — con tu propia cámara
+# en vivo y un modelo más avanzado (InsightFace) que además estima
+# edad y sexo a partir de esa cara detectada.</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">🧪</span>
+        <h2>Taller Aplicado</h2>
+      </div>
+      <div class="card-body">
+        <div class="colab-block">
+          <a href="https://colab.research.google.com/github/pdavicho/ml-ister-2026/blob/main/notebooks/semana16_practica.ipynb"
+             class="btn-colab" target="_blank">
+            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:20px;width:auto">
+            Abrir en Google Colab
+          </a>
+          <div class="colab-desc">
+            <h4>Práctica 16 — Detección y Análisis de Rostros en Vivo</h4>
+            <p>Habilita tu propia cámara dentro de Colab, preprocesa la foto, detecta el rostro con OpenCV y, con InsightFace, estima edad y sexo — completando cada celda marcada con 🔧 TU CÓDIGO.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2>Lecturas Obligatorias</h2>
+      </div>
+      <div class="card-body">
+        <div class="resource-list">
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Bobadilla, J. (2020) — Machine Learning y Deep Learning con Python, Scikit y Keras</h4>
+              <p>Capítulo de redes convolucionales (CNN): filtros, pooling y arquitecturas para clasificación de imágenes.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/222698" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">📖</span>
+            <div class="resource-content">
+              <h4>Ortega Candel, J.M. (2022) — Big Data, Machine Learning y Data Science en Python</h4>
+              <p>Fundamentos de procesamiento de imágenes y preparación de datos visuales para modelos de aprendizaje automático.</p>
+              <a href="https://elibro.net/es/lc/ister/titulos/230290" target="_blank" class="resource-link">→ Acceder en eLibro ISTER</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>OpenCV — Documentación oficial</h4>
+              <p>Referencia de <code>cv2.cvtColor</code>, <code>cv2.GaussianBlur</code>, <code>cv2.Canny</code> y <code>CascadeClassifier</code> usados en el código de hoy.</p>
+              <a href="https://docs.opencv.org/4.x/" target="_blank" class="resource-link">→ docs.opencv.org</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🌐</span>
+            <div class="resource-content">
+              <h4>Keras — Guía de capas convolucionales (Conv2D / MaxPooling2D)</h4>
+              <p>Documentación oficial de las capas usadas para construir la CNN de la Parte 3.</p>
+              <a href="https://keras.io/api/layers/convolution_layers/" target="_blank" class="resource-link">→ keras.io — Convolution layers</a>
+            </div>
+          </div>
+          <div class="resource-item">
+            <span class="resource-icon">🧭</span>
+            <div class="resource-content">
+              <h4>Barredo, A. & Díaz, N. (2020) — Explainable Artificial Intelligence (XAI)</h4>
+              <p>Contexto para la discusión ética de la Práctica 16: por qué un modelo de visión puede equivocarse más con ciertos grupos de personas, y por qué explicar sus decisiones importa.</p>
+              <a href="https://doi.org/10.1016/j.inffus.2019.12.012" target="_blank" class="resource-link">→ doi.org/10.1016/j.inffus.2019.12.012</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>Tareas de la Semana</h2>
+        <span class="card-meta">Entrega: próxima clase</span>
+      </div>
+      <div class="card-body">
+        <div class="task-list">
+          <div class="task-item">
+            <span class="task-badge badge-green">T1 · PYTHON</span>
+            <div class="task-content">
+              <h4>Preprocesamiento con otra imagen</h4>
+              <p>Repite la Parte 2 del código de clase (gris, resize, blur, Canny) con una foto distinta de tu elección. Compara los bordes detectados por <code>cv2.Canny</code> con dos combinaciones diferentes de <code>threshold1</code>/<code>threshold2</code>.</p>
+              <div class="task-due">📅 Próxima clase · Notebook .ipynb</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-purple">T2 · EXPERIMENTACIÓN</span>
+            <div class="task-content">
+              <h4>Más épocas, ¿mejor CNN?</h4>
+              <p>Usando la Parte 3 del código de clase, entrena la misma CNN con 15 épocas en vez de 5. Grafica la nueva curva de <code>accuracy</code> vs. la original. ¿Sigue mejorando, o se estanca?</p>
+              <div class="task-due">📅 Próxima clase · Gráfica + explicación</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <span class="task-badge badge-orange">T3 · CONCEPTUAL</span>
+            <div class="task-content">
+              <h4>Explica la convolución con tus palabras</h4>
+              <p>En máximo media página: ¿qué hace un filtro convolucional?, ¿por qué es distinto a aplanar la imagen directamente?, y ¿qué aporta el pooling? Usa la analogía de la "plantilla de galletas" vista en clase.</p>
+              <div class="task-due">📅 Próxima clase · Documento o celda Markdown</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="../assets/js/auth.js?v=13"></script>
+<script>protectPage(16);</script>
+<script src="../assets/js/utils.js?v=13"></script>
+</body>
+</html>
